@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>define_method, instance_eval and class_eval</title>
+   <meta name="author" content="Anuj Dutta (andHapp)" />
+   <meta name="description" content="Journey through ruby exploring its various facets."/>
+
+   <!-- syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/syntax.css" type="text/css" />
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+
+<body class="home blog">
+  <div id="siteWrapper">
+    <h1 class="vcard author">
+      <a class="fn" title="Home" href="/">plough => Ruby</a>
+    </h1>
+    <div id="siteDescription">Journey through Ruby</div>
+    <div id="coreContent" class="hfeed">
+      <div class="post hentry">
+  <h5 class="postDate">
+    30 September 2009
+  </h5>
+  <div class="postContent">
+    <h3 class="entry-title">
+      define_method, instance_eval and class_eval
+    </h3>
+  </div>
+  <div class="entry-content">
+    <p>Right, so this is a tad confusing and the reason I am explaining is to ensure that I understand it properly.</p>
+
+<p><strong>instance_eval</strong> - It creates singleton methods on the object it is invoked on. If it is invoked on a Class object then these methods become singleton methods of the class. Some people would call them <del datetime="2009-09-30T19:13:53+00:00">"class methods"</del> but these are simply methods in an object's singleton class. Here's the code:</p>
+
+<pre>
+SomeObject.instance_eval (def singleton_method; "singleton_method";end)
+</pre>
+
+
+<p><strong>class_eval</strong> - It creates an instance method on the object. Simple there is nothing confusing about this. Here's an example:</p>
+
+<pre>
+SomeObject.class_eval(def instance_method;"instance_method";end)
+</pre>
+
+
+<p>Now, define method when used inside either class_eval or instance_eval s immune to the usual behaviour.</p>
+
+<p>Why, you may ask?</p>
+
+<p>Because the documentation says so. As per the documentation "define method - Defines an instance method in the receiver". Therefore, it does not matter if you use define_method inside class_eval or instance_eval it would always create an instance method. Now, the question to ask is - "Is there no way to define a singleton method using defne_method?". Well, I still need to investigate that. It would probably be in an update to this post. Hope it all makes sense. Ruby metaprogramming is awesome only if you know what you are doing and to get to that stage one needs to spend countless hours metaprogramming.</p>
+
+  </div>
+</div>
+
+<div id="related">
+  <h2>Related Posts</h2>
+  <ul class="posts">
+    
+      <li><span>06 Jul 2010</span> &raquo; <a href="/2010/07/06/paperclip-and-rescue.html">Paperclip and rescue</a></li>
+    
+      <li><span>22 Feb 2010</span> &raquo; <a href="/2010/02/22/install-pg-and-mysql-gems.html">Install pg and mysql gems</a></li>
+    
+      <li><span>20 Dec 2009</span> &raquo; <a href="/2009/12/20/proc-proc-blocks.html">Proc, proc, blocks</a></li>
+    
+  </ul>
+</div>
+
+
+    </div>
+  </div>
+  <div id="footer">
+    <h5>Elsewhere</h5>
+    <ul class="elsewhere">
+      <li><a href="http://www.andhapp.com/blog">andHapp.com</a></li>
+      <li><a href="http://github.com/andhapp">Github</a></li>
+      <li><a href="http://twitter.com/andhapp">Twitter</a></li>
+    </ul>
+    <div class="footerContent">
+      <p>&copy; ploughthroughruby.co.uk. Powered by <a href="https://github.com/mojombo/jekyll/">Jekyll</a> and <a href="http://jimbarraud.com/manifest/">Manifest</a></p>
+    </div>
+  </div>
+</body>
+</html>

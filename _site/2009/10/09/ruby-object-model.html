@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Ruby object model</title>
+   <meta name="author" content="Anuj Dutta (andHapp)" />
+   <meta name="description" content="Journey through ruby exploring its various facets."/>
+
+   <!-- syntax highlighting CSS -->
+   <link rel="stylesheet" href="/css/syntax.css" type="text/css" />
+
+   <!-- Homepage CSS -->
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+</head>
+
+<body class="home blog">
+  <div id="siteWrapper">
+    <h1 class="vcard author">
+      <a class="fn" title="Home" href="/">plough => Ruby</a>
+    </h1>
+    <div id="siteDescription">Journey through Ruby</div>
+    <div id="coreContent" class="hfeed">
+      <div class="post hentry">
+  <h5 class="postDate">
+    09 October 2009
+  </h5>
+  <div class="postContent">
+    <h3 class="entry-title">
+      Ruby object model
+    </h3>
+  </div>
+  <div class="entry-content">
+    <p>Right, so you know Ruby's object model. Well here's a little code snippet by JRuby creator Ola Bini and it drives the point home really.</p>
+
+<pre>
+class Obj
+  def something
+    puts "calling simple"
+    @abc = 3*42
+    def something
+      puts "calling memoized"
+      @abc
+    end
+    something
+  end
+end
+
+o = Obj.new
+o.something
+o.something
+o.something
+
+</pre>
+
+
+<p>The output of the code is:</p>
+
+<pre>
+calling simple
+calling memoized
+calling memoized
+calling memoized
+</pre>
+
+
+<p>Let us look at the code and anaylise it. 'o' is an instance of 'Obj' class. 'something' is an instance method of 'O', therefore it can access it. The first 'o.something' would call the instance method defined in 'Obj' class. So, it prints "calling simple" and then the second 'something' defines a method on instance 'o' because inside the first 'something' self is same as instance 'o'.</p>
+
+<p>Now, what do you get when you do something like this:</p>
+
+<pre>
+def o.something
+     puts "I am o's singleton method."
+end
+</pre>
+
+
+<p>Yes, you get a singleton method on the instance. In this case, that's exactly what happens. The second 'something' defines a singleton method on instance 'o'.  We are still in the middle of executing the first something. The last line of the first something (or the outer something) calls the method 'something'. What the hell? Cyclic messaging!!!! Never ending loop. Yeah, but the code runs and exits gracefully.</p>
+
+<p>Well, the call to 'something' would actually go and look for 'something' method and before it finds a 'something' method defined in the class 'Obj' it would find the singleton-method 'something' and execute that. So, what would that print. Yeah, you are right it prints "calling memoized". The second and third calls to something will again encounter the 'something' singleton method and execute that and it would not bother to go and look for the something defined as an instance method in class 'Obj'.</p>
+
+<p>I know you are confused. Why would it go and look for the singleton method and not the instance method. This is the magic behind Ruby's object model. Please head over to Ola Bini's blog and read the article on <a href="http://ola-bini.blogspot.com/search/label/metaprogramming">metaprogramming</a>. He goes into a lot more detail.</p>
+
+  </div>
+</div>
+
+<div id="related">
+  <h2>Related Posts</h2>
+  <ul class="posts">
+    
+      <li><span>06 Jul 2010</span> &raquo; <a href="/2010/07/06/paperclip-and-rescue.html">Paperclip and rescue</a></li>
+    
+      <li><span>22 Feb 2010</span> &raquo; <a href="/2010/02/22/install-pg-and-mysql-gems.html">Install pg and mysql gems</a></li>
+    
+      <li><span>20 Dec 2009</span> &raquo; <a href="/2009/12/20/proc-proc-blocks.html">Proc, proc, blocks</a></li>
+    
+  </ul>
+</div>
+
+
+    </div>
+  </div>
+  <div id="footer">
+    <h5>Elsewhere</h5>
+    <ul class="elsewhere">
+      <li><a href="http://www.andhapp.com/blog">andHapp.com</a></li>
+      <li><a href="http://github.com/andhapp">Github</a></li>
+      <li><a href="http://twitter.com/andhapp">Twitter</a></li>
+    </ul>
+    <div class="footerContent">
+      <p>&copy; ploughthroughruby.co.uk. Powered by <a href="https://github.com/mojombo/jekyll/">Jekyll</a> and <a href="http://jimbarraud.com/manifest/">Manifest</a></p>
+    </div>
+  </div>
+</body>
+</html>
