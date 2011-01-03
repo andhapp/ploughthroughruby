@@ -43,10 +43,12 @@ $stdout.kind_of?(IO)
 
 <p>This would give you "true" which bascially means that $stdout is an IO object. <a href="http://ruby-doc.org/core/classes/IO.html#M002278">IO</a> is the main input output library in ruby. Do check out the rdoc for other exciting things you can do with it. Ok. Good that we have these file descriptors so what. I do not need to know how "puts" outputs stuff to the console. I just use it. Well, that is good but one should definitely have a good understanding of controlling where the output goes otherwise when someone asks you - <strong>"How do I redirect my output to a file instead of console?"</strong>, you would just sit there with no answer. So, let us try and find an answer to the same question so that you do not look like a fool.</p>
 
-<p>As it happens, we can actually redefine the $stdout. The following code would do exactly that when run in irb:
+<p>As it happens, we can actually redefine the $stdout. The following code would do exactly that when run in irb:</p>
+
 <pre>
 $stdout = File.open("test.log", "w")
-</pre></p>
+</pre>
+
 
 <p>It basically tells $stdout to spit everything out to a file called "test.log". That's it. Its done. Now, when you send a mesage to puts method it would use the newly defined $stdout and do the needful. Run this code in the same irb session as above and and see what happens:</p>
 
@@ -73,15 +75,19 @@ $stdout.equal?(STDOUT)
 
 <pre>
 $stdout = STDOUT
-</pre> 
+</pre>
 
+
+<p></p>
 
 <p>Simple! Now, when you do:</p>
 
 <pre>
 puts "Oh Em Gee, I am back on the console."
-</pre> 
+</pre>
 
+
+<p></p>
 
 <p>You will see it straight away on your console. BTW, instead of $stdout you can redefine STDOUT and redirect the output to a file but puts or print would not be bothered about it as they use $stdout which is still pointing to the console.</p>
 
@@ -104,11 +110,11 @@ system('echo Wheeee')
   <h2>Related Posts</h2>
   <ul class="posts">
     
+      <li><span>03 Jan 2011</span> &raquo; <a href="/2011/01/03/convert-array-to-hash-mystery.html">Convert Array to Hash mystery</a></li>
+    
       <li><span>06 Jul 2010</span> &raquo; <a href="/2010/07/06/paperclip-and-rescue.html">Paperclip and rescue</a></li>
     
       <li><span>22 Feb 2010</span> &raquo; <a href="/2010/02/22/install-pg-and-mysql-gems.html">Install pg and mysql gems</a></li>
-    
-      <li><span>20 Dec 2009</span> &raquo; <a href="/2009/12/20/proc-proc-blocks.html">Proc, proc, blocks</a></li>
     
   </ul>
 </div>
