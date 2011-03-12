@@ -425,6 +425,7 @@ input[type=submit]:focus{
   border: 1px solid #eee;
   font-family: Monaco;
   padding: 10px;
+  overflow: auto;
 }
 .entry-content ul,
 .entry-content ol{

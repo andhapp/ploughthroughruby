@@ -1,0 +1,10 @@
+---
+layout: post
+title: Ruby Hacking Guide - Chapter 1
+date_string: 12 March 2011
+---
+
+I have completed proof-reading and testing the code from old Ruby Hacking Guide and re-releases in the wild again. It still needs some styling work but I will hopefully find time to sort that out this week.
+
+In the meantime, have a [read through](http://rubyhacking.andhapp.co.uk/2011/01/30/chapter-1.html) and see if you spot any mistakes.
+
