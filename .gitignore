@@ -1,13 +1,5 @@
 .bundle/
 .sass-cache/
 .rvmrc
-_config.yml
-config.rb
-config.ru
-Gemfile
-Gemfile.lock
 Rakefile
-plugins/
-sass/
-source/
 vendor/
