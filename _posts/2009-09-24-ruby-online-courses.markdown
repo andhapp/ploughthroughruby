@@ -1,7 +1,0 @@
---- 
-layout: post
-title: Ruby online courses
-wordpress_id: 35
-wordpress_url: http://www.ploughthroughruby.co.uk/?p=35
----
-Anyone interested in learning ruby then head over to <a href="http://www.rubylearning.org">RubyLearning</a> blog with plethora of online courses. Some of them are free and some charge a very nominal price. I am currently scheduled to take Ruby Shoes course but there are others like: Ruby Core, ruby metaprogramming. I am enrolled and currently studying the ruby meta-programming course and it is fabulous. I paid $5 for it but it is compared to what you will achieve by the time you get to the other side. So, do not delay any further.

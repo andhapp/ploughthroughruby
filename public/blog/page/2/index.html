@@ -1,0 +1,758 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Plough => Ruby</title>
+  <meta name="author" content="andHapp">
+
+  
+  <meta name="description" content="I know you must be thinking proc and Proc is the same thing and I must have mistyped. But, proc and Proc are different things. Blocks is a beautifu...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="Plough => Ruby/blog/page/2/index.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Plough => Ruby" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Plough => Ruby</a></h1>
+  
+    <h2>Journey through ruby</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:Plough => Ruby" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/12/20/proc-proc-blocks.html/">Proc, Proc, Blocks</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-12-20T00:00:00+00:00" pubdate  data-updated="true" >Dec 20<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I know you must be thinking proc and Proc is the same thing and I must have mistyped. But, proc and Proc are different things. Blocks is a beautiful concept and you can achieve so much by using blocks carefully that it is unbelievable. I created a simple DSL using blocks and Faker gem to spit out XML used for testing purposes. I mean it took me few hours to do the first version up and running in Sinatra. Amazing.</p>
+
+<p>So, block is nothing more than bits of code within curly brackets. The concept of blocks is used excessively throughout Ruby in iterators like inject, select, map, each and so on and so forth. For example:</p>
+
+<pre>
+def example_from_a_block
+  puts "Should call a block"
+  yield 
+  puts "Yes, I did!"
+end
+</pre>
+
+
+<p>and invoke it like:</p>
+
+<pre>
+example_from_a_block { puts "in a block" }
+</pre>
+
+
+<p>But blocks do have problems. Not exactly problems, but yeah shortcoming for sure. They are not objects. So&#8230;what difference does it make if they are not objects. I don&#8217;t care man. I like them. Exactly you like blocks but you would love blocks wrapped as objects. Yes, these things do exist. They are called proc or lambda. So what is a proc then? It is basically a block but with object like features, I mean you can manipulate them and pass them around like regular objects. Cool.</p>
+
+<p>To create a proc, just do:</p>
+
+<pre>
+p = Proc.new { puts "I am a proc" }
+</pre>
+
+
+<p></p>
+
+<p>It is absolutely essential to pass a block to a proc. &#8220;p&#8221; is basically an instance of the class <a href="http://ruby-doc.org/core/classes/Proc.html">Proc</a>. Run this in you irb session and confim that it is indeed an object with an object_id:</p>
+
+<pre>
+p.object_id
+</pre>
+
+
+<p>Hmm&#8230;two down one to go. What exactly is a proc then. proc is just a simple global method, if you will, of the Kernel module. So, you can just invoke it like this:</p>
+
+<pre>
+kernels_proc_variable = proc {|a| a + 10 }
+</pre>
+
+
+<p>Now, proc behaves differently in Ruby 1.8 and Ruby 1.9. In 1.8, it returns a lambda where as in 1.9 it is a synonym for Proc.new. So, please be aware of this simple yet pivotal difference. Pivotal because lambda&#8217;s and proc&#8217;s are slightly different, although on the surface they look the same. They are both instances of Proc so let us just say they are siblings. There is so much more you can do with Procs and this post has just touched the surface of it. I will discuss lambda and closures in the coming posts and then compare them.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/11/19/ruby-streams-stdin-stdout-and-stderr.html/">Ruby Streams - $stdin, $stdout and $stderr</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-11-19T00:00:00+00:00" pubdate  data-updated="true" >Nov 19<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It is obvious from the subject that I am going to talk about the streams $stdin, $stdout and $stderr but it would be a fun ride with lots of examples and good explanations. However, there is another set of global variables called STDOUT, STDIN, STDERR. In addition to STDIN, there is ARGF and DATA for reading data in so you know you can research into these things.</p>
+
+<p>Any variable in ruby that starts with a $ sign is a global variable. You do not need to define it. It is given to you. Great!. Now, every ruby process on a UNIX (POSIX) system gives you three file descriptors stdin(fd0), stdout(fd1) and stderr(fd2). To generalise, every process is presumed to have three file descriptors, namely, standard output, standard input and standard error to communicate to the underlying OS. Since, ruby runs as a process it would also get these three file descriptors. So, $stderr, $stdout and $stdin are basically wrappers to those file descriptors and assist us in talking to the OS. Trivial operations like print this out on the console actually employs $stdout for outputting.</p>
+
+<p>What kind of objects are they? Let us go to good old irb and run some code. Run the code below:</p>
+
+<pre>
+$stdout.kind_of?(IO)
+</pre>
+
+
+<p>This would give you &#8220;true&#8221; which bascially means that $stdout is an IO object. <a href="http://ruby-doc.org/core/classes/IO.html#M002278">IO</a> is the main input output library in ruby. Do check out the rdoc for other exciting things you can do with it. Ok. Good that we have these file descriptors so what. I do not need to know how &#8220;puts&#8221; outputs stuff to the console. I just use it. Well, that is good but one should definitely have a good understanding of controlling where the output goes otherwise when someone asks you - <strong>&#8220;How do I redirect my output to a file instead of console?&#8221;</strong>, you would just sit there with no answer. So, let us try and find an answer to the same question so that you do not look like a fool.</p>
+
+<p>As it happens, we can actually redefine the $stdout. The following code would do exactly that when run in irb:</p>
+
+<pre>
+$stdout = File.open("test.log", "w")
+</pre>
+
+
+<p>It basically tells $stdout to spit everything out to a file called &#8220;test.log&#8221;. That&#8217;s it. Its done. Now, when you send a mesage to puts method it would use the newly defined $stdout and do the needful. Run this code in the same irb session as above and and see what happens:</p>
+
+<pre>
+puts "I am going to the file. It is more fun than printing on the cosole."
+</pre>
+
+
+<p>and you would not see this printed out in the console. Go and check the file test.log but to your surprise it would not be there. So, where the heck is it? Well, what happens is it is stored in a buffer and not written to the file until the buffer gets full (I am not entirely sure about this but I am guessing that would be the case). Now, if you terminate your irb session and check test.log you would find the entire ouput there but I do not want to end the session. I want to do the work and at the same time check the output. Well, not to worry the flush method does exactly that. Run this after every puts or print:</p>
+
+<pre>
+$stdout.flush
+</pre>
+
+
+<p>Voila! This clears the buffer and writes everthing to the file. So, there you are now you know how to redirect the output to a file. But hang on what if I want to go back to the console in the same session. Is that possible? Ofcourse, that is possible. Remember I told you about STDOUT at the beginning well that comes to the rescue. STDOUT and $stdout point to the same IO object. You can check that by running the following code in irb:</p>
+
+<pre>
+$stdout.equal?(STDOUT) 
+</pre>
+
+
+<p>and this gives you true, which proves my point. So, in order to go back to the original state you can just do this in order to redefine $stdout:</p>
+
+<pre>
+$stdout = STDOUT
+</pre>
+
+
+<p></p>
+
+<p>Simple! Now, when you do:</p>
+
+<pre>
+puts "Oh Em Gee, I am back on the console."
+</pre>
+
+
+<p></p>
+
+<p>You will see it straight away on your console. BTW, instead of $stdout you can redefine STDOUT and redirect the output to a file but puts or print would not be bothered about it as they use $stdout which is still pointing to the console.</p>
+
+<p>Now comes the most interesting bit of the whole post. Are system calles affected by the redefining of $stdout. You know system calls. Well, in ruby you can use a system method to call the underlying OS functions, for example:</p>
+
+<pre>
+system('ls -l')
+system('echo Wheeee')
+</pre>
+
+
+<p>So, the question is what happens when you redefine the $stdout does that affect the output of these system calls. And the answer is Nope, it does not. The child processes like system would still use the existing output channel that the ruby process had in the beginning. Redefining, $stdout would not change the file descriptor. The file descriptors are still there and when we redefine $stdout we just stop using them. But the native calls to the OS will still use the console for output.</p>
+
+<p>That was a long post! I hope now you are better equipped with the IO knowledge and how it all works in ruby.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/11/04/serendipity.html/">Serendipity</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-11-04T00:00:00+00:00" pubdate  data-updated="true" >Nov 4<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I accidently found a nifty way of calling <del datetime="2009-11-04T09:19:06+00:00">class</del> singleton methods. Imagine you have this code:</p>
+
+<pre>
+
+class FoundANewWay
+    def self.to_call_a_singleton_method
+        puts "It works!"
+    end
+end
+</pre>
+
+
+<p>and you can call it like this:</p>
+
+<pre>
+FoundANewWay.to_call_a_singleton_method
+
+or
+
+FoundANewWay::to_call_a_singleton_method
+</pre>
+
+
+<p>Cool!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/10/31/immediate-values.html/">Immediate Values</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-10-31T00:00:00+00:00" pubdate  data-updated="true" >Oct 31<span>st</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In a <a href="http://www.ploughthroughruby.co.uk/2009/08/is-variable-an-object/">previous post</a>, I have explained that variables are basically passed by values in ruby but since they have a reference to the original object any mutator methods can bascially modify the object itself. However, there are two exceptions to this; Fixnum and Symbol.</p>
+
+<p>Both, Fixnum and Symbol, store the values and have no reference to the object. This also applies that there are no mutator methods for Fixnum and Symbol and they are immutable. So, how can we actually prove this fact. Let us do a simple experiment and I think I might have done this before but I do not want you going back and forth between posts so let us just do it again. Run the code snippet and we are going through each step:</p>
+
+<pre>
+  fixnum_1 = 3
+  p fixnum_1.object_id
+  fixnum_2 = 3
+  p fixnum_2.object_id
+  str_1 = "3"
+  p str_1.object_id
+  str_2 = "3"
+  p str_2.object_id
+</pre>
+
+
+<p>You will see that both the fixnum variables have the same object_id where as with str variables they will be different. So, what does that mean? It simply means that two fixnums of same value always represent the same object instance, so instance variables for Fixnum with value 1 are shared across the system. The same is the case with Symbol.</p>
+
+<p>Ok. Fine. This makes perfect sense but why should I bother with all this explanation. Well, that is a million dollar question really and the answer to that is &#8220;You can&#8217;t define singleton methods on Fixnums and Symbols&#8221;. What? Why? I know this is confusing but when in doubt think of an example.</p>
+
+<p>We previously established that all the fixnum variables with same value are actually pointing to the same object instance. If let us say I want to define a singleton method on one then it would really define the singleton method on that object instance which means all the fixnum variables with same value would really share that new method you have added. Therefore, in order to cut that possibilty out one cannot define singleton methods on Fixnum, and Symbls.</p>
+
+<p>Update: I have just realised that true (TrueClass), false (FalseClass) and nil (NilClass) also store the references as immediate values. And, yes there is a TrueClass, FalseClass and NilClass and true, false and nil are singleton instances of these classes.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/10/31/class-names-are-constants.html/">Class Names Are Constants</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-10-31T00:00:00+00:00" pubdate  data-updated="true" >Oct 31<span>st</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Ruby is an object oriented programming. Let us look at a code sinpet:</p>
+
+<pre>
+ str =  String.new("ruby rocks")
+</pre>
+
+
+<p>So, we define a variable called &#8220;str&#8221;, which stores a pointer to the object created by sending &#8220;new&#8221; on &#8220;String&#8221;. Here, &#8220;String&#8221; receives the &#8220;new&#8221; message but for &#8220;String&#8221; to take any action when it receives &#8220;new&#8221; message it must have a reference to the object called String. Therefore, there must be a corresponding constant to every class in ruby. It can&#8217;t be a variable as it starts with an uppercase.</p>
+
+<p>Actually, that is exactly what happens. Every class in ruby has a global constant which stores a reference to the object and is used for method invocations. So, there are two things really one is the constant named String and the other is the object named String.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/10/09/ruby-object-model.html/">Ruby Object Model</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-10-09T00:00:00+01:00" pubdate  data-updated="true" >Oct 9<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Right, so you know Ruby&#8217;s object model. Well here&#8217;s a little code snippet by JRuby creator Ola Bini and it drives the point home really.</p>
+
+<pre>
+class Obj
+  def something
+    puts "calling simple"
+    @abc = 3*42
+    def something
+      puts "calling memoized"
+      @abc
+    end
+    something
+  end
+end
+
+o = Obj.new
+o.something
+o.something
+o.something
+
+</pre>
+
+
+<p>The output of the code is:</p>
+
+<pre>
+calling simple
+calling memoized
+calling memoized
+calling memoized
+</pre>
+
+
+<p>Let us look at the code and anaylise it. &#8216;o&#8217; is an instance of &#8216;Obj&#8217; class. &#8216;something&#8217; is an instance method of &#8216;O&#8217;, therefore it can access it. The first &#8216;o.something&#8217; would call the instance method defined in &#8216;Obj&#8217; class. So, it prints &#8220;calling simple&#8221; and then the second &#8216;something&#8217; defines a method on instance &#8216;o&#8217; because inside the first &#8216;something&#8217; self is same as instance &#8216;o&#8217;.</p>
+
+<p>Now, what do you get when you do something like this:</p>
+
+<pre>
+def o.something
+     puts "I am o's singleton method."
+end
+</pre>
+
+
+<p>Yes, you get a singleton method on the instance. In this case, that&#8217;s exactly what happens. The second &#8216;something&#8217; defines a singleton method on instance &#8216;o&#8217;.  We are still in the middle of executing the first something. The last line of the first something (or the outer something) calls the method &#8216;something&#8217;. What the hell? Cyclic messaging!!!! Never ending loop. Yeah, but the code runs and exits gracefully.</p>
+
+<p>Well, the call to &#8216;something&#8217; would actually go and look for &#8216;something&#8217; method and before it finds a &#8216;something&#8217; method defined in the class &#8216;Obj&#8217; it would find the singleton-method &#8216;something&#8217; and execute that. So, what would that print. Yeah, you are right it prints &#8220;calling memoized&#8221;. The second and third calls to something will again encounter the &#8216;something&#8217; singleton method and execute that and it would not bother to go and look for the something defined as an instance method in class &#8216;Obj&#8217;.</p>
+
+<p>I know you are confused. Why would it go and look for the singleton method and not the instance method. This is the magic behind Ruby&#8217;s object model. Please head over to Ola Bini&#8217;s blog and read the article on <a href="http://ola-bini.blogspot.com/search/label/metaprogramming">metaprogramming</a>. He goes into a lot more detail.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/09/30/define_method-instance_eval-and-class_eval.html/">Define_method, Instance_eval and Class_eval</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-09-30T00:00:00+01:00" pubdate  data-updated="true" >Sep 30<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Right, so this is a tad confusing and the reason I am explaining is to ensure that I understand it properly.</p>
+
+<p><strong>instance_eval</strong> - It creates singleton methods on the object it is invoked on. If it is invoked on a Class object then these methods become singleton methods of the class. Some people would call them <del datetime="2009-09-30T19:13:53+00:00">&#8220;class methods&#8221;</del> but these are simply methods in an object&#8217;s singleton class. Here&#8217;s the code:</p>
+
+<pre>
+SomeObject.instance_eval (def singleton_method; "singleton_method";end)
+</pre>
+
+
+<p><strong>class_eval</strong> - It creates an instance method on the object. Simple there is nothing confusing about this. Here&#8217;s an example:</p>
+
+<pre>
+SomeObject.class_eval(def instance_method;"instance_method";end)
+</pre>
+
+
+<p>Now, define method when used inside either class_eval or instance_eval s immune to the usual behaviour.</p>
+
+<p>Why, you may ask?</p>
+
+<p>Because the documentation says so. As per the documentation &#8220;define method - Defines an instance method in the receiver&#8221;. Therefore, it does not matter if you use define_method inside class_eval or instance_eval it would always create an instance method. Now, the question to ask is - &#8220;Is there no way to define a singleton method using defne_method?&#8221;. Well, I still need to investigate that. It would probably be in an update to this post. Hope it all makes sense. Ruby metaprogramming is awesome only if you know what you are doing and to get to that stage one needs to spend countless hours metaprogramming.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/09/24/ruby-online-courses.html/">Ruby Online Courses</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-09-24T00:00:00+01:00" pubdate  data-updated="true" >Sep 24<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Anyone interested in learning ruby then head over to <a href="http://www.rubylearning.org">RubyLearning</a> blog with plethora of online courses. Some of them are free and some charge a very nominal price. I am currently scheduled to take Ruby Shoes course but there are others like: Ruby Core, ruby metaprogramming. I am enrolled and currently studying the ruby meta-programming course and it is fabulous. I paid $5 for it but it is compared to what you will achieve by the time you get to the other side. So, do not delay any further.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/09/24/ruby-idioms.html/">Ruby Idioms</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-09-24T00:00:00+01:00" pubdate  data-updated="true" >Sep 24<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>You can write a complete ruby script as a string and run it. Ruby (rather MRI) would just evalutae the string by executing it. For example:</p>
+
+<pre>
+"#{def x(s); puts(s.reverse); end; ('1'..'3').each{|aStr| x(aStr)} }"
+</pre>
+
+
+<p>This is absolutely valid.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/08/24/excellent-tutorial-on-casewhen.html/">Excellent Tutorial on Case/when</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-08-24T00:00:00+01:00" pubdate  data-updated="true" >Aug 24<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://www.skorks.com">Alan</a> seems to be doing an excellent job of explaining Ruby language. <a href="http://www.skorks.com/2009/08/how-a-ruby-case-statement-works-and-what-you-can-do-with-it/">Here&#8217;s</a> another great article on case statements in Ruby.</p>
+
+<p>Enjoy.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <nav class="pagination">
+    <div>
+      
+        <a class="prev" href="/blog/page/3/">&larr; Older</a>
+      
+      <a href="/blog/archives">Blog Archives</a>
+      
+      <a class="next" href="/">Newer &rarr;</a>
+      
+    </div>
+  </nav>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2011/04/21/inconsistent-hashes.html/">Inconsistent hashes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/04/17/an-interesting-ruby-method.html/">An Interesting Ruby Method</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/03/12/ruby-hacking-guide-chapter-1.html/">Ruby Hacking Guide - Chapter 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/03/12/free-ruby-1.9-online-book.html/">Free Ruby 1.9 Online Book</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2011/01/21/ruby-file-append-mode.html/">Ruby File append mode</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2011 - andHapp -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-7379349-5']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
