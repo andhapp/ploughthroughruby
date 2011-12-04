@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="Plough => Ruby/atom.xml&#8221; rel=&#8221;self&#8221;/>
   <link href="Plough => Ruby/&#8221;/>
-  <updated>2011-10-17T06:23:28+01:00</updated>
+  <updated>2011-12-04T23:15:59+00:00</updated>
   <id>Plough => Ruby/</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -14,9 +14,103 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Installing any Ruby source on your local machine with RVM]]></title>
+    <link href="Plough => Ruby/2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm.html/&#8221;/>
+    <updated>2011-12-04T00:00:00+00:00</updated>
+    <id>Plough => Ruby/2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm</id>
+    <content type="html"><![CDATA[<p>Now, if you are like me you probably have ruby source checked out on your machine to ensure that you stay informed with the newest features and ponder through the ruby source at will. I started wondering what if I want to install the ruby from the source and test my gems out and test it against well-known libraries to see how they fare. Firstly, I thought of doing the ./configure -> make -> make install dance but then I realised&#8230;yes you&#8217;re absolutely right, why not use <a href="https://github.com/wayneeseguin/rvm">RVM</a>.</p>
+
+<p>What RVM? I must be out of mind.</p>
+
+<p>But, hey, RVM downloads ruby source code and installs it on your machine. The only difference is that I have got the ruby source checked-out on my machine and I want to use that as the source. And yes, RVM is awesome. I have spoken to <a href="https://github.com/wayneeseguin">Wayne</a> (via IRC) and the man is an absolute genius, very polite and helpful.</p>
+
+<p>So, somehow, I need to accomplish the following:</p>
+
+<ul>
+<li>Hey RVM, don&#8217;t download the ruby source.</li>
+<li>Here&#8217;s the location of the ruby source, use that and install it.</li>
+<li>Voila!</li>
+</ul>
+
+
+<p>But, how do I do that? I started looking at RVM source code and I am not an expert at bash scripting, so I figured why not just mail RVM mailing list. I got the following helpful response from <a href="https://github.com/mpapis">Micheal Papis</a>.</p>
+
+<pre>
+it's not yet supported to use sources/rubies provided by user, but it
+will be in rvm 2.0
+
+as for using it now, you could use $rvm_path/src - and provide your
+sources there ... not sure how it will work, you have to experiment a
+bit
+</pre>
+
+
+<p>That clue was enough for me and like he said, I experimented a little bit. When you run something like:</p>
+
+<pre>
+rvm install ruby-1.9.2
+</pre>
+
+
+<p>RVM downloads the source code into $rvm_path/repos, moves it over to $rvm_path/src and then does the configure, compile dance. I created a symlink in $rvm_path/repos pointing at the local ruby git repository on my machine. And, then I ran the install command. Here&#8217;s the output I get:</p>
+
+<pre>
+~/.rvm/src$ rvm install ruby-head
+Installing Ruby from source to: /Users/andhapp/.rvm/rubies/ruby-head, this may take a while depending on your cpu(s)...
+
+ruby-head - #fetching 
+HEAD is now at 02035ba Merge branch 'trunk' of git://github.com/ruby/ruby into trunk
+
+From github.com:andhapp/ruby
+ * branch            trunk      -> FETCH_HEAD
+Already up-to-date.
+Copying from repo to src path...
+ruby-head - #configuring 
+ruby-head - #compiling 
+ruby-head - #installing 
+Retrieving rubygems-1.8.10
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  243k  100  243k    0     0   456k      0 --:--:-- --:--:-- --:--:--  540k
+
+Extracting rubygems-1.8.10 ...
+Removing old Rubygems files...
+-e:1: Use RbConfig instead of obsolete and deprecated Config.
+Installing rubygems-1.8.10 for ruby-head ...
+Installation of rubygems completed successfully.
+ruby-head - adjusting #shebangs for (gem irb erb ri rdoc testrb rake).
+ruby-head - #importing default gemsets (/Users/andhapp/.rvm/gemsets/)
+Install of ruby-head - #complete 
+
+</pre>
+
+
+<p>This line &#8216;HEAD is now at 02035ba Merge branch &#8216;trunk&#8217; of git://github.com/ruby/ruby into trunk&#8217; is the last commit message on my local ruby git repository.</p>
+
+<p>This line &#8216;From github.com:andhapp/ruby&#8217; reflects the fact that rvm is using my git repository and not ruby&#8217;s repository and updating the local source to the latest before installing.</p>
+
+<p>I decided to call the ruby installation ruby-head. You can call it anything you fancy.</p>
+
+<p>Here&#8217;s the version on my machine now:</p>
+
+<pre>
+~/.rvm/src$ rvm use ruby-head
+Using /Users/andhapp/.rvm/gems/ruby-head
+~/.rvm/src$ ruby -v
+ruby 2.0.0dev (2011-12-03 trunk 33936) [x86_64-darwin10.8.0]
+</pre>
+
+
+<p>Awesome!</p>
+
+<p>PS: I am sure there are other details about RVM&#8217;s installation procedure that I have missed out and Wayne or Micheal will be kind enough to enlighten me.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Inconsistent hashes]]></title>
     <link href="Plough => Ruby/2011/04/21/inconsistent-hashes.html/&#8221;/>
-    <updated>2011-04-21T00:00:00+01:00</updated>
+    <updated>2011-04-21T00:00:00+00:00</updated>
     <id>Plough => Ruby/2011/04/21/inconsistent-hashes</id>
     <content type="html"><![CDATA[<p>To clarify, hashes here does not mean the Hash class. Object&#8217;s in ruby have a hash method that returns a hash code for an object. The hash is also used in the background by the eql? method. So, it&#8217;s safe to say that two objects are equal if their hash methods return the same value.</p>
 
@@ -36,7 +130,7 @@
   <entry>
     <title type="html"><![CDATA[An Interesting Ruby Method]]></title>
     <link href="Plough => Ruby/2011/04/17/an-interesting-ruby-method.html/&#8221;/>
-    <updated>2011-04-17T00:00:00+01:00</updated>
+    <updated>2011-04-17T00:00:00+00:00</updated>
     <id>Plough => Ruby/2011/04/17/an-interesting-ruby-method</id>
     <content type="html"><![CDATA[<p>In this post, I will talk about a ruby method that I had no idea existed which might come handy in debugging your code.</p>
 
@@ -226,7 +320,7 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
   <entry>
     <title type="html"><![CDATA[Paperclip and rescue]]></title>
     <link href="Plough => Ruby/2010/07/06/paperclip-and-rescue.html/&#8221;/>
-    <updated>2010-07-06T00:00:00+01:00</updated>
+    <updated>2010-07-06T00:00:00+00:00</updated>
     <id>Plough => Ruby/2010/07/06/paperclip-and-rescue</id>
     <content type="html"><![CDATA[<p>Reading Open Source Code is probably the best way of learning new ways. Paperclip is an amazing file upload tool by brilliant guys at Thoughtbot. And yesterday, while going through their code I realised that <strong>rescue</strong> can be used as a statement modifier. For example, consider this block of code below:</p>
 
@@ -496,7 +590,7 @@ FoundANewWay::to_call_a_singleton_method
   <entry>
     <title type="html"><![CDATA[Ruby object model]]></title>
     <link href="Plough => Ruby/2009/10/09/ruby-object-model.html/&#8221;/>
-    <updated>2009-10-09T00:00:00+01:00</updated>
+    <updated>2009-10-09T00:00:00+00:00</updated>
     <id>Plough => Ruby/2009/10/09/ruby-object-model</id>
     <content type="html"><![CDATA[<p>Right, so you know Ruby&#8217;s object model. Well here&#8217;s a little code snippet by JRuby creator Ola Bini and it drives the point home really.</p>
 
@@ -553,7 +647,7 @@ end
   <entry>
     <title type="html"><![CDATA[define_method, instance_eval and class_eval]]></title>
     <link href="Plough => Ruby/2009/09/30/define_method-instance_eval-and-class_eval.html/&#8221;/>
-    <updated>2009-09-30T00:00:00+01:00</updated>
+    <updated>2009-09-30T00:00:00+00:00</updated>
     <id>Plough => Ruby/2009/09/30/define_method-instance_eval-and-class_eval</id>
     <content type="html"><![CDATA[<p>Right, so this is a tad confusing and the reason I am explaining is to ensure that I understand it properly.</p>
 
@@ -582,7 +676,7 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
   <entry>
     <title type="html"><![CDATA[Ruby online courses]]></title>
     <link href="Plough => Ruby/2009/09/24/ruby-online-courses.html/&#8221;/>
-    <updated>2009-09-24T00:00:00+01:00</updated>
+    <updated>2009-09-24T00:00:00+00:00</updated>
     <id>Plough => Ruby/2009/09/24/ruby-online-courses</id>
     <content type="html"><![CDATA[<p>Anyone interested in learning ruby then head over to <a href="http://www.rubylearning.org">RubyLearning</a> blog with plethora of online courses. Some of them are free and some charge a very nominal price. I am currently scheduled to take Ruby Shoes course but there are others like: Ruby Core, ruby metaprogramming. I am enrolled and currently studying the ruby meta-programming course and it is fabulous. I paid $5 for it but it is compared to what you will achieve by the time you get to the other side. So, do not delay any further.</p>
 ]]></content>
@@ -591,7 +685,7 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
   <entry>
     <title type="html"><![CDATA[Ruby idioms]]></title>
     <link href="Plough => Ruby/2009/09/24/ruby-idioms.html/&#8221;/>
-    <updated>2009-09-24T00:00:00+01:00</updated>
+    <updated>2009-09-24T00:00:00+00:00</updated>
     <id>Plough => Ruby/2009/09/24/ruby-idioms</id>
     <content type="html"><![CDATA[<p>You can write a complete ruby script as a string and run it. Ruby (rather MRI) would just evalutae the string by executing it. For example:</p>
 
@@ -601,17 +695,6 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
 
 
 <p>This is absolutely valid.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Excellent tutorial on case/when]]></title>
-    <link href="Plough => Ruby/2009/08/24/excellent-tutorial-on-casewhen.html/&#8221;/>
-    <updated>2009-08-24T00:00:00+01:00</updated>
-    <id>Plough => Ruby/2009/08/24/excellent-tutorial-on-casewhen</id>
-    <content type="html"><![CDATA[<p><a href="http://www.skorks.com">Alan</a> seems to be doing an excellent job of explaining Ruby language. <a href="http://www.skorks.com/2009/08/how-a-ruby-case-statement-works-and-what-you-can-do-with-it/">Here&#8217;s</a> another great article on case statements in Ruby.</p>
-
-<p>Enjoy.</p>
 ]]></content>
   </entry>
   

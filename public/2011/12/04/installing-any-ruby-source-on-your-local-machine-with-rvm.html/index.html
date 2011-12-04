@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Proc, proc, blocks - Plough => Ruby</title>
+  <title>Installing any Ruby source on your local machine with RVM - Plough => Ruby</title>
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="I know you must be thinking proc and Proc is the same thing and I must have mistyped. But, proc and Proc are different things. Blocks is a beautifu...">
+  <meta name="description" content="Now, if you are like me you probably have ruby source checked out on your machine to ensure that you stay informed with the newest features and pon...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="Plough => Ruby/2009/12/20/proc-proc-blocks.html/">
+  <link rel="canonical" href="Plough => Ruby/2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm.html/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -63,7 +63,7 @@
   
   <header>
     
-      <h1 class="entry-title">Proc, Proc, Blocks</h1>
+      <h1 class="entry-title">Installing Any Ruby Source on Your Local Machine With RVM</h1>
     
     
       <p class="meta">
@@ -77,59 +77,99 @@
 
 
 
-<time datetime="2009-12-20T00:00:00+00:00" pubdate  data-updated="true" >Dec 20<span>th</span>, 2009</time>
+<time datetime="2011-12-04T00:00:00+00:00" pubdate  data-updated="true" >Dec 4<span>th</span>, 2011</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I know you must be thinking proc and Proc is the same thing and I must have mistyped. But, proc and Proc are different things. Blocks is a beautiful concept and you can achieve so much by using blocks carefully that it is unbelievable. I created a simple DSL using blocks and Faker gem to spit out XML used for testing purposes. I mean it took me few hours to do the first version up and running in Sinatra. Amazing.</p>
+<div class="entry-content"><p>Now, if you are like me you probably have ruby source checked out on your machine to ensure that you stay informed with the newest features and ponder through the ruby source at will. I started wondering what if I want to install the ruby from the source and test my gems out and test it against well-known libraries to see how they fare. Firstly, I thought of doing the ./configure -> make -> make install dance but then I realised&#8230;yes you&#8217;re absolutely right, why not use <a href="https://github.com/wayneeseguin/rvm">RVM</a>.</p>
 
-<p>So, block is nothing more than bits of code within curly brackets. The concept of blocks is used excessively throughout Ruby in iterators like inject, select, map, each and so on and so forth. For example:</p>
+<p>What RVM? I must be out of mind.</p>
+
+<p>But, hey, RVM downloads ruby source code and installs it on your machine. The only difference is that I have got the ruby source checked-out on my machine and I want to use that as the source. And yes, RVM is awesome. I have spoken to <a href="https://github.com/wayneeseguin">Wayne</a> (via IRC) and the man is an absolute genius, very polite and helpful.</p>
+
+<p>So, somehow, I need to accomplish the following:</p>
+
+<ul>
+<li>Hey RVM, don&#8217;t download the ruby source.</li>
+<li>Here&#8217;s the location of the ruby source, use that and install it.</li>
+<li>Voila!</li>
+</ul>
+
+
+<p>But, how do I do that? I started looking at RVM source code and I am not an expert at bash scripting, so I figured why not just mail RVM mailing list. I got the following helpful response from <a href="https://github.com/mpapis">Micheal Papis</a>.</p>
 
 <pre>
-def example_from_a_block
-  puts "Should call a block"
-  yield 
-  puts "Yes, I did!"
-end
+it's not yet supported to use sources/rubies provided by user, but it
+will be in rvm 2.0
+
+as for using it now, you could use $rvm_path/src - and provide your
+sources there ... not sure how it will work, you have to experiment a
+bit
 </pre>
 
 
-<p>and invoke it like:</p>
+<p>That clue was enough for me and like he said, I experimented a little bit. When you run something like:</p>
 
 <pre>
-example_from_a_block { puts "in a block" }
+rvm install ruby-1.9.2
 </pre>
 
 
-<p>But blocks do have problems. Not exactly problems, but yeah shortcoming for sure. They are not objects. So&#8230;what difference does it make if they are not objects. I don&#8217;t care man. I like them. Exactly you like blocks but you would love blocks wrapped as objects. Yes, these things do exist. They are called proc or lambda. So what is a proc then? It is basically a block but with object like features, I mean you can manipulate them and pass them around like regular objects. Cool.</p>
-
-<p>To create a proc, just do:</p>
+<p>RVM downloads the source code into $rvm_path/repos, moves it over to $rvm_path/src and then does the configure, compile dance. I created a symlink in $rvm_path/repos pointing at the local ruby git repository on my machine. And, then I ran the install command. Here&#8217;s the output I get:</p>
 
 <pre>
-p = Proc.new { puts "I am a proc" }
+~/.rvm/src$ rvm install ruby-head
+Installing Ruby from source to: /Users/andhapp/.rvm/rubies/ruby-head, this may take a while depending on your cpu(s)...
+
+ruby-head - #fetching 
+HEAD is now at 02035ba Merge branch 'trunk' of git://github.com/ruby/ruby into trunk
+
+From github.com:andhapp/ruby
+ * branch            trunk      -> FETCH_HEAD
+Already up-to-date.
+Copying from repo to src path...
+ruby-head - #configuring 
+ruby-head - #compiling 
+ruby-head - #installing 
+Retrieving rubygems-1.8.10
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  243k  100  243k    0     0   456k      0 --:--:-- --:--:-- --:--:--  540k
+
+Extracting rubygems-1.8.10 ...
+Removing old Rubygems files...
+-e:1: Use RbConfig instead of obsolete and deprecated Config.
+Installing rubygems-1.8.10 for ruby-head ...
+Installation of rubygems completed successfully.
+ruby-head - adjusting #shebangs for (gem irb erb ri rdoc testrb rake).
+ruby-head - #importing default gemsets (/Users/andhapp/.rvm/gemsets/)
+Install of ruby-head - #complete 
+
 </pre>
 
 
-<p></p>
+<p>This line &#8216;HEAD is now at 02035ba Merge branch &#8216;trunk&#8217; of git://github.com/ruby/ruby into trunk&#8217; is the last commit message on my local ruby git repository.</p>
 
-<p>It is absolutely essential to pass a block to a proc. &#8220;p&#8221; is basically an instance of the class <a href="http://ruby-doc.org/core/classes/Proc.html">Proc</a>. Run this in you irb session and confim that it is indeed an object with an object_id:</p>
+<p>This line &#8216;From github.com:andhapp/ruby&#8217; reflects the fact that rvm is using my git repository and not ruby&#8217;s repository and updating the local source to the latest before installing.</p>
+
+<p>I decided to call the ruby installation ruby-head. You can call it anything you fancy.</p>
+
+<p>Here&#8217;s the version on my machine now:</p>
 
 <pre>
-p.object_id
+~/.rvm/src$ rvm use ruby-head
+Using /Users/andhapp/.rvm/gems/ruby-head
+~/.rvm/src$ ruby -v
+ruby 2.0.0dev (2011-12-03 trunk 33936) [x86_64-darwin10.8.0]
 </pre>
 
 
-<p>Hmm&#8230;two down one to go. What exactly is a proc then. proc is just a simple global method, if you will, of the Kernel module. So, you can just invoke it like this:</p>
+<p>Awesome!</p>
 
-<pre>
-kernels_proc_variable = proc {|a| a + 10 }
-</pre>
-
-
-<p>Now, proc behaves differently in Ruby 1.8 and Ruby 1.9. In 1.8, it returns a lambda where as in 1.9 it is a synonym for Proc.new. So, please be aware of this simple yet pivotal difference. Pivotal because lambda&#8217;s and proc&#8217;s are slightly different, although on the surface they look the same. They are both instances of Proc so let us just say they are siblings. There is so much more you can do with Procs and this post has just touched the surface of it. I will discuss lambda and closures in the coming posts and then compare them.</p>
+<p>PS: I am sure there are other details about RVM&#8217;s installation procedure that I have missed out and Wayne or Micheal will be kind enough to enlighten me.</p>
 </div>
 
 
@@ -150,7 +190,7 @@ kernels_proc_variable = proc {|a| a + 10 }
 
 
 
-<time datetime="2009-12-20T00:00:00+00:00" pubdate  data-updated="true" >Dec 20<span>th</span>, 2009</time>
+<time datetime="2011-12-04T00:00:00+00:00" pubdate  data-updated="true" >Dec 4<span>th</span>, 2011</time>
       
 
 
@@ -158,7 +198,7 @@ kernels_proc_variable = proc {|a| a + 10 }
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2009/12/20/proc-proc-blocks.html/" data-via="" data-counturl="Plough => Ruby/2009/12/20/proc-proc-blocks.html/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm.html/" data-via="" data-counturl="Plough => Ruby/2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm.html/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -171,10 +211,8 @@ kernels_proc_variable = proc {|a| a + 10 }
     
     <p class="meta">
        
-        <a class="basic-alignment left" href="/2009/11/19/ruby-streams-stdin-stdout-and-stderr.html/" title="Previous Post: Ruby streams - $stdin, $stdout and $stderr">&laquo; Ruby streams - $stdin, $stdout and $stderr</a>
+        <a class="basic-alignment left" href="/2011/04/21/inconsistent-hashes.html/" title="Previous Post: Inconsistent hashes">&laquo; Inconsistent hashes</a>
       
-       
-        <a class="basic-alignment right" href="/2010/02/22/install-pg-and-mysql-gems.html/" title="next Post: Install pg and mysql gems">Install pg and mysql gems &raquo;</a>
       
     </p>
   </footer>
