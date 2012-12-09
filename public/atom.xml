@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="Plough => Ruby/atom.xml&#8221; rel=&#8221;self&#8221;/>
   <link href="Plough => Ruby/&#8221;/>
-  <updated>2012-12-09T11:36:19+00:00</updated>
+  <updated>2012-12-09T11:53:21+00:00</updated>
   <id>Plough => Ruby/</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -12,62 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[Install ruby that plays nicely with rvm]]></title>
-    <link href="Plough => Ruby/2012/10/12/install-ruby-that-plays-nicely-with-rvm.html/&#8221;/>
-    <updated>2012-10-12T00:00:00+01:00</updated>
-    <id>Plough => Ruby/2012/10/12/install-ruby-that-plays-nicely-with-rvm</id>
-    <content type="html"><![CDATA[<p>Why am I doing this? Well, I wanted to try Aaron Patterson&#8217;s probes
-branch to play with dtrace probes that he has added. Installing ruby is
-easy but I want it to work with rvm as well. I can render the responsibility
-of changing to the right version to rvm. I don&#8217;t want to write my own rvm,
-although the temptation to write one is high.</p>
-
-<p>All we have to do is instal ruby, I mean, do the
-configure-make-make-install dance, but ensure to specify the correct
-location of where it should be installed to. You can do that with
-&#8211;prefix option, as shown in the example below:</p>
-
-<p>First, checkout the ruby source code that you&#8217;d like to install and
-change into that directory. Then, execute the following commands one by
-one.</p>
-
-<pre>
-./configure --prefix=~/.rvm/rubies/ruby2-probes
-make
-make install (if you do sudo then, you do have to give access to rvm)
-</pre>
-
-
-<p>rvm installs ruby versions in ~/.rvm/rubies directory. Make sure to check
-it before you run the configure command. This will take a little while,
-so make yourself a cup of tea. This isntallation will install ruby but
-that doesn&#8217;t hook it up with rvm yet.</p>
-
-<p>Create a config file for rvm</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[What the heck is libffi?]]></title>
-    <link href="Plough => Ruby/2012/03/29/what-the-heck-is-libffi.html/&#8221;/>
-    <updated>2012-03-29T00:00:00+01:00</updated>
-    <id>Plough => Ruby/2012/03/29/what-the-heck-is-libffi</id>
-    <content type="html"><![CDATA[<p>Compilers know of the calling conventions on various different
-architectures and in different programming languages. Calling
-conventions are a set a rules that define where the function arguments
-are stored on entry and where the final result is stored on exit.</p>
-
-<ul>
-<li>http://techbrahmana.blogspot.co.uk/2008/08/how-libffi-actually-works.html</li>
-<li>https://github.com/ffi/ffi/wiki/Core-Concepts#wiki-arch</li>
-<li>http://groups.google.com/group/ruby-ffi/browse_thread/thread/4762fc77130339b1</li>
-<li>http://sourceware.org/libffi/</li>
-</ul>
-
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[Installing any Ruby source on your local machine with RVM]]></title>
@@ -729,6 +673,31 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
 <p>Why, you may ask?</p>
 
 <p>Because the documentation says so. As per the documentation &#8220;define method - Defines an instance method in the receiver&#8221;. Therefore, it does not matter if you use define_method inside class_eval or instance_eval it would always create an instance method. Now, the question to ask is - &#8220;Is there no way to define a singleton method using defne_method?&#8221;. Well, I still need to investigate that. It would probably be in an update to this post. Hope it all makes sense. Ruby metaprogramming is awesome only if you know what you are doing and to get to that stage one needs to spend countless hours metaprogramming.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby online courses]]></title>
+    <link href="Plough => Ruby/2009/09/24/ruby-online-courses.html/&#8221;/>
+    <updated>2009-09-24T00:00:00+01:00</updated>
+    <id>Plough => Ruby/2009/09/24/ruby-online-courses</id>
+    <content type="html"><![CDATA[<p>Anyone interested in learning ruby then head over to <a href="http://www.rubylearning.org">RubyLearning</a> blog with plethora of online courses. Some of them are free and some charge a very nominal price. I am currently scheduled to take Ruby Shoes course but there are others like: Ruby Core, ruby metaprogramming. I am enrolled and currently studying the ruby meta-programming course and it is fabulous. I paid $5 for it but it is compared to what you will achieve by the time you get to the other side. So, do not delay any further.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby idioms]]></title>
+    <link href="Plough => Ruby/2009/09/24/ruby-idioms.html/&#8221;/>
+    <updated>2009-09-24T00:00:00+01:00</updated>
+    <id>Plough => Ruby/2009/09/24/ruby-idioms</id>
+    <content type="html"><![CDATA[<p>You can write a complete ruby script as a string and run it. Ruby (rather MRI) would just evalutae the string by executing it. For example:</p>
+
+<pre>
+"#{def x(s); puts(s.reverse); end; ('1'..'3').each{|aStr| x(aStr)} }"
+</pre>
+
+
+<p>This is absolutely valid.</p>
 ]]></content>
   </entry>
   
