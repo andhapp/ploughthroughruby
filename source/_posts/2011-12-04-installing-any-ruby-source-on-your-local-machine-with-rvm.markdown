@@ -5,7 +5,8 @@ date_string: 04 December 2011
 ---
 
 Update:
-*This approach doesn't work with the latest version of rvm.*
+*This approach doesn't work with the latest version of rvm (1.17.0
+stable)*
 
 
 Now, if you are like me you probably have ruby source checked out on your machine to ensure that you stay informed with the newest features and ponder through the ruby source at will. I started wondering what if I want to install the ruby from the source and test my gems out and test it against well-known libraries to see how they fare. Firstly, I thought of doing the ./configure -> make -> make install dance but then I realised...yes you're absolutely right, why not use [RVM](https://github.com/wayneeseguin/rvm).

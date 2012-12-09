@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="Plough => Ruby/atom.xml&#8221; rel=&#8221;self&#8221;/>
   <link href="Plough => Ruby/&#8221;/>
-  <updated>2012-12-09T11:53:21+00:00</updated>
+  <updated>2012-12-09T12:10:11+00:00</updated>
   <id>Plough => Ruby/</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -19,7 +19,8 @@
     <updated>2011-12-04T00:00:00+00:00</updated>
     <id>Plough => Ruby/2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm</id>
     <content type="html"><![CDATA[<p>Update:
-<em>This approach doesn&#8217;t work with the latest version of rvm.</em></p>
+<em>This approach doesn&#8217;t work with the latest version of rvm (1.17.0
+stable)</em></p>
 
 <p>Now, if you are like me you probably have ruby source checked out on your machine to ensure that you stay informed with the newest features and ponder through the ruby source at will. I started wondering what if I want to install the ruby from the source and test my gems out and test it against well-known libraries to see how they fare. Firstly, I thought of doing the ./configure -> make -> make install dance but then I realised&#8230;yes you&#8217;re absolutely right, why not use <a href="https://github.com/wayneeseguin/rvm">RVM</a>.</p>
 
