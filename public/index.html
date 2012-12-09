@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Now, if you are like me you probably have ruby source checked out on your machine to ensure that you stay informed with the newest features and pon...">
+  <meta name="description" content="Why am I doing this? Well, I wanted to try Aaron Patterson&#8217;s probesbranch to play with dtrace probes that he has added. Installing ruby iseas...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,112 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/2012/10/12/install-ruby-that-plays-nicely-with-rvm.html/">Install Ruby That Plays Nicely With Rvm</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2012-10-12T00:00:00+01:00" pubdate  data-updated="true" >Oct 12<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Why am I doing this? Well, I wanted to try Aaron Patterson&#8217;s probes
+branch to play with dtrace probes that he has added. Installing ruby is
+easy but I want it to work with rvm as well. I can render the responsibility
+of changing to the right version to rvm. I don&#8217;t want to write my own rvm,
+although the temptation to write one is high.</p>
+
+<p>All we have to do is instal ruby, I mean, do the
+configure-make-make-install dance, but ensure to specify the correct
+location of where it should be installed to. You can do that with
+&#8211;prefix option, as shown in the example below:</p>
+
+<p>First, checkout the ruby source code that you&#8217;d like to install and
+change into that directory. Then, execute the following commands one by
+one.</p>
+
+<pre>
+./configure --prefix=~/.rvm/rubies/ruby2-probes
+make
+make install (if you do sudo then, you do have to give access to rvm)
+</pre>
+
+
+<p>rvm installs ruby versions in ~/.rvm/rubies directory. Make sure to check
+it before you run the configure command. This will take a little while,
+so make yourself a cup of tea. This isntallation will install ruby but
+that doesn&#8217;t hook it up with rvm yet.</p>
+
+<p>Create a config file for rvm</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2012/03/29/what-the-heck-is-libffi.html/">What the Heck Is Libffi?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2012-03-29T00:00:00+01:00" pubdate  data-updated="true" >Mar 29<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Compilers know of the calling conventions on various different
+architectures and in different programming languages. Calling
+conventions are a set a rules that define where the function arguments
+are stored on entry and where the final result is stored on exit.</p>
+
+<ul>
+<li>http://techbrahmana.blogspot.co.uk/2008/08/how-libffi-actually-works.html</li>
+<li>https://github.com/ffi/ffi/wiki/Core-Concepts#wiki-arch</li>
+<li>http://groups.google.com/group/ruby-ffi/browse_thread/thread/4762fc77130339b1</li>
+<li>http://sourceware.org/libffi/</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm.html/">Installing Any Ruby Source on Your Local Machine With RVM</a></h1>
     
     
@@ -87,7 +193,10 @@
   </header>
 
 
-  <div class="entry-content"><p>Now, if you are like me you probably have ruby source checked out on your machine to ensure that you stay informed with the newest features and ponder through the ruby source at will. I started wondering what if I want to install the ruby from the source and test my gems out and test it against well-known libraries to see how they fare. Firstly, I thought of doing the ./configure -> make -> make install dance but then I realised&#8230;yes you&#8217;re absolutely right, why not use <a href="https://github.com/wayneeseguin/rvm">RVM</a>.</p>
+  <div class="entry-content"><p>Update:
+<em>This approach doesn&#8217;t work with the latest version of rvm.</em></p>
+
+<p>Now, if you are like me you probably have ruby source checked out on your machine to ensure that you stay informed with the newest features and ponder through the ruby source at will. I started wondering what if I want to install the ruby from the source and test my gems out and test it against well-known libraries to see how they fare. Firstly, I thought of doing the ./configure -> make -> make install dance but then I realised&#8230;yes you&#8217;re absolutely right, why not use <a href="https://github.com/wayneeseguin/rvm">RVM</a>.</p>
 
 <p>What RVM? I must be out of mind.</p>
 
@@ -199,7 +308,7 @@ ruby 2.0.0dev (2011-12-03 trunk 33936) [x86_64-darwin10.8.0]
 
 
 
-<time datetime="2011-04-21T00:00:00+00:00" pubdate  data-updated="true" >Apr 21<span>st</span>, 2011</time>
+<time datetime="2011-04-21T00:00:00+01:00" pubdate  data-updated="true" >Apr 21<span>st</span>, 2011</time>
         
       </p>
     
@@ -244,7 +353,7 @@ ruby 2.0.0dev (2011-12-03 trunk 33936) [x86_64-darwin10.8.0]
 
 
 
-<time datetime="2011-04-17T00:00:00+00:00" pubdate  data-updated="true" >Apr 17<span>th</span>, 2011</time>
+<time datetime="2011-04-17T00:00:00+01:00" pubdate  data-updated="true" >Apr 17<span>th</span>, 2011</time>
         
       </p>
     
@@ -515,134 +624,6 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2011/01/03/convert-array-to-hash-mystery.html/">Convert Array to Hash Mystery</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-01-03T00:00:00+00:00" pubdate  data-updated="true" >Jan 3<span>rd</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It is always easy to find solutions on Google but the real fun is in finding out how a bit of code works. It just helps you understand much more about the language and how it behaves. Converting an array to hash is easy. Just use this piece of code that I found on google:</p>
-
-<pre>
-  some_array = [1,2,3]
-  some_hash = Hash[*(some_array.collect{|v| [v,v]}.flatten)] # yields {1=>1, 2=>2, 3=>3}
-</pre>
-
-
-<p>Few people have asked the question behind this conversion and I just decided to break it apart and tackle it bit by bit. Our objective, again, is to convert an array to a hash. Hash&#8217;s ruby documenation tells us that a new Hash object can be created by using even number of arguments. Something similar to the following code:</p>
-
-<pre>
-  some_hash = Hash[1,1,2,2,3,3] # This creates a hash object similar to this {1=>1, 2=>2, 3=>3}
-</pre>
-
-
-<p>All we need to do now is convert our some_array (defined in the first code snippet) and convert it into [1,1,2,2,3,3].</p>
-
-<p>It&#8217;s simple really. We take the some_array and convert it into an array&#8217;s or array like this:</p>
-
-<pre>
-  some_array = [1,2,3]
-  some_array.collect{|v| [v, v]} # will yield [[1,1], [2,2], [3,3]]
-</pre>
-
-
-<p>Now to convert it into [1,1,2,2,3,3] we just need to flatten this array of arrays like this:</p>
-
-<pre>
-  some_array = [1,2,3]
-  some_array.collect{|v| [v, v]}.flatten # will yield [1,1,2,2,3,3]
-</pre>
-
-
-<p>Now, all we need to do is use the splat (*) unary operator. The splat operator expands the supplied array into individual arguments which is what we need to convert array into a hash. You could also achieve the same with the following snippet:</p>
-
-<pre>
-  some_array = [1,2,3]
-  some_hash = Hash[*(some_array+some_array).sort] # yields {1=>1, 2=>2, 3=>3}
-</pre>
-
-
-<p>I hope you can work that out yourself. I hope this little discussion helped you.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/07/06/paperclip-and-rescue.html/">Paperclip and Rescue</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2010-07-06T00:00:00+00:00" pubdate  data-updated="true" >Jul 6<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Reading Open Source Code is probably the best way of learning new ways. Paperclip is an amazing file upload tool by brilliant guys at Thoughtbot. And yesterday, while going through their code I realised that <strong>rescue</strong> can be used as a statement modifier. For example, consider this block of code below:</p>
-
-<pre>
-  type = (self.path.match(/\.(\w+)$/)[1] rescue "octet-stream").downcase
-</pre>
-
-
-<p>What do you think happens here?
-Its quite simple really. If the first statement (the match bit) raises and exception the second statement is executed instead.</p>
-
-<p>Another way to write this would be:</p>
-
-<pre>
-  begin
-    type = (self.path.match(/\.(\w+)$/)[1]).downcase
-  rescue
-    "octet-stream"
-  end
-</pre>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -660,6 +641,14 @@ Its quite simple really. If the first statement (the match bit) raises and excep
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2012/10/12/install-ruby-that-plays-nicely-with-rvm.html/">Install ruby that plays nicely with rvm</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2012/03/29/what-the-heck-is-libffi.html/">What the heck is libffi?</a>
+      </li>
+    
+      <li class="post">
         <a href="/2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm.html/">Installing any Ruby source on your local machine with RVM</a>
       </li>
     
@@ -669,14 +658,6 @@ Its quite simple really. If the first statement (the match bit) raises and excep
     
       <li class="post">
         <a href="/2011/04/17/an-interesting-ruby-method.html/">An Interesting Ruby Method</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2011/03/12/ruby-hacking-guide-chapter-1.html/">Ruby Hacking Guide - Chapter 1</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2011/03/12/free-ruby-1.9-online-book.html/">Free Ruby 1.9 Online Book</a>
       </li>
     
   </ul>
@@ -691,7 +672,7 @@ Its quite simple really. If the first statement (the match bit) raises and excep
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2011 - andHapp -
+  Copyright &copy; 2012 - andHapp -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
