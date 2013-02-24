@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Ruby object model - Plough => Ruby</title>
+  <title>In Ruby2, inspect independent of to_s - Plough => Ruby</title>
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Right, so you know Ruby&#8217;s object model. Well here&#8217;s a little code snippet by JRuby creator Ola Bini and it drives the point home really...">
+  <meta name="description" content="Ruby 2.0.0 has been released and there are a lot of new things, for example, keyword arguments, TracePoint API, DTrace and so on. Here&#8217;s Ruby...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="Plough => Ruby/2009/10/09/ruby-object-model.html/">
+  <link rel="canonical" href="Plough => Ruby/2013/02/23/inspect-to_s-change-in-ruby2.html/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -63,7 +63,7 @@
   
   <header>
     
-      <h1 class="entry-title">Ruby Object Model</h1>
+      <h1 class="entry-title">In Ruby2, Inspect Independent of To_s</h1>
     
     
       <p class="meta">
@@ -77,62 +77,20 @@
 
 
 
-<time datetime="2009-10-09T00:00:00+01:00" pubdate  data-updated="true" >Oct 9<span>th</span>, 2009</time>
+<time datetime="2013-02-23T00:00:00+00:00" pubdate  data-updated="true" >Feb 23<span>rd</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Right, so you know Ruby&#8217;s object model. Well here&#8217;s a little code snippet by JRuby creator Ola Bini and it drives the point home really.</p>
+<div class="entry-content"><p><a href="http://www.ruby-lang.org/en/news/2013/02/24/ruby-2-0-0-p0-is-released/">Ruby 2.0.0</a> has been released and there are a lot of new things, for example, keyword arguments, TracePoint API, DTrace and so on. Here&#8217;s <a href="https://github.com/ruby/ruby/blob/trunk/NEWS">Ruby NEWS</a> file, and some <a href="http://blog.marc-andre.ca/2013/02/23/ruby-2-by-example/">new features in Ruby 2</a>.</p>
 
-<pre>
-class Obj
-  def something
-    puts "calling simple"
-    @abc = 3*42
-    def something
-      puts "calling memoized"
-      @abc
-    end
-    something
-  end
-end
-
-o = Obj.new
-o.something
-o.something
-o.something
-
-</pre>
-
-
-<p>The output of the code is:</p>
-
-<pre>
-calling simple
-calling memoized
-calling memoized
-calling memoized
-</pre>
-
-
-<p>Let us look at the code and anaylise it. &#8216;o&#8217; is an instance of &#8216;Obj&#8217; class. &#8216;something&#8217; is an instance method of &#8216;O&#8217;, therefore it can access it. The first &#8216;o.something&#8217; would call the instance method defined in &#8216;Obj&#8217; class. So, it prints &#8220;calling simple&#8221; and then the second &#8216;something&#8217; defines a method on instance &#8216;o&#8217; because inside the first &#8216;something&#8217; self is same as instance &#8216;o&#8217;.</p>
-
-<p>Now, what do you get when you do something like this:</p>
-
-<pre>
-def o.something
-     puts "I am o's singleton method."
-end
-</pre>
-
-
-<p>Yes, you get a singleton method on the instance. In this case, that&#8217;s exactly what happens. The second &#8216;something&#8217; defines a singleton method on instance &#8216;o&#8217;.  We are still in the middle of executing the first something. The last line of the first something (or the outer something) calls the method &#8216;something&#8217;. What the hell? Cyclic messaging!!!! Never ending loop. Yeah, but the code runs and exits gracefully.</p>
-
-<p>Well, the call to &#8216;something&#8217; would actually go and look for &#8216;something&#8217; method and before it finds a &#8216;something&#8217; method defined in the class &#8216;Obj&#8217; it would find the singleton-method &#8216;something&#8217; and execute that. So, what would that print. Yeah, you are right it prints &#8220;calling memoized&#8221;. The second and third calls to something will again encounter the &#8216;something&#8217; singleton method and execute that and it would not bother to go and look for the something defined as an instance method in class &#8216;Obj&#8217;.</p>
-
-<p>I know you are confused. Why would it go and look for the singleton method and not the instance method. This is the magic behind Ruby&#8217;s object model. Please head over to Ola Bini&#8217;s blog and read the article on <a href="http://ola-bini.blogspot.com/search/label/metaprogramming">metaprogramming</a>. He goes into a lot more detail.</p>
+<p>One thing to add to that list is that the behaviour of inspect is no
+longer dependent on to_s. In Ruby 1.9, if to_s was overridden inspect
+would just execute that code. But in Ruby 2.0, to_s overriding doesn&#8217;t
+affect inspect anymore. Here&#8217;s code example for <a href="http://eval.in/11121">Ruby 1.9.3</a> and <a href="http://eval.in/11120">Ruby
+2</a></p>
 </div>
 
 
@@ -153,7 +111,7 @@ end
 
 
 
-<time datetime="2009-10-09T00:00:00+01:00" pubdate  data-updated="true" >Oct 9<span>th</span>, 2009</time>
+<time datetime="2013-02-23T00:00:00+00:00" pubdate  data-updated="true" >Feb 23<span>rd</span>, 2013</time>
       
 
 
@@ -161,7 +119,7 @@ end
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2009/10/09/ruby-object-model.html/" data-via="" data-counturl="Plough => Ruby/2009/10/09/ruby-object-model.html/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2013/02/23/inspect-to_s-change-in-ruby2.html/" data-via="" data-counturl="Plough => Ruby/2013/02/23/inspect-to_s-change-in-ruby2.html/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -174,10 +132,8 @@ end
     
     <p class="meta">
        
-        <a class="basic-alignment left" href="/2009/09/30/define_method-instance_eval-and-class_eval.html/" title="Previous Post: define_method, instance_eval and class_eval">&laquo; define_method, instance_eval and class_eval</a>
+        <a class="basic-alignment left" href="/2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm.html/" title="Previous Post: Installing any Ruby source on your local machine with RVM">&laquo; Installing any Ruby source on your local machine with RVM</a>
       
-       
-        <a class="basic-alignment right" href="/2009/10/31/class-names-are-constants.html/" title="next Post: Class names are constants ">Class names are constants  &raquo;</a>
       
     </p>
   </footer>
