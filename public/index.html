@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Ruby 2.0.0 has been released and there are a lot of new things, for example, keyword arguments, TracePoint API, DTrace and so on. Here&#8217;s Ruby...">
+  <meta name="description" content="OpenStruct is a handy class in ruby&#8217;s stdlib. I&#8217;ve used it in the pastfor creating test data, instead of using factory girl. It&#8217;s...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -60,6 +60,65 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2013/04/08/openstruct-to-hash.html/">OpenStruct to Hash</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2013-04-08T00:00:00+01:00" pubdate  data-updated="true" >Apr 8<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>OpenStruct is a handy class in ruby&#8217;s stdlib. I&#8217;ve used it in the past
+for creating test data, instead of using factory girl. It&#8217;s fast, and
+the fact that it behaves like a Hash, makes it super easy for stubbing
+object behaviours.</p>
+
+<p>The other day, I had this requirement to convert an open struct instance
+into a hash. I foolishly tried to_hash call, considering that it acts as
+a hash, so there must be a to_hash call on it. But, unfortunately, there
+isn&#8217;t any to_hash methods on OpenStruct. However, there are other ways
+to convert an open struct instance to a hash quite easily. Here&#8217;s how:</p>
+
+<h3>Option 1</h3>
+
+<pre>
+os = OpenStruct.new(:id => 12)
+os.marshal_dump # returns the hash {:id=>12}
+</pre>
+
+
+<h3>Option 2</h3>
+
+<pre>
+os = OpenStruct.new(:id => 12)
+os.instance_variable_get(:@table) # returns the hash {:id=>12}
+</pre>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -559,81 +618,6 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2011/01/03/convert-array-to-hash-mystery.html/">Convert Array to Hash Mystery</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-01-03T00:00:00+00:00" pubdate  data-updated="true" >Jan 3<span>rd</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It is always easy to find solutions on Google but the real fun is in finding out how a bit of code works. It just helps you understand much more about the language and how it behaves. Converting an array to hash is easy. Just use this piece of code that I found on google:</p>
-
-<pre>
-  some_array = [1,2,3]
-  some_hash = Hash[*(some_array.collect{|v| [v,v]}.flatten)] # yields {1=>1, 2=>2, 3=>3}
-</pre>
-
-
-<p>Few people have asked the question behind this conversion and I just decided to break it apart and tackle it bit by bit. Our objective, again, is to convert an array to a hash. Hash&#8217;s ruby documenation tells us that a new Hash object can be created by using even number of arguments. Something similar to the following code:</p>
-
-<pre>
-  some_hash = Hash[1,1,2,2,3,3] # This creates a hash object similar to this {1=>1, 2=>2, 3=>3}
-</pre>
-
-
-<p>All we need to do now is convert our some_array (defined in the first code snippet) and convert it into [1,1,2,2,3,3].</p>
-
-<p>It&#8217;s simple really. We take the some_array and convert it into an array&#8217;s or array like this:</p>
-
-<pre>
-  some_array = [1,2,3]
-  some_array.collect{|v| [v, v]} # will yield [[1,1], [2,2], [3,3]]
-</pre>
-
-
-<p>Now to convert it into [1,1,2,2,3,3] we just need to flatten this array of arrays like this:</p>
-
-<pre>
-  some_array = [1,2,3]
-  some_array.collect{|v| [v, v]}.flatten # will yield [1,1,2,2,3,3]
-</pre>
-
-
-<p>Now, all we need to do is use the splat (*) unary operator. The splat operator expands the supplied array into individual arguments which is what we need to convert array into a hash. You could also achieve the same with the following snippet:</p>
-
-<pre>
-  some_array = [1,2,3]
-  some_hash = Hash[*(some_array+some_array).sort] # yields {1=>1, 2=>2, 3=>3}
-</pre>
-
-
-<p>I hope you can work that out yourself. I hope this little discussion helped you.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -651,6 +635,10 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/04/08/openstruct-to-hash.html/">OpenStruct to hash</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/02/23/inspect-to_s-change-in-ruby2.html/">In Ruby2, inspect independent of to_s</a>
       </li>
     
@@ -664,10 +652,6 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
     
       <li class="post">
         <a href="/2011/04/17/an-interesting-ruby-method.html/">An Interesting Ruby Method</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2011/03/12/ruby-hacking-guide-chapter-1.html/">Ruby Hacking Guide - Chapter 1</a>
       </li>
     
   </ul>

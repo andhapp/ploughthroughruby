@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Is variable an Object? - Plough => Ruby</title>
+  <title>OpenStruct to hash - Plough => Ruby</title>
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="In Ruby, everything is an object. Well in Ruby 1.8, everything derives from an Object. However, in 1.9 a BasicObject has been introduced which is a...">
+  <meta name="description" content="OpenStruct is a handy class in ruby&#8217;s stdlib. I&#8217;ve used it in the pastfor creating test data, instead of using factory girl. It&#8217;s...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="Plough => Ruby/2009/08/17/is-variable-an-object.html/">
+  <link rel="canonical" href="Plough => Ruby/2013/04/08/openstruct-to-hash.html/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -63,7 +63,7 @@
   
   <header>
     
-      <h1 class="entry-title">Is Variable an Object?</h1>
+      <h1 class="entry-title">OpenStruct to Hash</h1>
     
     
       <p class="meta">
@@ -77,63 +77,39 @@
 
 
 
-<time datetime="2009-08-17T00:00:00+01:00" pubdate  data-updated="true" >Aug 17<span>th</span>, 2009</time>
+<time datetime="2013-04-08T00:00:00+01:00" pubdate  data-updated="true" >Apr 8<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>In Ruby, everything is an object. Well in Ruby 1.8, everything derives from an Object. However, in 1.9 a BasicObject has been introduced which is a minimalist version of a full blown object.</p>
+<div class="entry-content"><p>OpenStruct is a handy class in ruby&#8217;s stdlib. I&#8217;ve used it in the past
+for creating test data, instead of using factory girl. It&#8217;s fast, and
+the fact that it behaves like a Hash, makes it super easy for stubbing
+object behaviours.</p>
 
-<p>Right, so is variable an object in Ruby?</p>
+<p>The other day, I had this requirement to convert an open struct instance
+into a hash. I foolishly tried to_hash call, considering that it acts as
+a hash, so there must be a to_hash call on it. But, unfortunately, there
+isn&#8217;t any to_hash methods on OpenStruct. However, there are other ways
+to convert an open struct instance to a hash quite easily. Here&#8217;s how:</p>
 
-<p>The answer is &#8220;no&#8221;. Let us look at the following code below and discuss what it does to reach a concrete solution. <br><br></p>
+<h3>Option 1</h3>
 
 <pre>
-    person = "Tim"
+os = OpenStruct.new(:id => 12)
+os.marshal_dump # returns the hash {:id=>12}
 </pre>
 
 
-
-
-<br><br>
-
-
-<p>This line basically creates a String object with the value &#8220;Tim&#8221; and stores it somewhere in the object heap. It then stores the reference of this object in the variable &#8220;person&#8221;. Thus, a variable is not an object. It is a mere pointer to an object. In other words, variables hold references to the objects and not the objects themselves.</p>
-
-<p>This is similar to how sometimes CPU registers work. Instead of storing the next instruction, the registers store the memory address of the next instruction.</p>
-
-<br><br>
-
-
-<p><b>Update:</b></p>
-
-<p>Continuing this discussion, I would like to add that variables when passed to methods are passed by <em>value</em>.</p>
-
-<p>And? what does that mean?</p>
-
-<p>Now, my contemporary Java and C developers (I like to call them geeks) would easily relate to the phrase &#8220;Pass by Value&#8221;. When a variable is passed by value then the variable is copied to another location and that new temporary variable that is created is passed to the method. Let us say the code for that is something like the snippet below:<br><br></p>
+<h3>Option 2</h3>
 
 <pre>
-    x = "Tim"
-    y = x
+os = OpenStruct.new(:id => 12)
+os.instance_variable_get(:@table) # returns the hash {:id=>12}
 </pre>
 
-
-
-
-<br><br>
-
-
-<p>Going back to the Ruby World. In Ruby, the variables are passed by value but since these values are actually the references to the object means the method can modify the underlying object. Let us prove this simple phenomenon. Take the code above and fire up the Terminal (or cmd line for Windows) and type irb to start a new irb session and do the following:<br><br></p>
-
-<pre>
-    x="Tim";y=x;puts "Copied - #{y.object_id} and Original - #{x.object_id}"
-</pre>
-
-
-<p>and what do you see? Yeah that is correct they are the reference to the same object.</p>
 </div>
 
 
@@ -154,7 +130,7 @@
 
 
 
-<time datetime="2009-08-17T00:00:00+01:00" pubdate  data-updated="true" >Aug 17<span>th</span>, 2009</time>
+<time datetime="2013-04-08T00:00:00+01:00" pubdate  data-updated="true" >Apr 8<span>th</span>, 2013</time>
       
 
 
@@ -162,7 +138,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2009/08/17/is-variable-an-object.html/" data-via="" data-counturl="Plough => Ruby/2009/08/17/is-variable-an-object.html/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2013/04/08/openstruct-to-hash.html/" data-via="" data-counturl="Plough => Ruby/2013/04/08/openstruct-to-hash.html/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -175,10 +151,8 @@
     
     <p class="meta">
        
-        <a class="basic-alignment left" href="/2009/08/16/hello-world.html/" title="Previous Post: Hello Ruby world!">&laquo; Hello Ruby world!</a>
+        <a class="basic-alignment left" href="/2013/02/23/inspect-to_s-change-in-ruby2.html/" title="Previous Post: In Ruby2, inspect independent of to_s">&laquo; In Ruby2, inspect independent of to_s</a>
       
-       
-        <a class="basic-alignment right" href="/2009/08/18/method-arguments-in-ruby.html/" title="next Post: Method arguments in ruby">Method arguments in ruby &raquo;</a>
       
     </p>
   </footer>

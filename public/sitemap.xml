@@ -104,14 +104,18 @@
     </url>
     <url>
         <loc>Plough =&gt; Ruby/2013/02/23/inspect-to_s-change-in-ruby2.html/</loc>
-        <lastmod>2013-02-24T15:17:25+00:00</lastmod>
+        <lastmod>2013-04-08T23:01:55+01:00</lastmod>
+    </url>
+    <url>
+        <loc>Plough =&gt; Ruby/2013/04/08/openstruct-to-hash.html/</loc>
+        <lastmod>2013-04-08T23:48:26+01:00</lastmod>
     </url>
     <url>
         <loc>Plough =&gt; Ruby/blog/archives/</loc>
-        <lastmod>2013-02-24T15:17:25+00:00</lastmod>
+        <lastmod>2013-04-08T23:48:26+01:00</lastmod>
     </url>
     <url>
         <loc>Plough =&gt; Ruby/</loc>
-        <lastmod>2013-02-24T15:17:25+00:00</lastmod>
+        <lastmod>2013-04-08T23:48:26+01:00</lastmod>
     </url>
 </urlset>
