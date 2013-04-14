@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>In Ruby2, inspect independent of to_s - Plough => Ruby</title>
+  <title>DTrace probes in Ruby 2 and a startling discovery - Plough => Ruby</title>
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Ruby 2.0.0 has been released and there are a lot of new things, for example, keyword arguments, TracePoint API, DTrace and so on. Here&#8217;s Ruby...">
+  <meta name="description" content="DTrace is a static and dynamic instrumentation framework. I did a talkat LRUG back in October on DTrace and it&#8217;s addition in Ruby 2. There&#8...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="Plough => Ruby/2013/02/23/inspect-to_s-change-in-ruby2.html/">
+  <link rel="canonical" href="Plough => Ruby/2013/04/10/dtrace-probes-in-ruby-2.html/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -63,7 +63,7 @@
   
   <header>
     
-      <h1 class="entry-title">In Ruby2, Inspect Independent of To_s</h1>
+      <h1 class="entry-title">DTrace Probes in Ruby 2 and a Startling Discovery</h1>
     
     
       <p class="meta">
@@ -77,20 +77,89 @@
 
 
 
-<time datetime="2013-02-23T00:00:00+00:00" pubdate  data-updated="true" >Feb 23<span>rd</span>, 2013</time>
+<time datetime="2013-04-10T00:00:00+01:00" pubdate  data-updated="true" >Apr 10<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><a href="http://www.ruby-lang.org/en/news/2013/02/24/ruby-2-0-0-p0-is-released/">Ruby 2.0.0</a> has been released and there are a lot of new things, for example, keyword arguments, TracePoint API, DTrace and so on. Here&#8217;s <a href="https://github.com/ruby/ruby/blob/trunk/NEWS">Ruby NEWS</a> file, and some <a href="http://blog.marc-andre.ca/2013/02/23/ruby-2-by-example/">new features in Ruby 2</a>.</p>
+<div class="entry-content"><p>DTrace is a static and dynamic instrumentation framework. I did a talk
+at LRUG back in October on DTrace and it&#8217;s addition in Ruby 2. There&#8217;s
+not much content in the presentation, but it will give you a little
+pointers to the present situation of DTrace in general, and in Ruby.</p>
 
-<p>One thing to add to that list is that the behaviour of inspect is no
-longer dependent on to_s. In Ruby 1.9, if to_s was overridden inspect
-would just execute that code. But in Ruby 2.0, to_s overriding doesn&#8217;t
-affect inspect anymore. Here&#8217;s code example for <a href="http://eval.in/11121">Ruby 1.9.3</a> and <a href="http://eval.in/11120">Ruby
-2</a></p>
+<p>The more I look into DTrace, the more I find it intriguing, challenging,
+surprising, and yet thoroughly enjoyable. Recently, I was refactoring some
+of the tests for a project, and the test suite takes forever to run,
+therefore, I decided to use Object.new for creating an instance of the
+interested object (stub the requests). Another colleague came along and
+commented&#8230;&#8221;Oh, why are you not using OpenStruct&#8221;. OpenStruct is handy,
+as it has a hash like structre, which means a method call that hasn&#8217;t
+been stubbed or instantiated will just return nil, just like a hash call
+when the key is absent from the hash.</p>
+
+<p>I ran some quick benchmarks and here are the results:</p>
+
+<pre>
+Calculating -------------------------------------
+         Struct.new       7341 i/100ms
+         Object.new      57600 i/100ms
+     OpenStruct.new       5462 i/100ms
+-------------------------------------------------
+         Struct.new     90353.5 (±10.0%) i/s -     447801 in   5.017170s
+         Object.new   2335283.3 (±3.2%) i/s -   11692800 in   5.012149s
+     OpenStruct.new     65014.7 (±4.9%) i/s -     327720 in   5.053209s
+</pre>
+
+
+<p>One thing is obvious, if you don&#8217;t need the dynamic nature of an
+OpenStruct, just use Object.new. This led me to think, why Object.new is
+superfast as compared to Struct or OpenStruct. I wanted to see what
+method calls is Struct or OpenStruct making, you know, just for my own
+knowledge. I decided to use DTrace for that purpose. DTrace has been
+added to Ruby 2, but I still couldn&#8217;t find any documentation. However,
+<a href="https://github.com/ruby/ruby/blob/trunk/probes.d">probes.d</a> file gives
+a details of all the probe names, arguments in the probe and so on.
+Please look at that file if you&#8217;d like to use DTrace with ruby.</p>
+
+<p>I created a simple ruby file called <code>test.rb</code>, like this:</p>
+
+<pre>
+Object.new
+</pre>
+
+
+<p>and ran the following dtrace command on a Mac OS X:</p>
+
+<pre>
+sudo dtrace -c 'ruby test.rb' -Zn 'ruby*::method-entry { @[copyinstr(arg0)] = count(); }'
+</pre>
+
+
+<p>to receive the following output:</p>
+
+<pre>
+dtrace: description 'ruby*::method-entry ' matched 2 probes
+dtrace: pid 14009 has exited
+
+  Gem                                                              12
+  Gem::Requirement                                                 23
+  Gem::Version                                                     36
+  Gem::Specification                                              267
+  RbConfig                                                        309
+</pre>
+
+
+<p>Here column 1 is the Class name and the column 2 is the number of
+times that class was accessed while running this ruby file. This was
+quite surprising that RbConfig was accessed 309 times. Why? After much
+thinking, I thought may be RVM has got a hand in this. I haven&#8217;t found a
+solution yet.</p>
+
+<p>I leave you here with this startling discovery and hope to solve
+it for my next post. I&#8217;m planning to run the same dtrace command with
+ruby installed via rbenv and see what I get and then go from there.</p>
 </div>
 
 
@@ -111,7 +180,7 @@ affect inspect anymore. Here&#8217;s code example for <a href="http://eval.in/11
 
 
 
-<time datetime="2013-02-23T00:00:00+00:00" pubdate  data-updated="true" >Feb 23<span>rd</span>, 2013</time>
+<time datetime="2013-04-10T00:00:00+01:00" pubdate  data-updated="true" >Apr 10<span>th</span>, 2013</time>
       
 
 
@@ -119,7 +188,7 @@ affect inspect anymore. Here&#8217;s code example for <a href="http://eval.in/11
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2013/02/23/inspect-to_s-change-in-ruby2.html/" data-via="" data-counturl="Plough => Ruby/2013/02/23/inspect-to_s-change-in-ruby2.html/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2013/04/10/dtrace-probes-in-ruby-2.html/" data-via="" data-counturl="Plough => Ruby/2013/04/10/dtrace-probes-in-ruby-2.html/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -132,10 +201,8 @@ affect inspect anymore. Here&#8217;s code example for <a href="http://eval.in/11
     
     <p class="meta">
        
-        <a class="basic-alignment left" href="/2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm.html/" title="Previous Post: Installing any Ruby source on your local machine with RVM">&laquo; Installing any Ruby source on your local machine with RVM</a>
+        <a class="basic-alignment left" href="/2013/04/08/openstruct-to-hash.html/" title="Previous Post: OpenStruct to hash">&laquo; OpenStruct to hash</a>
       
-       
-        <a class="basic-alignment right" href="/2013/04/08/openstruct-to-hash.html/" title="next Post: OpenStruct to hash">OpenStruct to hash &raquo;</a>
       
     </p>
   </footer>

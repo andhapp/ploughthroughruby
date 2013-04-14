@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="Plough => Ruby/atom.xml&#8221; rel=&#8221;self&#8221;/>
   <link href="Plough => Ruby/&#8221;/>
-  <updated>2013-04-08T23:48:30+01:00</updated>
+  <updated>2013-04-14T17:40:16+01:00</updated>
   <id>Plough => Ruby/</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -12,6 +12,90 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[DTrace probes in Ruby 2 and a startling discovery]]></title>
+    <link href="Plough => Ruby/2013/04/10/dtrace-probes-in-ruby-2.html/&#8221;/>
+    <updated>2013-04-10T00:00:00+01:00</updated>
+    <id>Plough => Ruby/2013/04/10/dtrace-probes-in-ruby-2</id>
+    <content type="html"><![CDATA[<p>DTrace is a static and dynamic instrumentation framework. I did a talk
+at LRUG back in October on DTrace and it&#8217;s addition in Ruby 2. There&#8217;s
+not much content in the presentation, but it will give you a little
+pointers to the present situation of DTrace in general, and in Ruby.</p>
+
+<p>The more I look into DTrace, the more I find it intriguing, challenging,
+surprising, and yet thoroughly enjoyable. Recently, I was refactoring some
+of the tests for a project, and the test suite takes forever to run,
+therefore, I decided to use Object.new for creating an instance of the
+interested object (stub the requests). Another colleague came along and
+commented&#8230;&#8221;Oh, why are you not using OpenStruct&#8221;. OpenStruct is handy,
+as it has a hash like structre, which means a method call that hasn&#8217;t
+been stubbed or instantiated will just return nil, just like a hash call
+when the key is absent from the hash.</p>
+
+<p>I ran some quick benchmarks and here are the results:</p>
+
+<pre>
+Calculating -------------------------------------
+         Struct.new       7341 i/100ms
+         Object.new      57600 i/100ms
+     OpenStruct.new       5462 i/100ms
+-------------------------------------------------
+         Struct.new     90353.5 (±10.0%) i/s -     447801 in   5.017170s
+         Object.new   2335283.3 (±3.2%) i/s -   11692800 in   5.012149s
+     OpenStruct.new     65014.7 (±4.9%) i/s -     327720 in   5.053209s
+</pre>
+
+
+<p>One thing is obvious, if you don&#8217;t need the dynamic nature of an
+OpenStruct, just use Object.new. This led me to think, why Object.new is
+superfast as compared to Struct or OpenStruct. I wanted to see what
+method calls is Struct or OpenStruct making, you know, just for my own
+knowledge. I decided to use DTrace for that purpose. DTrace has been
+added to Ruby 2, but I still couldn&#8217;t find any documentation. However,
+<a href="https://github.com/ruby/ruby/blob/trunk/probes.d">probes.d</a> file gives
+a details of all the probe names, arguments in the probe and so on.
+Please look at that file if you&#8217;d like to use DTrace with ruby.</p>
+
+<p>I created a simple ruby file called <code>test.rb</code>, like this:</p>
+
+<pre>
+Object.new
+</pre>
+
+
+<p>and ran the following dtrace command on a Mac OS X:</p>
+
+<pre>
+sudo dtrace -c 'ruby test.rb' -Zn 'ruby*::method-entry { @[copyinstr(arg0)] = count(); }'
+</pre>
+
+
+<p>to receive the following output:</p>
+
+<pre>
+dtrace: description 'ruby*::method-entry ' matched 2 probes
+dtrace: pid 14009 has exited
+
+  Gem                                                              12
+  Gem::Requirement                                                 23
+  Gem::Version                                                     36
+  Gem::Specification                                              267
+  RbConfig                                                        309
+</pre>
+
+
+<p>Here column 1 is the Class name and the column 2 is the number of
+times that class was accessed while running this ruby file. This was
+quite surprising that RbConfig was accessed 309 times. Why? After much
+thinking, I thought may be RVM has got a hand in this. I haven&#8217;t found a
+solution yet.</p>
+
+<p>I leave you here with this startling discovery and hope to solve
+it for my next post. I&#8217;m planning to run the same dtrace command with
+ruby installed via rbenv and see what I get and then go from there.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[OpenStruct to hash]]></title>
@@ -694,35 +778,6 @@ end
 <p>Well, the call to &#8216;something&#8217; would actually go and look for &#8216;something&#8217; method and before it finds a &#8216;something&#8217; method defined in the class &#8216;Obj&#8217; it would find the singleton-method &#8216;something&#8217; and execute that. So, what would that print. Yeah, you are right it prints &#8220;calling memoized&#8221;. The second and third calls to something will again encounter the &#8216;something&#8217; singleton method and execute that and it would not bother to go and look for the something defined as an instance method in class &#8216;Obj&#8217;.</p>
 
 <p>I know you are confused. Why would it go and look for the singleton method and not the instance method. This is the magic behind Ruby&#8217;s object model. Please head over to Ola Bini&#8217;s blog and read the article on <a href="http://ola-bini.blogspot.com/search/label/metaprogramming">metaprogramming</a>. He goes into a lot more detail.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[define_method, instance_eval and class_eval]]></title>
-    <link href="Plough => Ruby/2009/09/30/define_method-instance_eval-and-class_eval.html/&#8221;/>
-    <updated>2009-09-30T00:00:00+01:00</updated>
-    <id>Plough => Ruby/2009/09/30/define_method-instance_eval-and-class_eval</id>
-    <content type="html"><![CDATA[<p>Right, so this is a tad confusing and the reason I am explaining is to ensure that I understand it properly.</p>
-
-<p><strong>instance_eval</strong> - It creates singleton methods on the object it is invoked on. If it is invoked on a Class object then these methods become singleton methods of the class. Some people would call them <del datetime="2009-09-30T19:13:53+00:00">&#8220;class methods&#8221;</del> but these are simply methods in an object&#8217;s singleton class. Here&#8217;s the code:</p>
-
-<pre>
-SomeObject.instance_eval (def singleton_method; "singleton_method";end)
-</pre>
-
-
-<p><strong>class_eval</strong> - It creates an instance method on the object. Simple there is nothing confusing about this. Here&#8217;s an example:</p>
-
-<pre>
-SomeObject.class_eval(def instance_method;"instance_method";end)
-</pre>
-
-
-<p>Now, define method when used inside either class_eval or instance_eval s immune to the usual behaviour.</p>
-
-<p>Why, you may ask?</p>
-
-<p>Because the documentation says so. As per the documentation &#8220;define method - Defines an instance method in the receiver&#8221;. Therefore, it does not matter if you use define_method inside class_eval or instance_eval it would always create an instance method. Now, the question to ask is - &#8220;Is there no way to define a singleton method using defne_method?&#8221;. Well, I still need to investigate that. It would probably be in an update to this post. Hope it all makes sense. Ruby metaprogramming is awesome only if you know what you are doing and to get to that stage one needs to spend countless hours metaprogramming.</p>
 ]]></content>
   </entry>
   
