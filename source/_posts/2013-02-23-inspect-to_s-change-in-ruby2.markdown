@@ -9,5 +9,5 @@ date_string: 23 February 2013
 One thing to add to that list is that the behaviour of inspect is no
 longer dependent on to_s. In Ruby 1.9, if to_s was overridden inspect
 would just execute that code. But in Ruby 2.0, to_s overriding doesn't
-affect inspect anymore. Here's code example for [Ruby 1.9.3](http://eval.in/11121) and [Ruby
-2](http://eval.in/11120)
+affect inspect anymore. Here's code example for [Ruby 1.9.3](https://eval.in/11121) and [Ruby
+2](https://eval.in/11120)
