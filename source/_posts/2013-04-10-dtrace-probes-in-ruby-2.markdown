@@ -76,14 +76,3 @@ solution yet.
 I leave you here with this startling discovery and hope to solve
 it for my next post. I'm planning to run the same dtrace command with
 ruby installed via rbenv and see what I get and then go from there.
-
-
-
-
-
-
-
-
-
-
-
