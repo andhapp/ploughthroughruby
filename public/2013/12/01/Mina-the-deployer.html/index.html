@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Hello Ruby world! - Plough => Ruby</title>
+  <title>Mina, the deployer - Plough => Ruby</title>
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="I have been reading a lot about Ruby the language and decided that it was about time I blogged my journey.Hence the blog, Plough Through Ruby.Have ...">
+  <meta name="description" content="I recently decided to setup a dedicated website for my company as opposed to just using my personal one. It’s a static site, with barely any conten...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="Plough => Ruby/2009/08/16/hello-world.html/">
+  <link rel="canonical" href="Plough => Ruby/2013/12/01/Mina-the-deployer.html/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -63,7 +63,7 @@
   
   <header>
     
-      <h1 class="entry-title">Hello Ruby World!</h1>
+      <h1 class="entry-title">Mina, the Deployer</h1>
     
     
       <p class="meta">
@@ -77,18 +77,22 @@
 
 
 
-<time datetime="2009-08-16T00:00:00+01:00" pubdate  data-updated="true" >Aug 16<span>th</span>, 2009</time>
+<time datetime="2013-12-01T00:00:00+00:00" pubdate  data-updated="true" >Dec 1<span>st</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I have been reading a lot about Ruby the language and decided that it was about time I blogged my journey.</p>
+<div class="entry-content"><p>I recently decided to setup a dedicated website for my company as opposed to just using my personal one. It’s a static site, with barely any content right now.</p>
 
-<p>Hence the blog, Plough Through Ruby.</p>
+<p>Now, I usually rely on capistrano for deployment, but since capistrano had recently undergone a major facelift, I sensed it as an opportunity to try <a href="https://github.com/nadarei/mina">Mina</a>. I have known about the gem since it’s very beginning, but the pressures of modern web developer life means less time for playing around, and more for getting things done. In other words, don’t change the deployer if it ain’t broken.</p>
 
-<p>Have fun!</p>
+<p>Mina is very similar to Capistrano, except one small yet pivotal fact. Instead of running commands one-by-one over SSH, it creates a bash script from your configuration and executes it remotely as one SSH command. Sounds astute to me. It has the same configuration and deploy setup as Capistrano, and anyone with some Capistrano experience will pick it up pretty quickly.</p>
+
+<p>One thing that really stuck out for me and propelled me to write this post is it’s reliance on the existing SSH set-up on your machine. For example, In Capistrano, one has to explicitly set up the ssh forward agent in the deploy script itself. But, in Mina, one just needs to specify forward agent in their SSH config, and Mina will pick that up. It’s quite logical, no idea why it wasn’t the case for Capistrano.</p>
+
+<p>Anyways, hope this will motivate you guys to try Mina as well.</p>
 </div>
 
 
@@ -109,7 +113,7 @@
 
 
 
-<time datetime="2009-08-16T00:00:00+01:00" pubdate  data-updated="true" >Aug 16<span>th</span>, 2009</time>
+<time datetime="2013-12-01T00:00:00+00:00" pubdate  data-updated="true" >Dec 1<span>st</span>, 2013</time>
       
 
 
@@ -117,7 +121,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2009/08/16/hello-world.html/" data-via="" data-counturl="Plough => Ruby/2009/08/16/hello-world.html/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2013/12/01/Mina-the-deployer.html/" data-via="" data-counturl="Plough => Ruby/2013/12/01/Mina-the-deployer.html/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -129,9 +133,9 @@
 
     
     <p class="meta">
-      
        
-        <a class="basic-alignment right" href="/2009/08/17/is-variable-an-object.html/" title="next Post: Is variable an Object?">Is variable an Object? &raquo;</a>
+        <a class="basic-alignment left" href="/2013/04/10/dtrace-probes-in-ruby-2.html/" title="Previous Post: DTrace probes in Ruby 2 and a startling discovery">&laquo; DTrace probes in Ruby 2 and a startling discovery</a>
+      
       
     </p>
   </footer>

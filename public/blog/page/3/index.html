@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Right, so this is a tad confusing and the reason I am explaining is to ensure that I understand it properly.instance_eval - It creates singleton me...">
+  <meta name="description" content="Right, so you know Ruby&#8217;s object model. Well here&#8217;s a little code snippet by JRuby creator Ola Bini and it drives the point home really...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -60,6 +60,88 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/10/09/ruby-object-model.html/">Ruby Object Model</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-10-09T00:00:00+01:00" pubdate  data-updated="true" >Oct 9<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Right, so you know Ruby&#8217;s object model. Well here&#8217;s a little code snippet by JRuby creator Ola Bini and it drives the point home really.</p>
+
+<pre>
+class Obj
+  def something
+    puts "calling simple"
+    @abc = 3*42
+    def something
+      puts "calling memoized"
+      @abc
+    end
+    something
+  end
+end
+
+o = Obj.new
+o.something
+o.something
+o.something
+
+</pre>
+
+
+<p>The output of the code is:</p>
+
+<pre>
+calling simple
+calling memoized
+calling memoized
+calling memoized
+</pre>
+
+
+<p>Let us look at the code and anaylise it. &#8216;o&#8217; is an instance of &#8216;Obj&#8217; class. &#8216;something&#8217; is an instance method of &#8216;O&#8217;, therefore it can access it. The first &#8216;o.something&#8217; would call the instance method defined in &#8216;Obj&#8217; class. So, it prints &#8220;calling simple&#8221; and then the second &#8216;something&#8217; defines a method on instance &#8216;o&#8217; because inside the first &#8216;something&#8217; self is same as instance &#8216;o&#8217;.</p>
+
+<p>Now, what do you get when you do something like this:</p>
+
+<pre>
+def o.something
+     puts "I am o's singleton method."
+end
+</pre>
+
+
+<p>Yes, you get a singleton method on the instance. In this case, that&#8217;s exactly what happens. The second &#8216;something&#8217; defines a singleton method on instance &#8216;o&#8217;.  We are still in the middle of executing the first something. The last line of the first something (or the outer something) calls the method &#8216;something&#8217;. What the hell? Cyclic messaging!!!! Never ending loop. Yeah, but the code runs and exits gracefully.</p>
+
+<p>Well, the call to &#8216;something&#8217; would actually go and look for &#8216;something&#8217; method and before it finds a &#8216;something&#8217; method defined in the class &#8216;Obj&#8217; it would find the singleton-method &#8216;something&#8217; and execute that. So, what would that print. Yeah, you are right it prints &#8220;calling memoized&#8221;. The second and third calls to something will again encounter the &#8216;something&#8217; singleton method and execute that and it would not bother to go and look for the something defined as an instance method in class &#8216;Obj&#8217;.</p>
+
+<p>I know you are confused. Why would it go and look for the singleton method and not the instance method. This is the magic behind Ruby&#8217;s object model. Please head over to Ola Bini&#8217;s blog and read the article on <a href="http://ola-bini.blogspot.com/search/label/metaprogramming">metaprogramming</a>. He goes into a lot more detail.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -402,6 +484,10 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/12/01/Mina-the-deployer.html/">Mina, the deployer</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/04/10/dtrace-probes-in-ruby-2.html/">DTrace probes in Ruby 2 and a startling discovery</a>
       </li>
     
@@ -415,10 +501,6 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
     
       <li class="post">
         <a href="/2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm.html/">Installing any Ruby source on your local machine with RVM</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2011/04/21/inconsistent-hashes.html/">Inconsistent hashes</a>
       </li>
     
   </ul>

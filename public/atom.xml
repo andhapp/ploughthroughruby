@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="Plough => Ruby/atom.xml&#8221; rel=&#8221;self&#8221;/>
   <link href="Plough => Ruby/&#8221;/>
-  <updated>2013-06-13T10:00:46+01:00</updated>
+  <updated>2013-12-01T15:02:13+00:00</updated>
   <id>Plough => Ruby/</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -12,6 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Mina, the deployer]]></title>
+    <link href="Plough => Ruby/2013/12/01/Mina-the-deployer.html/&#8221;/>
+    <updated>2013-12-01T00:00:00+00:00</updated>
+    <id>Plough => Ruby/2013/12/01/Mina-the-deployer</id>
+    <content type="html"><![CDATA[<p>I recently decided to setup a dedicated website for my company as opposed to just using my personal one. It’s a static site, with barely any content right now.</p>
+
+<p>Now, I usually rely on capistrano for deployment, but since capistrano had recently undergone a major facelift, I sensed it as an opportunity to try <a href="https://github.com/nadarei/mina">Mina</a>. I have known about the gem since it’s very beginning, but the pressures of modern web developer life means less time for playing around, and more for getting things done. In other words, don’t change the deployer if it ain’t broken.</p>
+
+<p>Mina is very similar to Capistrano, except one small yet pivotal fact. Instead of running commands one-by-one over SSH, it creates a bash script from your configuration and executes it remotely as one SSH command. Sounds astute to me. It has the same configuration and deploy setup as Capistrano, and anyone with some Capistrano experience will pick it up pretty quickly.</p>
+
+<p>One thing that really stuck out for me and propelled me to write this post is it’s reliance on the existing SSH set-up on your machine. For example, In Capistrano, one has to explicitly set up the ssh forward agent in the deploy script itself. But, in Mina, one just needs to specify forward agent in their SSH config, and Mina will pick that up. It’s quite logical, no idea why it wasn’t the case for Capistrano.</p>
+
+<p>Anyways, hope this will motivate you guys to try Mina as well.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[DTrace probes in Ruby 2 and a startling discovery]]></title>
@@ -721,63 +738,6 @@ FoundANewWay::to_call_a_singleton_method
 <p>So, we define a variable called &#8220;str&#8221;, which stores a pointer to the object created by sending &#8220;new&#8221; on &#8220;String&#8221;. Here, &#8220;String&#8221; receives the &#8220;new&#8221; message but for &#8220;String&#8221; to take any action when it receives &#8220;new&#8221; message it must have a reference to the object called String. Therefore, there must be a corresponding constant to every class in ruby. It can&#8217;t be a variable as it starts with an uppercase.</p>
 
 <p>Actually, that is exactly what happens. Every class in ruby has a global constant which stores a reference to the object and is used for method invocations. So, there are two things really one is the constant named String and the other is the object named String.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Ruby object model]]></title>
-    <link href="Plough => Ruby/2009/10/09/ruby-object-model.html/&#8221;/>
-    <updated>2009-10-09T00:00:00+01:00</updated>
-    <id>Plough => Ruby/2009/10/09/ruby-object-model</id>
-    <content type="html"><![CDATA[<p>Right, so you know Ruby&#8217;s object model. Well here&#8217;s a little code snippet by JRuby creator Ola Bini and it drives the point home really.</p>
-
-<pre>
-class Obj
-  def something
-    puts "calling simple"
-    @abc = 3*42
-    def something
-      puts "calling memoized"
-      @abc
-    end
-    something
-  end
-end
-
-o = Obj.new
-o.something
-o.something
-o.something
-
-</pre>
-
-
-<p>The output of the code is:</p>
-
-<pre>
-calling simple
-calling memoized
-calling memoized
-calling memoized
-</pre>
-
-
-<p>Let us look at the code and anaylise it. &#8216;o&#8217; is an instance of &#8216;Obj&#8217; class. &#8216;something&#8217; is an instance method of &#8216;O&#8217;, therefore it can access it. The first &#8216;o.something&#8217; would call the instance method defined in &#8216;Obj&#8217; class. So, it prints &#8220;calling simple&#8221; and then the second &#8216;something&#8217; defines a method on instance &#8216;o&#8217; because inside the first &#8216;something&#8217; self is same as instance &#8216;o&#8217;.</p>
-
-<p>Now, what do you get when you do something like this:</p>
-
-<pre>
-def o.something
-     puts "I am o's singleton method."
-end
-</pre>
-
-
-<p>Yes, you get a singleton method on the instance. In this case, that&#8217;s exactly what happens. The second &#8216;something&#8217; defines a singleton method on instance &#8216;o&#8217;.  We are still in the middle of executing the first something. The last line of the first something (or the outer something) calls the method &#8216;something&#8217;. What the hell? Cyclic messaging!!!! Never ending loop. Yeah, but the code runs and exits gracefully.</p>
-
-<p>Well, the call to &#8216;something&#8217; would actually go and look for &#8216;something&#8217; method and before it finds a &#8216;something&#8217; method defined in the class &#8216;Obj&#8217; it would find the singleton-method &#8216;something&#8217; and execute that. So, what would that print. Yeah, you are right it prints &#8220;calling memoized&#8221;. The second and third calls to something will again encounter the &#8216;something&#8217; singleton method and execute that and it would not bother to go and look for the something defined as an instance method in class &#8216;Obj&#8217;.</p>
-
-<p>I know you are confused. Why would it go and look for the singleton method and not the instance method. This is the magic behind Ruby&#8217;s object model. Please head over to Ola Bini&#8217;s blog and read the article on <a href="http://ola-bini.blogspot.com/search/label/metaprogramming">metaprogramming</a>. He goes into a lot more detail.</p>
 ]]></content>
   </entry>
   
