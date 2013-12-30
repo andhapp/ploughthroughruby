@@ -35,12 +35,27 @@ Cross-cutting concern can be defined as any piece of code that's more widely
 used across the application, for example, logging, security, or authentication, perhaps. 
 Something, like a before_filter in Rails controllers that's applied to a set of actions.
 
-
 There are libraries that one could use to achieve same and even more
 than before_filter functionality outside of Rails. The one that I
 briefly looked at is called
 [Aspector](https://github.com/gcao/aspector). It provides a lot of examples
 as well just in case you are stuck.
+
+### Why not just use Ruby Modules?
+
+Ruby modules are similar but not exactly same as the AOP concept. One
+important difference is that you can apply an aspect (aspect is the
+piece of code with common functionality, like a module) to a class from
+outside, without opening the class. Here's some aspector code snippet to
+elaborate the point:
+
+<pre>
+TestAspect.apply A
+</pre>
+
+Here A is the class, and TestAspect is the aspect. As you can see, you
+can just apply it from outside. Sorry, not very clear, but I didn't want
+to tie the concept to a particular library implementation.
 
 One good use case of using AOP concepts would be with something like
 debugging, for example, a user performed an action and you want to check

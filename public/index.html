@@ -124,6 +124,23 @@ briefly looked at is called
 <a href="https://github.com/gcao/aspector">Aspector</a>. It provides a lot of examples
 as well just in case you are stuck.</p>
 
+<h3>Why not just use Ruby Modules?</h3>
+
+<p>Ruby modules are similar but not exactly same as the AOP concept. One
+important difference is that you can apply an aspect (aspect is the
+piece of code with common functionality, like a module) to a class from
+outside, without opening the class. Here&#8217;s some aspector code snippet to
+elaborate the point:</p>
+
+<pre>
+TestAspect.apply A
+</pre>
+
+
+<p>Here A is the class, and TestAspect is the aspect. As you can see, you
+can just apply it from outside. Sorry, not very clear, but I didn&#8217;t want
+to tie the concept to a particular library implementation.</p>
+
 <p>One good use case of using AOP concepts would be with something like
 debugging, for example, a user performed an action and you want to check
 the log for parameters that are getting passed in to methods, or what
