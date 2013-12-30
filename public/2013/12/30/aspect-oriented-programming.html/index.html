@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Ruby object model - Plough => Ruby</title>
+  <title>Aspect Oriented Programming - Plough => Ruby</title>
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Right, so you know Ruby&#8217;s object model. Well here&#8217;s a little code snippet by JRuby creator Ola Bini and it drives the point home really...">
+  <meta name="description" content="I was looking into Ruby&#8217;s TracePointclass recently. TracePoint is an objectified Kernel#set_trace_func method. TracePoint wasadded in Ruby2, ...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="Plough => Ruby/2009/10/09/ruby-object-model.html/">
+  <link rel="canonical" href="Plough => Ruby/2013/12/30/aspect-oriented-programming.html/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -63,7 +63,7 @@
   
   <header>
     
-      <h1 class="entry-title">Ruby Object Model</h1>
+      <h1 class="entry-title">Aspect Oriented Programming</h1>
     
     
       <p class="meta">
@@ -77,62 +77,62 @@
 
 
 
-<time datetime="2009-10-09T00:00:00+01:00" pubdate  data-updated="true" >Oct 9<span>th</span>, 2009</time>
+<time datetime="2013-12-30T00:00:00+00:00" pubdate  data-updated="true" >Dec 30<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Right, so you know Ruby&#8217;s object model. Well here&#8217;s a little code snippet by JRuby creator Ola Bini and it drives the point home really.</p>
+<div class="entry-content"><p>I was looking into Ruby&#8217;s <a href="http://www.ruby-doc.org/core-2.0.0/TracePoint.html">TracePoint</a>
+class recently. TracePoint is an objectified Kernel#set_trace_func method. TracePoint was
+added in Ruby2, but before that there was a gem that had same function as TracePoint
+class. Surprisingly, it was also called <a href="https://github.com/rubyunworks/tracepoint">tracepoint</a>.</p>
 
-<pre>
-class Obj
-  def something
-    puts "calling simple"
-    @abc = 3*42
-    def something
-      puts "calling memoized"
-      @abc
-    end
-    something
-  end
-end
+<p>Anyways, TracePoint is not the scope of this post. This post is all about AOP,
+or Aspect Oriented Programming.</p>
 
-o = Obj.new
-o.something
-o.something
-o.something
+<p>Wikipedia defines it as <em>&#8220;aspect-oriented programming (AOP) is a programming paradigm that aims to increase modularity by allowing the separation of cross-cutting concerns. AOP forms a basis for aspect-oriented software development.&#8221;</em></p>
 
-</pre>
+<p>There are couple of things worth noting, Modularity and Cross-cutting concerns.</p>
 
+<h3>Modularity</h3>
 
-<p>The output of the code is:</p>
+<p>In English, Modularity means based on modules, easily assembled, or repaired
+and the reason it&#8217;s easily repaired is because modules are
+self-contained and talk to each other via a defined interface. Interface
+could be hardware pins, RAM slots, or intangible ones, defined in your
+Ruby or Java class.</p>
 
-<pre>
-calling simple
-calling memoized
-calling memoized
-calling memoized
-</pre>
+<p>In Ruby world, modules and modularity is the go-to thing to achieve
+separation of concern. You got a piece of code that is used in two
+different places and has no state of its own, just create a
+module to be included/extended or prepended.</p>
 
+<h3>Cross-cutting concerns</h3>
 
-<p>Let us look at the code and anaylise it. &#8216;o&#8217; is an instance of &#8216;Obj&#8217; class. &#8216;something&#8217; is an instance method of &#8216;O&#8217;, therefore it can access it. The first &#8216;o.something&#8217; would call the instance method defined in &#8216;Obj&#8217; class. So, it prints &#8220;calling simple&#8221; and then the second &#8216;something&#8217; defines a method on instance &#8216;o&#8217; because inside the first &#8216;something&#8217; self is same as instance &#8216;o&#8217;.</p>
+<p>Cross-cutting concern can be defined as any piece of code that&#8217;s more widely
+used across the application, for example, logging, security, or authentication, perhaps.
+Something, like a before_filter in Rails controllers that&#8217;s applied to a set of actions.</p>
 
-<p>Now, what do you get when you do something like this:</p>
+<p>There are libraries that one could use to achieve same and even more
+than before_filter functionality outside of Rails. The one that I
+briefly looked at is called
+<a href="https://github.com/gcao/aspector">Aspector</a>. It provides a lot of examples
+as well just in case you are stuck.</p>
 
-<pre>
-def o.something
-     puts "I am o's singleton method."
-end
-</pre>
+<p>One good use case of using AOP concepts would be with something like
+debugging, for example, a user performed an action and you want to check
+the log for parameters that are getting passed in to methods, or what
+methods are getting called when certain action is performed. But, that&#8217;s
+what TracePoint does, right? Well, it definitely allows one to hook into
+the events and print debugging information. With AOP, one can create
+more focussed debugging. Imagine, a request going through Rails stack
+will hit a lot of methods and you don&#8217;t want to enable tracing and then
+having to go through a long console output.</p>
 
-
-<p>Yes, you get a singleton method on the instance. In this case, that&#8217;s exactly what happens. The second &#8216;something&#8217; defines a singleton method on instance &#8216;o&#8217;.  We are still in the middle of executing the first something. The last line of the first something (or the outer something) calls the method &#8216;something&#8217;. What the hell? Cyclic messaging!!!! Never ending loop. Yeah, but the code runs and exits gracefully.</p>
-
-<p>Well, the call to &#8216;something&#8217; would actually go and look for &#8216;something&#8217; method and before it finds a &#8216;something&#8217; method defined in the class &#8216;Obj&#8217; it would find the singleton-method &#8216;something&#8217; and execute that. So, what would that print. Yeah, you are right it prints &#8220;calling memoized&#8221;. The second and third calls to something will again encounter the &#8216;something&#8217; singleton method and execute that and it would not bother to go and look for the something defined as an instance method in class &#8216;Obj&#8217;.</p>
-
-<p>I know you are confused. Why would it go and look for the singleton method and not the instance method. This is the magic behind Ruby&#8217;s object model. Please head over to Ola Bini&#8217;s blog and read the article on <a href="http://ola-bini.blogspot.com/search/label/metaprogramming">metaprogramming</a>. He goes into a lot more detail.</p>
+<p>These are just some of the initial thoughts I had on reading AOP and TracePoint.
+Hope this post will encourage you to investigate and learn more about these topics.</p>
 </div>
 
 
@@ -153,7 +153,7 @@ end
 
 
 
-<time datetime="2009-10-09T00:00:00+01:00" pubdate  data-updated="true" >Oct 9<span>th</span>, 2009</time>
+<time datetime="2013-12-30T00:00:00+00:00" pubdate  data-updated="true" >Dec 30<span>th</span>, 2013</time>
       
 
 
@@ -161,7 +161,7 @@ end
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2009/10/09/ruby-object-model.html/" data-via="" data-counturl="Plough => Ruby/2009/10/09/ruby-object-model.html/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2013/12/30/aspect-oriented-programming.html/" data-via="" data-counturl="Plough => Ruby/2013/12/30/aspect-oriented-programming.html/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -174,10 +174,8 @@ end
     
     <p class="meta">
        
-        <a class="basic-alignment left" href="/2009/09/30/define_method-instance_eval-and-class_eval.html/" title="Previous Post: define_method, instance_eval and class_eval">&laquo; define_method, instance_eval and class_eval</a>
+        <a class="basic-alignment left" href="/2013/12/01/Mina-the-deployer.html/" title="Previous Post: Mina, the deployer">&laquo; Mina, the deployer</a>
       
-       
-        <a class="basic-alignment right" href="/2009/10/31/class-names-are-constants.html/" title="next Post: Class names are constants ">Class names are constants  &raquo;</a>
       
     </p>
   </footer>

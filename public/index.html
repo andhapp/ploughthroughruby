@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="I recently decided to setup a dedicated website for my company as opposed to just using my personal one. It’s a static site, with barely any conten...">
+  <meta name="description" content="I was looking into Ruby&#8217;s TracePointclass recently. TracePoint is an objectified Kernel#set_trace_func method. TracePoint wasadded in Ruby2, ...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,88 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/2013/12/30/aspect-oriented-programming.html/">Aspect Oriented Programming</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2013-12-30T00:00:00+00:00" pubdate  data-updated="true" >Dec 30<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I was looking into Ruby&#8217;s <a href="http://www.ruby-doc.org/core-2.0.0/TracePoint.html">TracePoint</a>
+class recently. TracePoint is an objectified Kernel#set_trace_func method. TracePoint was
+added in Ruby2, but before that there was a gem that had same function as TracePoint
+class. Surprisingly, it was also called <a href="https://github.com/rubyunworks/tracepoint">tracepoint</a>.</p>
+
+<p>Anyways, TracePoint is not the scope of this post. This post is all about AOP,
+or Aspect Oriented Programming.</p>
+
+<p>Wikipedia defines it as <em>&#8220;aspect-oriented programming (AOP) is a programming paradigm that aims to increase modularity by allowing the separation of cross-cutting concerns. AOP forms a basis for aspect-oriented software development.&#8221;</em></p>
+
+<p>There are couple of things worth noting, Modularity and Cross-cutting concerns.</p>
+
+<h3>Modularity</h3>
+
+<p>In English, Modularity means based on modules, easily assembled, or repaired
+and the reason it&#8217;s easily repaired is because modules are
+self-contained and talk to each other via a defined interface. Interface
+could be hardware pins, RAM slots, or intangible ones, defined in your
+Ruby or Java class.</p>
+
+<p>In Ruby world, modules and modularity is the go-to thing to achieve
+separation of concern. You got a piece of code that is used in two
+different places and has no state of its own, just create a
+module to be included/extended or prepended.</p>
+
+<h3>Cross-cutting concerns</h3>
+
+<p>Cross-cutting concern can be defined as any piece of code that&#8217;s more widely
+used across the application, for example, logging, security, or authentication, perhaps.
+Something, like a before_filter in Rails controllers that&#8217;s applied to a set of actions.</p>
+
+<p>There are libraries that one could use to achieve same and even more
+than before_filter functionality outside of Rails. The one that I
+briefly looked at is called
+<a href="https://github.com/gcao/aspector">Aspector</a>. It provides a lot of examples
+as well just in case you are stuck.</p>
+
+<p>One good use case of using AOP concepts would be with something like
+debugging, for example, a user performed an action and you want to check
+the log for parameters that are getting passed in to methods, or what
+methods are getting called when certain action is performed. But, that&#8217;s
+what TracePoint does, right? Well, it definitely allows one to hook into
+the events and print debugging information. With AOP, one can create
+more focussed debugging. Imagine, a request going through Rails stack
+will hit a lot of methods and you don&#8217;t want to enable tracing and then
+having to go through a long console output.</p>
+
+<p>These are just some of the initial thoughts I had on reading AOP and TracePoint.
+Hope this post will encourage you to investigate and learn more about these topics.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/2013/12/01/Mina-the-deployer.html/">Mina, the Deployer</a></h1>
     
     
@@ -89,11 +171,11 @@
 
   <div class="entry-content"><p>I recently decided to setup a dedicated website for my company as opposed to just using my personal one. It’s a static site, with barely any content right now.</p>
 
-<p>Now, I usually rely on capistrano for deployment, but since capistrano had recently undergone a major facelift, I sensed it as an opportunity to try <a href="https://github.com/nadarei/mina">Mina</a>. I have known about the gem since it’s very beginning, but the pressures of modern web developer life means less time for playing around, and more for getting things done. In other words, don’t change the deployer if it ain’t broken.</p>
+<p>Now, I usually rely on capistrano for deployment, but since capistrano had recently undergone a major facelift, I sensed it as an opportunity to try <a href="https://github.com/nadarei/mina">Mina</a>. I have known about the gem since it’s very beginning, but the pressures of modern web developer life means less time for playing around, and more for getting things done. In other words, don’t change the deployer, if it ain’t broken.</p>
 
 <p>Mina is very similar to Capistrano, except one small yet pivotal fact. Instead of running commands one-by-one over SSH, it creates a bash script from your configuration and executes it remotely as one SSH command. Sounds astute to me. It has the same configuration and deploy setup as Capistrano, and anyone with some Capistrano experience will pick it up pretty quickly.</p>
 
-<p>One thing that really stuck out for me and propelled me to write this post is it’s reliance on the existing SSH set-up on your machine. For example, In Capistrano, one has to explicitly set up the ssh forward agent in the deploy script itself. But, in Mina, one just needs to specify forward agent in their SSH config, and Mina will pick that up. It’s quite logical, no idea why it wasn’t the case for Capistrano.</p>
+<p>One thing that really stuck out for me and propelled me to write this post is it’s reliance on the existing SSH set-up on your machine. For example, in Capistrano, one has to explicitly set up the ssh forward agent in the deploy script itself. But, in Mina, one just needs to specify forward agent in their SSH config, and Mina will pick that up. It’s quite logical, no idea why it wasn’t the case for Capistrano.</p>
 
 <p>Anyways, hope this will motivate you guys to try Mina as well.</p>
 </div>
@@ -647,47 +729,6 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2011/01/21/ruby-file-append-mode.html/">Ruby File Append Mode</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-01-21T00:00:00+00:00" pubdate  data-updated="true" >Jan 21<span>st</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>There are different file modes available to the developer when creating and opening new files in Ruby. One that I didn&#8217;t know about was &#8220;a&#8221; which basically means append to the end of the file rather than starting a new one. What could it be useful for? One example would be as a log file of some sort where one wants to preserve the old data and add new data to the end of the file. Very trivial but helpful if you know about these things. Just makes you a better developer.</p>
-
-<p>A simple code example would be:</p>
-
-<pre>
-    file = File.new("datamapper.log", "a")  
-</pre>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -705,6 +746,10 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/12/30/aspect-oriented-programming.html/">Aspect Oriented Programming</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/12/01/Mina-the-deployer.html/">Mina, the deployer</a>
       </li>
     
@@ -718,10 +763,6 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
     
       <li class="post">
         <a href="/2013/02/23/inspect-to_s-change-in-ruby2.html/">In Ruby2, inspect independent of to_s</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm.html/">Installing any Ruby source on your local machine with RVM</a>
       </li>
     
   </ul>

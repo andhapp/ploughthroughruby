@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="I got hold of an out-of-date Ruby Hacking Guide and it looks very interesting. Therefore, in order to improve my understanding of Ruby internals, I...">
+  <meta name="description" content="There are different file modes available to the developer when creating and opening new files in Ruby. One that I didn&#8217;t know about was &#822...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -60,6 +60,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/01/21/ruby-file-append-mode.html/">Ruby File Append Mode</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-01-21T00:00:00+00:00" pubdate  data-updated="true" >Jan 21<span>st</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There are different file modes available to the developer when creating and opening new files in Ruby. One that I didn&#8217;t know about was &#8220;a&#8221; which basically means append to the end of the file rather than starting a new one. What could it be useful for? One example would be as a log file of some sort where one wants to preserve the old data and add new data to the end of the file. Very trivial but helpful if you know about these things. Just makes you a better developer.</p>
+
+<p>A simple code example would be:</p>
+
+<pre>
+    file = File.new("datamapper.log", "a")  
+</pre>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -619,49 +660,6 @@ FoundANewWay::to_call_a_singleton_method
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/10/31/class-names-are-constants.html/">Class Names Are Constants</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2009-10-31T00:00:00+00:00" pubdate  data-updated="true" >Oct 31<span>st</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Ruby is an object oriented programming. Let us look at a code sinpet:</p>
-
-<pre>
- str =  String.new("ruby rocks")
-</pre>
-
-
-<p>So, we define a variable called &#8220;str&#8221;, which stores a pointer to the object created by sending &#8220;new&#8221; on &#8220;String&#8221;. Here, &#8220;String&#8221; receives the &#8220;new&#8221; message but for &#8220;String&#8221; to take any action when it receives &#8220;new&#8221; message it must have a reference to the object called String. Therefore, there must be a corresponding constant to every class in ruby. It can&#8217;t be a variable as it starts with an uppercase.</p>
-
-<p>Actually, that is exactly what happens. Every class in ruby has a global constant which stores a reference to the object and is used for method invocations. So, there are two things really one is the constant named String and the other is the object named String.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -681,6 +679,10 @@ FoundANewWay::to_call_a_singleton_method
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/12/30/aspect-oriented-programming.html/">Aspect Oriented Programming</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/12/01/Mina-the-deployer.html/">Mina, the deployer</a>
       </li>
     
@@ -694,10 +696,6 @@ FoundANewWay::to_call_a_singleton_method
     
       <li class="post">
         <a href="/2013/02/23/inspect-to_s-change-in-ruby2.html/">In Ruby2, inspect independent of to_s</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm.html/">Installing any Ruby source on your local machine with RVM</a>
       </li>
     
   </ul>
