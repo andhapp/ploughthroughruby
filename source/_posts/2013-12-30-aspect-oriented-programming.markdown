@@ -4,8 +4,7 @@ title: Aspect Oriented Programming
 date_string: 30 December 2013
 ---
 
-I was looking into Ruby's [TracePoint](http://www.ruby-doc.org/core-2.0.0/TracePoint.html) 
-class recently. TracePoint is an objectified Kernel#set_trace_func method. TracePoint was 
+I was looking into Ruby's [TracePoint](http://www.ruby-doc.org/core-2.0.0/TracePoint.html) class recently. TracePoint is an objectified Kernel#set_trace_func method. TracePoint was 
 added in Ruby2, but before that there was a gem that had same function as TracePoint
 class. Surprisingly, it was also called [tracepoint](https://github.com/rubyunworks/tracepoint).
 

@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Ruby object model - Plough => Ruby</title>
+  <title>Nested exceptions in Ruby 2.1.0 - Plough => Ruby</title>
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Right, so you know Ruby&#8217;s object model. Well here&#8217;s a little code snippet by JRuby creator Ola Bini and it drives the point home really...">
+  <meta name="description" content="With Ruby 2.1.0, one can easily trace the original exception.Previously, on rescuing an exception one would have no reference to the original excep...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="Plough => Ruby/2009/10/09/ruby-object-model.html/">
+  <link rel="canonical" href="Plough => Ruby/2014/01/06/nested-exception-in-ruby-2.1.0.html/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -63,7 +63,7 @@
   
   <header>
     
-      <h1 class="entry-title">Ruby Object Model</h1>
+      <h1 class="entry-title">Nested Exceptions in Ruby 2.1.0</h1>
     
     
       <p class="meta">
@@ -77,62 +77,68 @@
 
 
 
-<time datetime="2009-10-09T00:00:00+01:00" pubdate  data-updated="true" >Oct 9<span>th</span>, 2009</time>
+<time datetime="2014-01-06T00:00:00+00:00" pubdate  data-updated="true" >Jan 6<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Right, so you know Ruby&#8217;s object model. Well here&#8217;s a little code snippet by JRuby creator Ola Bini and it drives the point home really.</p>
+<div class="entry-content"><p>With Ruby 2.1.0, one can easily trace the original exception.
+Previously, on rescuing an exception one would have no reference to the original exception
+(thrown by a gem/library). There are a couple of <a href="https://github.com/skorks/nesty">gems</a> that can help you
+keep track of the exceptions, but with Ruby 2.1.0 you can work with
+nested exceptions without any issues. Here&#8217;s some trivial code to
+achieve the same:</p>
 
-<pre>
-class Obj
-  def something
-    puts "calling simple"
-    @abc = 3*42
-    def something
-      puts "calling memoized"
-      @abc
-    end
-    something
-  end
-end
-
-o = Obj.new
-o.something
-o.something
-o.something
-
-</pre>
-
-
-<p>The output of the code is:</p>
-
-<pre>
-calling simple
-calling memoized
-calling memoized
-calling memoized
-</pre>
-
-
-<p>Let us look at the code and anaylise it. &#8216;o&#8217; is an instance of &#8216;Obj&#8217; class. &#8216;something&#8217; is an instance method of &#8216;O&#8217;, therefore it can access it. The first &#8216;o.something&#8217; would call the instance method defined in &#8216;Obj&#8217; class. So, it prints &#8220;calling simple&#8221; and then the second &#8216;something&#8217; defines a method on instance &#8216;o&#8217; because inside the first &#8216;something&#8217; self is same as instance &#8216;o&#8217;.</p>
-
-<p>Now, what do you get when you do something like this:</p>
-
-<pre>
-def o.something
-     puts "I am o's singleton method."
-end
-</pre>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Car
+</span><span class='line'>  def self.start
+</span><span class='line'>    begin
+</span><span class='line'>      1/0
+</span><span class='line'>    rescue =&gt; ex
+</span><span class='line'>      puts "Exception: #{ex}"
+</span><span class='line'>      raise StandardError.new "Can't start the car"
+</span><span class='line'>    end
+</span><span class='line'>   end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>begin
+</span><span class='line'>  Car.start
+</span><span class='line'>rescue =&gt; ex
+</span><span class='line'>  puts "Cause: #{ex.cause}"
+</span><span class='line'>  puts "Exception: #{ex}"
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Yes, you get a singleton method on the instance. In this case, that&#8217;s exactly what happens. The second &#8216;something&#8217; defines a singleton method on instance &#8216;o&#8217;.  We are still in the middle of executing the first something. The last line of the first something (or the outer something) calls the method &#8216;something&#8217;. What the hell? Cyclic messaging!!!! Never ending loop. Yeah, but the code runs and exits gracefully.</p>
+<p>This will produce the following output:</p>
 
-<p>Well, the call to &#8216;something&#8217; would actually go and look for &#8216;something&#8217; method and before it finds a &#8216;something&#8217; method defined in the class &#8216;Obj&#8217; it would find the singleton-method &#8216;something&#8217; and execute that. So, what would that print. Yeah, you are right it prints &#8220;calling memoized&#8221;. The second and third calls to something will again encounter the &#8216;something&#8217; singleton method and execute that and it would not bother to go and look for the something defined as an instance method in class &#8216;Obj&#8217;.</p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Exception: divided by 0
+</span><span class='line'>Cause: divided by 0
+</span><span class='line'>Exception: Can't start the car</span></code></pre></td></tr></table></div></figure>
 
-<p>I know you are confused. Why would it go and look for the singleton method and not the instance method. This is the magic behind Ruby&#8217;s object model. Please head over to Ola Bini&#8217;s blog and read the article on <a href="http://ola-bini.blogspot.com/search/label/metaprogramming">metaprogramming</a>. He goes into a lot more detail.</p>
+
+<p>You can <a href="https://eval.in/86466">play around</a> with the code yourself.
+It&#8217;s not as sophisticated as the gems out there, but it&#8217;s getting there.</p>
 </div>
 
 
@@ -153,7 +159,7 @@ end
 
 
 
-<time datetime="2009-10-09T00:00:00+01:00" pubdate  data-updated="true" >Oct 9<span>th</span>, 2009</time>
+<time datetime="2014-01-06T00:00:00+00:00" pubdate  data-updated="true" >Jan 6<span>th</span>, 2014</time>
       
 
 
@@ -161,7 +167,7 @@ end
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2009/10/09/ruby-object-model.html/" data-via="" data-counturl="Plough => Ruby/2009/10/09/ruby-object-model.html/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2014/01/06/nested-exception-in-ruby-2.1.0.html/" data-via="" data-counturl="Plough => Ruby/2014/01/06/nested-exception-in-ruby-2.1.0.html/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -174,10 +180,8 @@ end
     
     <p class="meta">
        
-        <a class="basic-alignment left" href="/2009/09/30/define_method-instance_eval-and-class_eval.html/" title="Previous Post: define_method, instance_eval and class_eval">&laquo; define_method, instance_eval and class_eval</a>
+        <a class="basic-alignment left" href="/2013/12/30/aspect-oriented-programming.html/" title="Previous Post: Aspect Oriented Programming">&laquo; Aspect Oriented Programming</a>
       
-       
-        <a class="basic-alignment right" href="/2009/10/31/class-names-are-constants.html/" title="next Post: Class names are constants ">Class names are constants  &raquo;</a>
       
     </p>
   </footer>

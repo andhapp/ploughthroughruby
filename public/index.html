@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="I was looking into Ruby&#8217;s TracePointclass recently. TracePoint is an objectified Kernel#set_trace_func method. TracePoint wasadded in Ruby2, ...">
+  <meta name="description" content="With Ruby 2.1.0, one can easily trace the original exception.Previously, on rescuing an exception one would have no reference to the original excep...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -60,6 +60,94 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/01/06/nested-exception-in-ruby-2.1.0.html/">Nested Exceptions in Ruby 2.1.0</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2014-01-06T00:00:00+00:00" pubdate  data-updated="true" >Jan 6<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>With Ruby 2.1.0, one can easily trace the original exception.
+Previously, on rescuing an exception one would have no reference to the original exception
+(thrown by a gem/library). There are a couple of <a href="https://github.com/skorks/nesty">gems</a> that can help you
+keep track of the exceptions, but with Ruby 2.1.0 you can work with
+nested exceptions without any issues. Here&#8217;s some trivial code to
+achieve the same:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Car
+</span><span class='line'>  def self.start
+</span><span class='line'>    begin
+</span><span class='line'>      1/0
+</span><span class='line'>    rescue =&gt; ex
+</span><span class='line'>      puts "Exception: #{ex}"
+</span><span class='line'>      raise StandardError.new "Can't start the car"
+</span><span class='line'>    end
+</span><span class='line'>   end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>begin
+</span><span class='line'>  Car.start
+</span><span class='line'>rescue =&gt; ex
+</span><span class='line'>  puts "Cause: #{ex.cause}"
+</span><span class='line'>  puts "Exception: #{ex}"
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will produce the following output:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Exception: divided by 0
+</span><span class='line'>Cause: divided by 0
+</span><span class='line'>Exception: Can't start the car</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can <a href="https://eval.in/86466">play around</a> with the code yourself.
+It&#8217;s not as sophisticated as the gems out there, but it&#8217;s getting there.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -712,40 +800,6 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2011/03/12/free-ruby-1.9-online-book.html/">Free Ruby 1.9 Online Book</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-03-12T00:00:00+00:00" pubdate  data-updated="true" >Mar 12<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Just found this nicely done online book on <a href="http://ruby.runpaint.org/">Ruby 1.9</a>, in particular. It&#8217;s a must see.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -763,6 +817,10 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/01/06/nested-exception-in-ruby-2.1.0.html/">Nested exceptions in Ruby 2.1.0</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/12/30/aspect-oriented-programming.html/">Aspect Oriented Programming</a>
       </li>
     
@@ -778,10 +836,6 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
         <a href="/2013/04/08/openstruct-to-hash.html/">OpenStruct to hash</a>
       </li>
     
-      <li class="post">
-        <a href="/2013/02/23/inspect-to_s-change-in-ruby2.html/">In Ruby2, inspect independent of to_s</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -794,7 +848,7 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - andHapp -
+  Copyright &copy; 2014 - andHapp -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

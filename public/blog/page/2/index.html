@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="There are different file modes available to the developer when creating and opening new files in Ruby. One that I didn&#8217;t know about was &#822...">
+  <meta name="description" content="Just found this nicely done online book on Ruby 1.9, in particular. It&#8217;s a must see.">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -60,6 +60,40 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/03/12/free-ruby-1.9-online-book.html/">Free Ruby 1.9 Online Book</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-03-12T00:00:00+00:00" pubdate  data-updated="true" >Mar 12<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Just found this nicely done online book on <a href="http://ruby.runpaint.org/">Ruby 1.9</a>, in particular. It&#8217;s a must see.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -604,62 +638,6 @@ FoundANewWay::to_call_a_singleton_method
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/10/31/immediate-values.html/">Immediate Values</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2009-10-31T00:00:00+00:00" pubdate  data-updated="true" >Oct 31<span>st</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In a <a href="http://www.ploughthroughruby.co.uk/2009/08/is-variable-an-object/">previous post</a>, I have explained that variables are basically passed by values in ruby but since they have a reference to the original object any mutator methods can bascially modify the object itself. However, there are two exceptions to this; Fixnum and Symbol.</p>
-
-<p>Both, Fixnum and Symbol, store the values and have no reference to the object. This also applies that there are no mutator methods for Fixnum and Symbol and they are immutable. So, how can we actually prove this fact. Let us do a simple experiment and I think I might have done this before but I do not want you going back and forth between posts so let us just do it again. Run the code snippet and we are going through each step:</p>
-
-<pre>
-  fixnum_1 = 3
-  p fixnum_1.object_id
-  fixnum_2 = 3
-  p fixnum_2.object_id
-  str_1 = "3"
-  p str_1.object_id
-  str_2 = "3"
-  p str_2.object_id
-</pre>
-
-
-<p>You will see that both the fixnum variables have the same object_id where as with str variables they will be different. So, what does that mean? It simply means that two fixnums of same value always represent the same object instance, so instance variables for Fixnum with value 1 are shared across the system. The same is the case with Symbol.</p>
-
-<p>Ok. Fine. This makes perfect sense but why should I bother with all this explanation. Well, that is a million dollar question really and the answer to that is &#8220;You can&#8217;t define singleton methods on Fixnums and Symbols&#8221;. What? Why? I know this is confusing but when in doubt think of an example.</p>
-
-<p>We previously established that all the fixnum variables with same value are actually pointing to the same object instance. If let us say I want to define a singleton method on one then it would really define the singleton method on that object instance which means all the fixnum variables with same value would really share that new method you have added. Therefore, in order to cut that possibilty out one cannot define singleton methods on Fixnum, and Symbls.</p>
-
-<p>Update: I have just realised that true (TrueClass), false (FalseClass) and nil (NilClass) also store the references as immediate values. And, yes there is a TrueClass, FalseClass and NilClass and true, false and nil are singleton instances of these classes.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -679,6 +657,10 @@ FoundANewWay::to_call_a_singleton_method
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/01/06/nested-exception-in-ruby-2.1.0.html/">Nested exceptions in Ruby 2.1.0</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/12/30/aspect-oriented-programming.html/">Aspect Oriented Programming</a>
       </li>
     
@@ -694,10 +676,6 @@ FoundANewWay::to_call_a_singleton_method
         <a href="/2013/04/08/openstruct-to-hash.html/">OpenStruct to hash</a>
       </li>
     
-      <li class="post">
-        <a href="/2013/02/23/inspect-to_s-change-in-ruby2.html/">In Ruby2, inspect independent of to_s</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -710,7 +688,7 @@ FoundANewWay::to_call_a_singleton_method
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - andHapp -
+  Copyright &copy; 2014 - andHapp -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

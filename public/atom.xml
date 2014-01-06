@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="Plough => Ruby/atom.xml&#8221; rel=&#8221;self&#8221;/>
   <link href="Plough => Ruby/&#8221;/>
-  <updated>2013-12-30T12:04:28+00:00</updated>
+  <updated>2014-01-06T22:22:41+00:00</updated>
   <id>Plough => Ruby/</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -12,6 +12,69 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Nested exceptions in Ruby 2.1.0]]></title>
+    <link href="Plough => Ruby/2014/01/06/nested-exception-in-ruby-2.1.0.html/&#8221;/>
+    <updated>2014-01-06T00:00:00+00:00</updated>
+    <id>Plough => Ruby/2014/01/06/nested-exception-in-ruby-2.1.0</id>
+    <content type="html"><![CDATA[<p>With Ruby 2.1.0, one can easily trace the original exception.
+Previously, on rescuing an exception one would have no reference to the original exception
+(thrown by a gem/library). There are a couple of <a href="https://github.com/skorks/nesty">gems</a> that can help you
+keep track of the exceptions, but with Ruby 2.1.0 you can work with
+nested exceptions without any issues. Here&#8217;s some trivial code to
+achieve the same:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Car
+</span><span class='line'>  def self.start
+</span><span class='line'>    begin
+</span><span class='line'>      1/0
+</span><span class='line'>    rescue =&gt; ex
+</span><span class='line'>      puts "Exception: #{ex}"
+</span><span class='line'>      raise StandardError.new "Can't start the car"
+</span><span class='line'>    end
+</span><span class='line'>   end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>begin
+</span><span class='line'>  Car.start
+</span><span class='line'>rescue =&gt; ex
+</span><span class='line'>  puts "Cause: #{ex.cause}"
+</span><span class='line'>  puts "Exception: #{ex}"
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will produce the following output:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Exception: divided by 0
+</span><span class='line'>Cause: divided by 0
+</span><span class='line'>Exception: Can't start the car</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can <a href="https://eval.in/86466">play around</a> with the code yourself.
+It&#8217;s not as sophisticated as the gems out there, but it&#8217;s getting there.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Aspect Oriented Programming]]></title>
@@ -763,37 +826,6 @@ FoundANewWay::to_call_a_singleton_method
 
 
 <p>Cool!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Immediate Values]]></title>
-    <link href="Plough => Ruby/2009/10/31/immediate-values.html/&#8221;/>
-    <updated>2009-10-31T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2009/10/31/immediate-values</id>
-    <content type="html"><![CDATA[<p>In a <a href="http://www.ploughthroughruby.co.uk/2009/08/is-variable-an-object/">previous post</a>, I have explained that variables are basically passed by values in ruby but since they have a reference to the original object any mutator methods can bascially modify the object itself. However, there are two exceptions to this; Fixnum and Symbol.</p>
-
-<p>Both, Fixnum and Symbol, store the values and have no reference to the object. This also applies that there are no mutator methods for Fixnum and Symbol and they are immutable. So, how can we actually prove this fact. Let us do a simple experiment and I think I might have done this before but I do not want you going back and forth between posts so let us just do it again. Run the code snippet and we are going through each step:</p>
-
-<pre>
-  fixnum_1 = 3
-  p fixnum_1.object_id
-  fixnum_2 = 3
-  p fixnum_2.object_id
-  str_1 = "3"
-  p str_1.object_id
-  str_2 = "3"
-  p str_2.object_id
-</pre>
-
-
-<p>You will see that both the fixnum variables have the same object_id where as with str variables they will be different. So, what does that mean? It simply means that two fixnums of same value always represent the same object instance, so instance variables for Fixnum with value 1 are shared across the system. The same is the case with Symbol.</p>
-
-<p>Ok. Fine. This makes perfect sense but why should I bother with all this explanation. Well, that is a million dollar question really and the answer to that is &#8220;You can&#8217;t define singleton methods on Fixnums and Symbols&#8221;. What? Why? I know this is confusing but when in doubt think of an example.</p>
-
-<p>We previously established that all the fixnum variables with same value are actually pointing to the same object instance. If let us say I want to define a singleton method on one then it would really define the singleton method on that object instance which means all the fixnum variables with same value would really share that new method you have added. Therefore, in order to cut that possibilty out one cannot define singleton methods on Fixnum, and Symbls.</p>
-
-<p>Update: I have just realised that true (TrueClass), false (FalseClass) and nil (NilClass) also store the references as immediate values. And, yes there is a TrueClass, FalseClass and NilClass and true, false and nil are singleton instances of these classes.</p>
 ]]></content>
   </entry>
   
