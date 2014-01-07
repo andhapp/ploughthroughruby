@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Immediate Values - Plough => Ruby</title>
+  <title>Plough => Ruby</title>
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="In a previous post, I have explained that variables are basically passed by values in ruby but since they have a reference to the original object a...">
+  <meta name="description" content="I have been reading a lot about Ruby the language and decided that it was about time I blogged my journey.Hence the blog, Plough Through Ruby.Have ...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="Plough => Ruby/2009/10/31/immediate-values.html/">
+  <link rel="canonical" href="Plough => Ruby/blog/page/4/index.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -58,12 +58,15 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article class="hentry" role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
     
-      <h1 class="entry-title">Immediate Values</h1>
+      <h1 class="entry-title"><a href="/2009/08/16/hello-world.html/">Hello Ruby World!</a></h1>
     
     
       <p class="meta">
@@ -77,88 +80,35 @@
 
 
 
-<time datetime="2009-10-31T00:00:00+00:00" pubdate  data-updated="true" >Oct 31<span>st</span>, 2009</time>
+<time datetime="2009-08-16T00:00:00+01:00" pubdate  data-updated="true" >Aug 16<span>th</span>, 2009</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>In a <a href="http://www.ploughthroughruby.co.uk/2009/08/is-variable-an-object/">previous post</a>, I have explained that variables are basically passed by values in ruby but since they have a reference to the original object any mutator methods can bascially modify the object itself. However, there are two exceptions to this; Fixnum and Symbol.</p>
+  <div class="entry-content"><p>I have been reading a lot about Ruby the language and decided that it was about time I blogged my journey.</p>
 
-<p>Both, Fixnum and Symbol, store the values and have no reference to the object. This also applies that there are no mutator methods for Fixnum and Symbol and they are immutable. So, how can we actually prove this fact. Let us do a simple experiment and I think I might have done this before but I do not want you going back and forth between posts so let us just do it again. Run the code snippet and we are going through each step:</p>
+<p>Hence the blog, Plough Through Ruby.</p>
 
-<pre>
-  fixnum_1 = 3
-  p fixnum_1.object_id
-  fixnum_2 = 3
-  p fixnum_2.object_id
-  str_1 = "3"
-  p str_1.object_id
-  str_2 = "3"
-  p str_2.object_id
-</pre>
-
-
-<p>You will see that both the fixnum variables have the same object_id where as with str variables they will be different. So, what does that mean? It simply means that two fixnums of same value always represent the same object instance, so instance variables for Fixnum with value 1 are shared across the system. The same is the case with Symbol.</p>
-
-<p>Ok. Fine. This makes perfect sense but why should I bother with all this explanation. Well, that is a million dollar question really and the answer to that is &#8220;You can&#8217;t define singleton methods on Fixnums and Symbols&#8221;. What? Why? I know this is confusing but when in doubt think of an example.</p>
-
-<p>We previously established that all the fixnum variables with same value are actually pointing to the same object instance. If let us say I want to define a singleton method on one then it would really define the singleton method on that object instance which means all the fixnum variables with same value would really share that new method you have added. Therefore, in order to cut that possibilty out one cannot define singleton methods on Fixnum, and Symbls.</p>
-
-<p>Update: I have just realised that true (TrueClass), false (FalseClass) and nil (NilClass) also store the references as immediate values. And, yes there is a TrueClass, FalseClass and NilClass and true, false and nil are singleton instances of these classes.</p>
+<p>Have fun!</p>
 </div>
+  
+  
 
 
-  <footer>
-    <p class="meta">
+    </article>
+  
+  <nav class="pagination">
+    <div>
       
-  
-
-<span class="byline author vcard">Posted by <span class="fn">andHapp</span></span>
-
+      <a href="/blog/archives">Blog Archives</a>
       
-
-
-
-
-
-  
-
-
-
-<time datetime="2009-10-31T00:00:00+00:00" pubdate  data-updated="true" >Oct 31<span>st</span>, 2009</time>
+      <a class="next" href="/blog/page/3/">Newer &rarr;</a>
       
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2009/10/31/immediate-values.html/" data-via="" data-counturl="Plough => Ruby/2009/10/31/immediate-values.html/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
+    </div>
+  </nav>
 </div>
-
-    
-    <p class="meta">
-       
-        <a class="basic-alignment left" href="/2009/10/31/class-names-are-constants.html/" title="Previous Post: Class names are constants ">&laquo; Class names are constants </a>
-      
-       
-        <a class="basic-alignment right" href="/2009/11/04/serendipity.html/" title="next Post: Serendipity">Serendipity &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
-</div>
-
 <aside class="sidebar">
   
     <section>
@@ -193,7 +143,6 @@
 
   
 </aside>
-
 
     </div>
   </div>

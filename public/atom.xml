@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="Plough => Ruby/atom.xml&#8221; rel=&#8221;self&#8221;/>
   <link href="Plough => Ruby/&#8221;/>
-  <updated>2014-01-06T22:22:41+00:00</updated>
+  <updated>2014-01-07T23:42:53+00:00</updated>
   <id>Plough => Ruby/</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -12,6 +12,29 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Cryptic global variables in Ruby]]></title>
+    <link href="Plough => Ruby/2014/01/07/cryptic-global-variables-in-ruby.html/&#8221;/>
+    <updated>2014-01-07T00:00:00+00:00</updated>
+    <id>Plough => Ruby/2014/01/07/cryptic-global-variables-in-ruby</id>
+    <content type="html"><![CDATA[<p>Do you know what $! means in Ruby?</p>
+
+<p>Years ago, I was discussing some issue regarding GemCutter (now that makes
+it ancient in programming age), and we were talking about global
+variables in Ruby, for example, $; and $/. At the time, we couldn&#8217;t
+really find a place to look them up, even Google <a href="https://www.google.co.uk/search?q=%24!+Ruby&amp;oq=%24!+Ruby&amp;aqs=chrome..69i57.2487j0j7&amp;sourceid=chrome&amp;espv=210&amp;es_sm=91&amp;ie=UTF-8">isn&#8217;t very effective</a> given
+the nature of the query.</p>
+
+<p>Anyways, while looking through Ruby&#8217;s standard library, I found the file
+<a href="http://ruby-doc.org/stdlib-2.1.0/libdoc/English/rdoc/English.html">English.rb</a>.
+This library has English names for all the cryptic global variables. For
+example: $ERROR_INFO represents $!.</p>
+
+<p>If you ever have to look up the English names, which I suggest you do as
+it makes code easier to read, just refer to that file.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Nested exceptions in Ruby 2.1.0]]></title>
@@ -81,8 +104,7 @@ It&#8217;s not as sophisticated as the gems out there, but it&#8217;s getting th
     <link href="Plough => Ruby/2013/12/30/aspect-oriented-programming.html/&#8221;/>
     <updated>2013-12-30T00:00:00+00:00</updated>
     <id>Plough => Ruby/2013/12/30/aspect-oriented-programming</id>
-    <content type="html"><![CDATA[<p>I was looking into Ruby&#8217;s <a href="http://www.ruby-doc.org/core-2.0.0/TracePoint.html">TracePoint</a>
-class recently. TracePoint is an objectified Kernel#set_trace_func method. TracePoint was
+    <content type="html"><![CDATA[<p>I was looking into Ruby&#8217;s <a href="http://www.ruby-doc.org/core-2.0.0/TracePoint.html">TracePoint</a> class recently. TracePoint is an objectified Kernel#set_trace_func method. TracePoint was
 added in Ruby2, but before that there was a gem that had same function as TracePoint
 class. Surprisingly, it was also called <a href="https://github.com/rubyunworks/tracepoint">tracepoint</a>.</p>
 
@@ -794,38 +816,6 @@ system('echo Wheeee')
 <p>So, the question is what happens when you redefine the $stdout does that affect the output of these system calls. And the answer is Nope, it does not. The child processes like system would still use the existing output channel that the ruby process had in the beginning. Redefining, $stdout would not change the file descriptor. The file descriptors are still there and when we redefine $stdout we just stop using them. But the native calls to the OS will still use the console for output.</p>
 
 <p>That was a long post! I hope now you are better equipped with the IO knowledge and how it all works in ruby.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Serendipity]]></title>
-    <link href="Plough => Ruby/2009/11/04/serendipity.html/&#8221;/>
-    <updated>2009-11-04T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2009/11/04/serendipity</id>
-    <content type="html"><![CDATA[<p>I accidently found a nifty way of calling <del datetime="2009-11-04T09:19:06+00:00">class</del> singleton methods. Imagine you have this code:</p>
-
-<pre>
-
-class FoundANewWay
-    def self.to_call_a_singleton_method
-        puts "It works!"
-    end
-end
-</pre>
-
-
-<p>and you can call it like this:</p>
-
-<pre>
-FoundANewWay.to_call_a_singleton_method
-
-or
-
-FoundANewWay::to_call_a_singleton_method
-</pre>
-
-
-<p>Cool!</p>
 ]]></content>
   </entry>
   
