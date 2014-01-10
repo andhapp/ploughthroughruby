@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="I have been reading a lot about Ruby the language and decided that it was about time I blogged my journey.Hence the blog, Plough Through Ruby.Have ...">
+  <meta name="description" content="In Ruby, everything is an object. Well in Ruby 1.8, everything derives from an Object. However, in 1.9 a BasicObject has been introduced which is a...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,89 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/2009/08/17/is-variable-an-object.html/">Is Variable an Object?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-08-17T00:00:00+01:00" pubdate  data-updated="true" >Aug 17<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In Ruby, everything is an object. Well in Ruby 1.8, everything derives from an Object. However, in 1.9 a BasicObject has been introduced which is a minimalist version of a full blown object.</p>
+
+<p>Right, so is variable an object in Ruby?</p>
+
+<p>The answer is &#8220;no&#8221;. Let us look at the following code below and discuss what it does to reach a concrete solution. <br><br></p>
+
+<pre>
+    person = "Tim"
+</pre>
+
+
+
+
+<br><br>
+
+
+<p>This line basically creates a String object with the value &#8220;Tim&#8221; and stores it somewhere in the object heap. It then stores the reference of this object in the variable &#8220;person&#8221;. Thus, a variable is not an object. It is a mere pointer to an object. In other words, variables hold references to the objects and not the objects themselves.</p>
+
+<p>This is similar to how sometimes CPU registers work. Instead of storing the next instruction, the registers store the memory address of the next instruction.</p>
+
+<br><br>
+
+
+<p><b>Update:</b></p>
+
+<p>Continuing this discussion, I would like to add that variables when passed to methods are passed by <em>value</em>.</p>
+
+<p>And? what does that mean?</p>
+
+<p>Now, my contemporary Java and C developers (I like to call them geeks) would easily relate to the phrase &#8220;Pass by Value&#8221;. When a variable is passed by value then the variable is copied to another location and that new temporary variable that is created is passed to the method. Let us say the code for that is something like the snippet below:<br><br></p>
+
+<pre>
+    x = "Tim"
+    y = x
+</pre>
+
+
+
+
+<br><br>
+
+
+<p>Going back to the Ruby World. In Ruby, the variables are passed by value but since these values are actually the references to the object means the method can modify the underlying object. Let us prove this simple phenomenon. Take the code above and fire up the Terminal (or cmd line for Windows) and type irb to start a new irb session and do the following:<br><br></p>
+
+<pre>
+    x="Tim";y=x;puts "Copied - #{y.object_id} and Original - #{x.object_id}"
+</pre>
+
+
+<p>and what do you see? Yeah that is correct they are the reference to the same object.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/2009/08/16/hello-world.html/">Hello Ruby World!</a></h1>
     
     
@@ -116,6 +199,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/01/10/abbreviation-in-ruby.html/">Abbreviation in Ruby</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/01/07/cryptic-global-variables-in-ruby.html/">Cryptic global variables in Ruby</a>
       </li>
     
@@ -129,10 +216,6 @@
     
       <li class="post">
         <a href="/2013/12/01/Mina-the-deployer.html/">Mina, the deployer</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/04/10/dtrace-probes-in-ruby-2.html/">DTrace probes in Ruby 2 and a startling discovery</a>
       </li>
     
   </ul>

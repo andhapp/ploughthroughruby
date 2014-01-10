@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="I accidently found a nifty way of calling class singleton methods. Imagine you have this code:class FoundANewWay    def self.to_call_a_singleton_me...">
+  <meta name="description" content="It is obvious from the subject that I am going to talk about the streams $stdin, $stdout and $stderr but it would be a fun ride with lots of exampl...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -60,6 +60,111 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/11/19/ruby-streams-stdin-stdout-and-stderr.html/">Ruby Streams - $stdin, $stdout and $stderr</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-11-19T00:00:00+00:00" pubdate  data-updated="true" >Nov 19<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It is obvious from the subject that I am going to talk about the streams $stdin, $stdout and $stderr but it would be a fun ride with lots of examples and good explanations. However, there is another set of global variables called STDOUT, STDIN, STDERR. In addition to STDIN, there is ARGF and DATA for reading data in so you know you can research into these things.</p>
+
+<p>Any variable in ruby that starts with a $ sign is a global variable. You do not need to define it. It is given to you. Great!. Now, every ruby process on a UNIX (POSIX) system gives you three file descriptors stdin(fd0), stdout(fd1) and stderr(fd2). To generalise, every process is presumed to have three file descriptors, namely, standard output, standard input and standard error to communicate to the underlying OS. Since, ruby runs as a process it would also get these three file descriptors. So, $stderr, $stdout and $stdin are basically wrappers to those file descriptors and assist us in talking to the OS. Trivial operations like print this out on the console actually employs $stdout for outputting.</p>
+
+<p>What kind of objects are they? Let us go to good old irb and run some code. Run the code below:</p>
+
+<pre>
+$stdout.kind_of?(IO)
+</pre>
+
+
+<p>This would give you &#8220;true&#8221; which bascially means that $stdout is an IO object. <a href="http://ruby-doc.org/core/classes/IO.html#M002278">IO</a> is the main input output library in ruby. Do check out the rdoc for other exciting things you can do with it. Ok. Good that we have these file descriptors so what. I do not need to know how &#8220;puts&#8221; outputs stuff to the console. I just use it. Well, that is good but one should definitely have a good understanding of controlling where the output goes otherwise when someone asks you - <strong>&#8220;How do I redirect my output to a file instead of console?&#8221;</strong>, you would just sit there with no answer. So, let us try and find an answer to the same question so that you do not look like a fool.</p>
+
+<p>As it happens, we can actually redefine the $stdout. The following code would do exactly that when run in irb:</p>
+
+<pre>
+$stdout = File.open("test.log", "w")
+</pre>
+
+
+<p>It basically tells $stdout to spit everything out to a file called &#8220;test.log&#8221;. That&#8217;s it. Its done. Now, when you send a mesage to puts method it would use the newly defined $stdout and do the needful. Run this code in the same irb session as above and and see what happens:</p>
+
+<pre>
+puts "I am going to the file. It is more fun than printing on the cosole."
+</pre>
+
+
+<p>and you would not see this printed out in the console. Go and check the file test.log but to your surprise it would not be there. So, where the heck is it? Well, what happens is it is stored in a buffer and not written to the file until the buffer gets full (I am not entirely sure about this but I am guessing that would be the case). Now, if you terminate your irb session and check test.log you would find the entire ouput there but I do not want to end the session. I want to do the work and at the same time check the output. Well, not to worry the flush method does exactly that. Run this after every puts or print:</p>
+
+<pre>
+$stdout.flush
+</pre>
+
+
+<p>Voila! This clears the buffer and writes everthing to the file. So, there you are now you know how to redirect the output to a file. But hang on what if I want to go back to the console in the same session. Is that possible? Ofcourse, that is possible. Remember I told you about STDOUT at the beginning well that comes to the rescue. STDOUT and $stdout point to the same IO object. You can check that by running the following code in irb:</p>
+
+<pre>
+$stdout.equal?(STDOUT) 
+</pre>
+
+
+<p>and this gives you true, which proves my point. So, in order to go back to the original state you can just do this in order to redefine $stdout:</p>
+
+<pre>
+$stdout = STDOUT
+</pre>
+
+
+<p></p>
+
+<p>Simple! Now, when you do:</p>
+
+<pre>
+puts "Oh Em Gee, I am back on the console."
+</pre>
+
+
+<p></p>
+
+<p>You will see it straight away on your console. BTW, instead of $stdout you can redefine STDOUT and redirect the output to a file but puts or print would not be bothered about it as they use $stdout which is still pointing to the console.</p>
+
+<p>Now comes the most interesting bit of the whole post. Are system calles affected by the redefining of $stdout. You know system calls. Well, in ruby you can use a system method to call the underlying OS functions, for example:</p>
+
+<pre>
+system('ls -l')
+system('echo Wheeee')
+</pre>
+
+
+<p>So, the question is what happens when you redefine the $stdout does that affect the output of these system calls. And the answer is Nope, it does not. The child processes like system would still use the existing output channel that the ruby process had in the beginning. Redefining, $stdout would not change the file descriptor. The file descriptors are still there and when we redefine $stdout we just stop using them. But the native calls to the OS will still use the console for output.</p>
+
+<p>That was a long post! I hope now you are better equipped with the IO knowledge and how it all works in ruby.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -502,89 +607,6 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/08/17/is-variable-an-object.html/">Is Variable an Object?</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2009-08-17T00:00:00+01:00" pubdate  data-updated="true" >Aug 17<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In Ruby, everything is an object. Well in Ruby 1.8, everything derives from an Object. However, in 1.9 a BasicObject has been introduced which is a minimalist version of a full blown object.</p>
-
-<p>Right, so is variable an object in Ruby?</p>
-
-<p>The answer is &#8220;no&#8221;. Let us look at the following code below and discuss what it does to reach a concrete solution. <br><br></p>
-
-<pre>
-    person = "Tim"
-</pre>
-
-
-
-
-<br><br>
-
-
-<p>This line basically creates a String object with the value &#8220;Tim&#8221; and stores it somewhere in the object heap. It then stores the reference of this object in the variable &#8220;person&#8221;. Thus, a variable is not an object. It is a mere pointer to an object. In other words, variables hold references to the objects and not the objects themselves.</p>
-
-<p>This is similar to how sometimes CPU registers work. Instead of storing the next instruction, the registers store the memory address of the next instruction.</p>
-
-<br><br>
-
-
-<p><b>Update:</b></p>
-
-<p>Continuing this discussion, I would like to add that variables when passed to methods are passed by <em>value</em>.</p>
-
-<p>And? what does that mean?</p>
-
-<p>Now, my contemporary Java and C developers (I like to call them geeks) would easily relate to the phrase &#8220;Pass by Value&#8221;. When a variable is passed by value then the variable is copied to another location and that new temporary variable that is created is passed to the method. Let us say the code for that is something like the snippet below:<br><br></p>
-
-<pre>
-    x = "Tim"
-    y = x
-</pre>
-
-
-
-
-<br><br>
-
-
-<p>Going back to the Ruby World. In Ruby, the variables are passed by value but since these values are actually the references to the object means the method can modify the underlying object. Let us prove this simple phenomenon. Take the code above and fire up the Terminal (or cmd line for Windows) and type irb to start a new irb session and do the following:<br><br></p>
-
-<pre>
-    x="Tim";y=x;puts "Copied - #{y.object_id} and Original - #{x.object_id}"
-</pre>
-
-
-<p>and what do you see? Yeah that is correct they are the reference to the same object.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -604,6 +626,10 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/01/10/abbreviation-in-ruby.html/">Abbreviation in Ruby</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/01/07/cryptic-global-variables-in-ruby.html/">Cryptic global variables in Ruby</a>
       </li>
     
@@ -617,10 +643,6 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
     
       <li class="post">
         <a href="/2013/12/01/Mina-the-deployer.html/">Mina, the deployer</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/04/10/dtrace-probes-in-ruby-2.html/">DTrace probes in Ruby 2 and a startling discovery</a>
       </li>
     
   </ul>

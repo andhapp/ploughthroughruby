@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="I have completed proof-reading and testing the code from old Ruby Hacking Guide and re-releases in the wild again. It still needs some styling work...">
+  <meta name="description" content="In this post, I will talk about a ruby method that I had no idea existed which might come handy in debugging your code.The method I am talking abou...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -60,6 +60,104 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2011/04/17/an-interesting-ruby-method.html/">An Interesting Ruby Method</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-04-17T00:00:00+01:00" pubdate  data-updated="true" >Apr 17<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In this post, I will talk about a ruby method that I had no idea existed which might come handy in debugging your code.</p>
+
+<p>The method I am talking about is <em>set_trace_func</em>. It&#8217;s part of the Kernel class and it does what it says. Allows one to set the method tracing on a method. The following snippet explains it further. Here, we have a class, TestingSetProcFunc:</p>
+
+<pre>
+    class TestingSetProcFunc
+      def traceThisMethod
+        source = 1
+        target = 2
+      end
+    end
+</pre>
+
+
+<p>To inject set_trace_func in, it needs to be called before the method is invoked, like this:</p>
+
+<pre>    
+    puts "Event    File:Line                Id          Binding        Classname"
+    set_trace_func proc { |event, file, line, id, binding, classname|
+      printf "%8s %s:%-2d %20s %12s %8s\n", event, file, line, id, binding, classname
+    }
+</pre>
+
+
+<p>It takes a proc with upto 6 arguments. These are the events with their brief descriptions:</p>
+
+<ul>
+<li>c-call (call a C-language routine)</li>
+<li>c-return (return from a C-language routine)</li>
+<li>call (call a Ruby method)</li>
+<li>class (start a class or module definition)</li>
+<li>end (finish a class or module definition)</li>
+<li>line (execute code on a new line)</li>
+<li>raise (raise an exception)</li>
+<li>return (return from a Ruby method).</li>
+</ul>
+
+
+<p>Now, to run this we just need to call the method and look at the output:</p>
+
+<pre>
+    tracer = TestingSetProcFunc.new
+    tracer.traceThisMethod
+</pre>
+
+
+<p>This is what the output will look like when you run it on the command line:</p>
+
+<pre>    
+Event    File:Line                Id          Binding        Classname
+c-return test.rb:11       set_trace_func #<Binding:0x0b53c4>   Kernel
+    line test.rb:13                      #<Binding:0x0b52fc>         
+  c-call test.rb:13                  new #<Binding:0x0b525c>    Class
+  c-call test.rb:13           initialize #<Binding:0x0b5144> BasicObject
+c-return test.rb:13           initialize #<Binding:0x0b5090> BasicObject
+c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
+    line test.rb:14                      #<Binding:0x0b4f50>         
+    call test.rb:2       traceThisMethod #<Binding:0x0b4eb0> TestingSetProcFunc
+    line test.rb:3       traceThisMethod #<Binding:0x0b4dfc> TestingSetProcFunc
+    line test.rb:4       traceThisMethod #<Binding:0x0b4d5c> TestingSetProcFunc
+  return test.rb:5       traceThisMethod #<Binding:0x0b4cbc> TestingSetProcFunc    
+</pre>
+
+
+<p>This output gives one a good idea about the work that is happening in the background. The weird looking Binding instance is the context at that particular place in the code. I have just scratched the surface and I am sure there&#8217;s a lot one can do with this method. Have a look at the <a href="https://github.com/ruby/ruby/blob/trunk/test/ruby/test_settracefunc.rb">ruby&#8217;s test for set_trace_func</a> for more useful ways of employing it.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -512,111 +610,6 @@ kernels_proc_variable = proc {|a| a + 10 }
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/11/19/ruby-streams-stdin-stdout-and-stderr.html/">Ruby Streams - $stdin, $stdout and $stderr</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2009-11-19T00:00:00+00:00" pubdate  data-updated="true" >Nov 19<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It is obvious from the subject that I am going to talk about the streams $stdin, $stdout and $stderr but it would be a fun ride with lots of examples and good explanations. However, there is another set of global variables called STDOUT, STDIN, STDERR. In addition to STDIN, there is ARGF and DATA for reading data in so you know you can research into these things.</p>
-
-<p>Any variable in ruby that starts with a $ sign is a global variable. You do not need to define it. It is given to you. Great!. Now, every ruby process on a UNIX (POSIX) system gives you three file descriptors stdin(fd0), stdout(fd1) and stderr(fd2). To generalise, every process is presumed to have three file descriptors, namely, standard output, standard input and standard error to communicate to the underlying OS. Since, ruby runs as a process it would also get these three file descriptors. So, $stderr, $stdout and $stdin are basically wrappers to those file descriptors and assist us in talking to the OS. Trivial operations like print this out on the console actually employs $stdout for outputting.</p>
-
-<p>What kind of objects are they? Let us go to good old irb and run some code. Run the code below:</p>
-
-<pre>
-$stdout.kind_of?(IO)
-</pre>
-
-
-<p>This would give you &#8220;true&#8221; which bascially means that $stdout is an IO object. <a href="http://ruby-doc.org/core/classes/IO.html#M002278">IO</a> is the main input output library in ruby. Do check out the rdoc for other exciting things you can do with it. Ok. Good that we have these file descriptors so what. I do not need to know how &#8220;puts&#8221; outputs stuff to the console. I just use it. Well, that is good but one should definitely have a good understanding of controlling where the output goes otherwise when someone asks you - <strong>&#8220;How do I redirect my output to a file instead of console?&#8221;</strong>, you would just sit there with no answer. So, let us try and find an answer to the same question so that you do not look like a fool.</p>
-
-<p>As it happens, we can actually redefine the $stdout. The following code would do exactly that when run in irb:</p>
-
-<pre>
-$stdout = File.open("test.log", "w")
-</pre>
-
-
-<p>It basically tells $stdout to spit everything out to a file called &#8220;test.log&#8221;. That&#8217;s it. Its done. Now, when you send a mesage to puts method it would use the newly defined $stdout and do the needful. Run this code in the same irb session as above and and see what happens:</p>
-
-<pre>
-puts "I am going to the file. It is more fun than printing on the cosole."
-</pre>
-
-
-<p>and you would not see this printed out in the console. Go and check the file test.log but to your surprise it would not be there. So, where the heck is it? Well, what happens is it is stored in a buffer and not written to the file until the buffer gets full (I am not entirely sure about this but I am guessing that would be the case). Now, if you terminate your irb session and check test.log you would find the entire ouput there but I do not want to end the session. I want to do the work and at the same time check the output. Well, not to worry the flush method does exactly that. Run this after every puts or print:</p>
-
-<pre>
-$stdout.flush
-</pre>
-
-
-<p>Voila! This clears the buffer and writes everthing to the file. So, there you are now you know how to redirect the output to a file. But hang on what if I want to go back to the console in the same session. Is that possible? Ofcourse, that is possible. Remember I told you about STDOUT at the beginning well that comes to the rescue. STDOUT and $stdout point to the same IO object. You can check that by running the following code in irb:</p>
-
-<pre>
-$stdout.equal?(STDOUT) 
-</pre>
-
-
-<p>and this gives you true, which proves my point. So, in order to go back to the original state you can just do this in order to redefine $stdout:</p>
-
-<pre>
-$stdout = STDOUT
-</pre>
-
-
-<p></p>
-
-<p>Simple! Now, when you do:</p>
-
-<pre>
-puts "Oh Em Gee, I am back on the console."
-</pre>
-
-
-<p></p>
-
-<p>You will see it straight away on your console. BTW, instead of $stdout you can redefine STDOUT and redirect the output to a file but puts or print would not be bothered about it as they use $stdout which is still pointing to the console.</p>
-
-<p>Now comes the most interesting bit of the whole post. Are system calles affected by the redefining of $stdout. You know system calls. Well, in ruby you can use a system method to call the underlying OS functions, for example:</p>
-
-<pre>
-system('ls -l')
-system('echo Wheeee')
-</pre>
-
-
-<p>So, the question is what happens when you redefine the $stdout does that affect the output of these system calls. And the answer is Nope, it does not. The child processes like system would still use the existing output channel that the ruby process had in the beginning. Redefining, $stdout would not change the file descriptor. The file descriptors are still there and when we redefine $stdout we just stop using them. But the native calls to the OS will still use the console for output.</p>
-
-<p>That was a long post! I hope now you are better equipped with the IO knowledge and how it all works in ruby.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -636,6 +629,10 @@ system('echo Wheeee')
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/01/10/abbreviation-in-ruby.html/">Abbreviation in Ruby</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/01/07/cryptic-global-variables-in-ruby.html/">Cryptic global variables in Ruby</a>
       </li>
     
@@ -649,10 +646,6 @@ system('echo Wheeee')
     
       <li class="post">
         <a href="/2013/12/01/Mina-the-deployer.html/">Mina, the deployer</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/04/10/dtrace-probes-in-ruby-2.html/">DTrace probes in Ruby 2 and a startling discovery</a>
       </li>
     
   </ul>

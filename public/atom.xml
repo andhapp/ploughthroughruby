@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="Plough => Ruby/atom.xml&#8221; rel=&#8221;self&#8221;/>
   <link href="Plough => Ruby/&#8221;/>
-  <updated>2014-01-07T23:42:53+00:00</updated>
+  <updated>2014-01-10T10:11:42+00:00</updated>
   <id>Plough => Ruby/</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -12,6 +12,66 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Abbreviation in Ruby]]></title>
+    <link href="Plough => Ruby/2014/01/10/abbreviation-in-ruby.html/&#8221;/>
+    <updated>2014-01-10T00:00:00+00:00</updated>
+    <id>Plough => Ruby/2014/01/10/abbreviation-in-ruby</id>
+    <content type="html"><![CDATA[<p>Ruby&#8217;s standard library is filled with several unique, non-standard classes/modules, one such module is <a href="http://ruby-doc.org/stdlib-2.1.0/libdoc/abbrev/rdoc/Abbrev.html">Abbrev</a>.</p>
+
+<p>Abbrev calculates the set of unique abbreviations for a given set of strings. The following code demonstrates it properly:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>require 'abbrev'
+</span><span class='line'>require 'pp'
+</span><span class='line'>
+</span><span class='line'>pp Abbrev.abbrev(['ruby', 'rules'])</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This code produces the following output where all the keys are
+abbreviated and unique, and point to their respective words.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{"ruby"=&gt;"ruby",
+</span><span class='line'> "rub"=&gt;"ruby",
+</span><span class='line'> "rules"=&gt;"rules",
+</span><span class='line'> "rule"=&gt;"rules",
+</span><span class='line'> "rul"=&gt;"rules"}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This also provides an extension for an Array, so you can call &#8216;abbrev&#8217;
+method straight on an array. The code above will then become:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>require 'abbrev'
+</span><span class='line'>require 'pp'
+</span><span class='line'>
+</span><span class='line'>pp ['ruby', 'rules'].abbrev</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I found a couple of use cases of the Abbrev module on Google:</p>
+
+<ol>
+<li><p>For creating <a href="http://www.aimred.com/news/developers/2010/05/11/rediscovering_ruby_abbrev/">unique labels</a> for a bar graph.</p></li>
+<li><p>For creating an <a href="http://endofline.wordpress.com/2010/12/25/ruby-standard-library-abbrev/">auto-completer</a> on console, intriguing, right?</p></li>
+</ol>
+
+
+<p>Hope this will make you aware of such a nifty module and please share your
+use-cases with the rest of us.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Cryptic global variables in Ruby]]></title>
@@ -736,86 +796,6 @@ kernels_proc_variable = proc {|a| a + 10 }
 
 
 <p>Now, proc behaves differently in Ruby 1.8 and Ruby 1.9. In 1.8, it returns a lambda where as in 1.9 it is a synonym for Proc.new. So, please be aware of this simple yet pivotal difference. Pivotal because lambda&#8217;s and proc&#8217;s are slightly different, although on the surface they look the same. They are both instances of Proc so let us just say they are siblings. There is so much more you can do with Procs and this post has just touched the surface of it. I will discuss lambda and closures in the coming posts and then compare them.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Ruby streams - $stdin, $stdout and $stderr]]></title>
-    <link href="Plough => Ruby/2009/11/19/ruby-streams-stdin-stdout-and-stderr.html/&#8221;/>
-    <updated>2009-11-19T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2009/11/19/ruby-streams-stdin-stdout-and-stderr</id>
-    <content type="html"><![CDATA[<p>It is obvious from the subject that I am going to talk about the streams $stdin, $stdout and $stderr but it would be a fun ride with lots of examples and good explanations. However, there is another set of global variables called STDOUT, STDIN, STDERR. In addition to STDIN, there is ARGF and DATA for reading data in so you know you can research into these things.</p>
-
-<p>Any variable in ruby that starts with a $ sign is a global variable. You do not need to define it. It is given to you. Great!. Now, every ruby process on a UNIX (POSIX) system gives you three file descriptors stdin(fd0), stdout(fd1) and stderr(fd2). To generalise, every process is presumed to have three file descriptors, namely, standard output, standard input and standard error to communicate to the underlying OS. Since, ruby runs as a process it would also get these three file descriptors. So, $stderr, $stdout and $stdin are basically wrappers to those file descriptors and assist us in talking to the OS. Trivial operations like print this out on the console actually employs $stdout for outputting.</p>
-
-<p>What kind of objects are they? Let us go to good old irb and run some code. Run the code below:</p>
-
-<pre>
-$stdout.kind_of?(IO)
-</pre>
-
-
-<p>This would give you &#8220;true&#8221; which bascially means that $stdout is an IO object. <a href="http://ruby-doc.org/core/classes/IO.html#M002278">IO</a> is the main input output library in ruby. Do check out the rdoc for other exciting things you can do with it. Ok. Good that we have these file descriptors so what. I do not need to know how &#8220;puts&#8221; outputs stuff to the console. I just use it. Well, that is good but one should definitely have a good understanding of controlling where the output goes otherwise when someone asks you - <strong>&#8220;How do I redirect my output to a file instead of console?&#8221;</strong>, you would just sit there with no answer. So, let us try and find an answer to the same question so that you do not look like a fool.</p>
-
-<p>As it happens, we can actually redefine the $stdout. The following code would do exactly that when run in irb:</p>
-
-<pre>
-$stdout = File.open("test.log", "w")
-</pre>
-
-
-<p>It basically tells $stdout to spit everything out to a file called &#8220;test.log&#8221;. That&#8217;s it. Its done. Now, when you send a mesage to puts method it would use the newly defined $stdout and do the needful. Run this code in the same irb session as above and and see what happens:</p>
-
-<pre>
-puts "I am going to the file. It is more fun than printing on the cosole."
-</pre>
-
-
-<p>and you would not see this printed out in the console. Go and check the file test.log but to your surprise it would not be there. So, where the heck is it? Well, what happens is it is stored in a buffer and not written to the file until the buffer gets full (I am not entirely sure about this but I am guessing that would be the case). Now, if you terminate your irb session and check test.log you would find the entire ouput there but I do not want to end the session. I want to do the work and at the same time check the output. Well, not to worry the flush method does exactly that. Run this after every puts or print:</p>
-
-<pre>
-$stdout.flush
-</pre>
-
-
-<p>Voila! This clears the buffer and writes everthing to the file. So, there you are now you know how to redirect the output to a file. But hang on what if I want to go back to the console in the same session. Is that possible? Ofcourse, that is possible. Remember I told you about STDOUT at the beginning well that comes to the rescue. STDOUT and $stdout point to the same IO object. You can check that by running the following code in irb:</p>
-
-<pre>
-$stdout.equal?(STDOUT) 
-</pre>
-
-
-<p>and this gives you true, which proves my point. So, in order to go back to the original state you can just do this in order to redefine $stdout:</p>
-
-<pre>
-$stdout = STDOUT
-</pre>
-
-
-<p></p>
-
-<p>Simple! Now, when you do:</p>
-
-<pre>
-puts "Oh Em Gee, I am back on the console."
-</pre>
-
-
-<p></p>
-
-<p>You will see it straight away on your console. BTW, instead of $stdout you can redefine STDOUT and redirect the output to a file but puts or print would not be bothered about it as they use $stdout which is still pointing to the console.</p>
-
-<p>Now comes the most interesting bit of the whole post. Are system calles affected by the redefining of $stdout. You know system calls. Well, in ruby you can use a system method to call the underlying OS functions, for example:</p>
-
-<pre>
-system('ls -l')
-system('echo Wheeee')
-</pre>
-
-
-<p>So, the question is what happens when you redefine the $stdout does that affect the output of these system calls. And the answer is Nope, it does not. The child processes like system would still use the existing output channel that the ruby process had in the beginning. Redefining, $stdout would not change the file descriptor. The file descriptors are still there and when we redefine $stdout we just stop using them. But the native calls to the OS will still use the console for output.</p>
-
-<p>That was a long post! I hope now you are better equipped with the IO knowledge and how it all works in ruby.</p>
 ]]></content>
   </entry>
   
