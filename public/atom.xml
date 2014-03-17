@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="Plough => Ruby/atom.xml&#8221; rel=&#8221;self&#8221;/>
   <link href="Plough => Ruby/&#8221;/>
-  <updated>2014-01-10T10:11:42+00:00</updated>
+  <updated>2014-03-17T21:51:38+00:00</updated>
   <id>Plough => Ruby/</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -12,6 +12,39 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[You want to be a programmer?]]></title>
+    <link href="Plough => Ruby/2014/03/17/you-want-to-be-a-programmer%3F.html/&#8221;/>
+    <updated>2014-03-17T00:00:00+00:00</updated>
+    <id>Plough => Ruby/2014/03/17/you-want-to-be-a-programmer?</id>
+    <content type="html"><![CDATA[<h3>But, you have no time</h3>
+
+
+<p>No one has time!</p>
+
+<p>The rise of billion dollar startups that get acquired in 6 months (or longer, perhaps) from launch gives a false impression that programming is easy, and hence shouldn’t take very long to learn. After all, you have a billion dollar idea you would like to start working on.</p>
+
+<p>Let’s conduct a small study. Why don’t you spend an hour on StackOverflow? Why? To observe how users, without doing any research, ask the same questions over and over and over again. They just want to learn how this works, not why this works and not something else. I’m possibly guilty of the same mistakes, and I have been trying to amend them ever since.</p>
+
+<h3>You need this</h3>
+
+
+<p>As a result of these observations, and experience in teaching, I’ve come up up with a list of few qualities that can make you a better programmer:</p>
+
+<ul>
+<li><p>Learner - Learning never stops for a programmer and that’s the fun of it. You will have to spend extra hours every week to brush up your skills, gain new skills, and get better at your trade.</p></li>
+<li><p>Committed - It’s not easy to become a programmer. It will require a lot of commitment, practice, and more programming, of course.</p></li>
+<li><p>Investigative - You may end up spending days trying to fix a Javascript memory leak, or why your Rails app is running slow and leaking memory. It will require a lot of investigation, research and thinking about every aspect of the application, and it’s behaviour. You will have to read API documents, source code, and so on.
+and this list is not complete yet.</p></li>
+</ul>
+
+
+<p>All in all, it’s not going to be easy.</p>
+
+<p>Now, do you still want to be a programmer?</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Abbreviation in Ruby]]></title>
@@ -742,60 +775,6 @@ Its quite simple really. If the first statement (the match bit) raises and excep
 
 
 <p>Also, please note that you should have postgres and mysql installed on your machine.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Proc, proc, blocks]]></title>
-    <link href="Plough => Ruby/2009/12/20/proc-proc-blocks.html/&#8221;/>
-    <updated>2009-12-20T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2009/12/20/proc-proc-blocks</id>
-    <content type="html"><![CDATA[<p>I know you must be thinking proc and Proc is the same thing and I must have mistyped. But, proc and Proc are different things. Blocks is a beautiful concept and you can achieve so much by using blocks carefully that it is unbelievable. I created a simple DSL using blocks and Faker gem to spit out XML used for testing purposes. I mean it took me few hours to do the first version up and running in Sinatra. Amazing.</p>
-
-<p>So, block is nothing more than bits of code within curly brackets. The concept of blocks is used excessively throughout Ruby in iterators like inject, select, map, each and so on and so forth. For example:</p>
-
-<pre>
-def example_from_a_block
-  puts "Should call a block"
-  yield 
-  puts "Yes, I did!"
-end
-</pre>
-
-
-<p>and invoke it like:</p>
-
-<pre>
-example_from_a_block { puts "in a block" }
-</pre>
-
-
-<p>But blocks do have problems. Not exactly problems, but yeah shortcoming for sure. They are not objects. So&#8230;what difference does it make if they are not objects. I don&#8217;t care man. I like them. Exactly you like blocks but you would love blocks wrapped as objects. Yes, these things do exist. They are called proc or lambda. So what is a proc then? It is basically a block but with object like features, I mean you can manipulate them and pass them around like regular objects. Cool.</p>
-
-<p>To create a proc, just do:</p>
-
-<pre>
-p = Proc.new { puts "I am a proc" }
-</pre>
-
-
-<p></p>
-
-<p>It is absolutely essential to pass a block to a proc. &#8220;p&#8221; is basically an instance of the class <a href="http://ruby-doc.org/core/classes/Proc.html">Proc</a>. Run this in you irb session and confim that it is indeed an object with an object_id:</p>
-
-<pre>
-p.object_id
-</pre>
-
-
-<p>Hmm&#8230;two down one to go. What exactly is a proc then. proc is just a simple global method, if you will, of the Kernel module. So, you can just invoke it like this:</p>
-
-<pre>
-kernels_proc_variable = proc {|a| a + 10 }
-</pre>
-
-
-<p>Now, proc behaves differently in Ruby 1.8 and Ruby 1.9. In 1.8, it returns a lambda where as in 1.9 it is a synonym for Proc.new. So, please be aware of this simple yet pivotal difference. Pivotal because lambda&#8217;s and proc&#8217;s are slightly different, although on the surface they look the same. They are both instances of Proc so let us just say they are siblings. There is so much more you can do with Procs and this post has just touched the surface of it. I will discuss lambda and closures in the coming posts and then compare them.</p>
 ]]></content>
   </entry>
   
