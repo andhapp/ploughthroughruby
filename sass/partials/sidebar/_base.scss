@@ -47,6 +47,11 @@ aside.sidebar {
     color: $sidebar-link-color;
     &:hover { color: $sidebar-link-color-hover; }
   }
+	#mc_embed_signup {
+    clear:left; 
+    background:#f3f2f2; 
+    font:14px 'PT Serif',Helvetica,Arial,sans-serif; 
+  }
 }
 .aside-alt-link {
   color: $sidebar-link-color-subdued;
