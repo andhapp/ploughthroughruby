@@ -21,7 +21,6 @@ As a result of these observations, and experience in teaching, I’ve come up up
   * Committed - It’s not easy to become a programmer. It will require a lot of commitment, practice, and more programming, of course.
 
   * Investigative - You may end up spending days trying to fix a Javascript memory leak, or why your Rails app is running slow and leaking memory. It will require a lot of investigation, research and thinking about every aspect of the application, and it’s behaviour. You will have to read API documents, source code, and so on.
-and this list is not complete yet. 
 
 All in all, it’s not going to be easy.
 

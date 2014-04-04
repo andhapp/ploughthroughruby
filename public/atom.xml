@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="Plough => Ruby/atom.xml&#8221; rel=&#8221;self&#8221;/>
   <link href="Plough => Ruby/&#8221;/>
-  <updated>2014-03-24T01:48:49+00:00</updated>
+  <updated>2014-04-04T10:30:32+01:00</updated>
   <id>Plough => Ruby/</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -35,8 +35,7 @@
 <ul>
 <li><p>Learner - Learning never stops for a programmer and that’s the fun of it. You will have to spend extra hours every week to brush up your skills, gain new skills, and get better at your trade.</p></li>
 <li><p>Committed - It’s not easy to become a programmer. It will require a lot of commitment, practice, and more programming, of course.</p></li>
-<li><p>Investigative - You may end up spending days trying to fix a Javascript memory leak, or why your Rails app is running slow and leaking memory. It will require a lot of investigation, research and thinking about every aspect of the application, and it’s behaviour. You will have to read API documents, source code, and so on.
-and this list is not complete yet.</p></li>
+<li><p>Investigative - You may end up spending days trying to fix a Javascript memory leak, or why your Rails app is running slow and leaking memory. It will require a lot of investigation, research and thinking about every aspect of the application, and it’s behaviour. You will have to read API documents, source code, and so on.</p></li>
 </ul>
 
 
