@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="Plough => Ruby/atom.xml&#8221; rel=&#8221;self&#8221;/>
   <link href="Plough => Ruby/&#8221;/>
-  <updated>2014-04-04T10:30:32+01:00</updated>
+  <updated>2014-06-15T23:07:57+01:00</updated>
   <id>Plough => Ruby/</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -12,6 +12,43 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ruby puts command]]></title>
+    <link href="Plough => Ruby/2014/06/15/ruby-puts-command.html/&#8221;/>
+    <updated>2014-06-15T00:00:00+01:00</updated>
+    <id>Plough => Ruby/2014/06/15/ruby-puts-command</id>
+    <content type="html"><![CDATA[<p>Ruby&#8217;s puts command will lead the &#8216;most used command&#8217; competition in the language. It&#8217;s probably the first command you run when you fire up irb, or write HelloWorld.rb. I have been using it from day 1, for debugging, printing out the progress of long running scripts and so on. I recently found couple of nifty things you can do with puts command:</p>
+
+<ul>
+<li>You can pass it multiple arguments and it will print them on the screen with a line break, for example:</li>
+</ul>
+
+
+<pre>
+irb(main):001:0> puts "First", "day"
+First
+day
+=> nil
+</pre>
+
+
+<ul>
+<li>Secondly, you can pass it an array of elements, and it will print the elements with a line break, for example:</li>
+</ul>
+
+
+<pre>
+irb(main):004:0> puts ["Second", "Day"]
+Second
+Day
+=> nil
+</pre>
+
+
+<p>Hope you can use this to replace multiple calls to puts in your code.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[You want to be a programmer?]]></title>
@@ -747,33 +784,6 @@ Its quite simple really. If the first statement (the match bit) raises and excep
   end
 </pre>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Install pg and mysql gems]]></title>
-    <link href="Plough => Ruby/2010/02/22/install-pg-and-mysql-gems.html/&#8221;/>
-    <updated>2010-02-22T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2010/02/22/install-pg-and-mysql-gems</id>
-    <content type="html"><![CDATA[<p>This is not entirely realted to ruby but if you ever program with ruby you will find yourself using pg and mysql gems and the issue is how exactly do I install them. This mini-post (rather tumble) is just to make a note of this. Run the following in Teerminal.</p>
-
-<p>PostgreSql</p>
-
-<pre>
-  export PATH=/usr/local/pgsql/bin:${PATH}
-  gem install pg
-</pre>
-
-
-<p>MySql</p>
-
-<pre>
-  export PATH=/usr/local/mysql/bin:${PATH}
-  gem install mysql
-</pre>
-
-
-<p>Also, please note that you should have postgres and mysql installed on your machine.</p>
 ]]></content>
   </entry>
   

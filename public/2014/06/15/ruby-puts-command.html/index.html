@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Convert Array to Hash mystery - Plough => Ruby</title>
+  <title>Ruby puts command - Plough => Ruby</title>
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="It is always easy to find solutions on Google but the real fun is in finding out how a bit of code works. It just helps you understand much more ab...">
+  <meta name="description" content="Ruby&#8217;s puts command will lead the &#8216;most used command&#8217; competition in the language. It&#8217;s probably the first command you run ...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="Plough => Ruby/2011/01/03/convert-array-to-hash-mystery.html/">
+  <link rel="canonical" href="Plough => Ruby/2014/06/15/ruby-puts-command.html/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -64,7 +64,7 @@
   
   <header>
     
-      <h1 class="entry-title">Convert Array to Hash Mystery</h1>
+      <h1 class="entry-title">Ruby Puts Command</h1>
     
     
       <p class="meta">
@@ -78,55 +78,42 @@
 
 
 
-<time datetime="2011-01-03T00:00:00+00:00" pubdate  data-updated="true" >Jan 3<span>rd</span>, 2011</time>
+<time datetime="2014-06-15T00:00:00+01:00" pubdate  data-updated="true" >Jun 15<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>It is always easy to find solutions on Google but the real fun is in finding out how a bit of code works. It just helps you understand much more about the language and how it behaves. Converting an array to hash is easy. Just use this piece of code that I found on google:</p>
+<div class="entry-content"><p>Ruby&#8217;s puts command will lead the &#8216;most used command&#8217; competition in the language. It&#8217;s probably the first command you run when you fire up irb, or write HelloWorld.rb. I have been using it from day 1, for debugging, printing out the progress of long running scripts and so on. I recently found couple of nifty things you can do with puts command:</p>
+
+<ul>
+<li>You can pass it multiple arguments and it will print them on the screen with a line break, for example:</li>
+</ul>
+
 
 <pre>
-  some_array = [1,2,3]
-  some_hash = Hash[*(some_array.collect{|v| [v,v]}.flatten)] # yields {1=>1, 2=>2, 3=>3}
+irb(main):001:0> puts "First", "day"
+First
+day
+=> nil
 </pre>
 
 
-<p>Few people have asked the question behind this conversion and I just decided to break it apart and tackle it bit by bit. Our objective, again, is to convert an array to a hash. Hash&#8217;s ruby documenation tells us that a new Hash object can be created by using even number of arguments. Something similar to the following code:</p>
+<ul>
+<li>Secondly, you can pass it an array of elements, and it will print the elements with a line break, for example:</li>
+</ul>
+
 
 <pre>
-  some_hash = Hash[1,1,2,2,3,3] # This creates a hash object similar to this {1=>1, 2=>2, 3=>3}
+irb(main):004:0> puts ["Second", "Day"]
+Second
+Day
+=> nil
 </pre>
 
 
-<p>All we need to do now is convert our some_array (defined in the first code snippet) and convert it into [1,1,2,2,3,3].</p>
-
-<p>It&#8217;s simple really. We take the some_array and convert it into an array&#8217;s or array like this:</p>
-
-<pre>
-  some_array = [1,2,3]
-  some_array.collect{|v| [v, v]} # will yield [[1,1], [2,2], [3,3]]
-</pre>
-
-
-<p>Now to convert it into [1,1,2,2,3,3] we just need to flatten this array of arrays like this:</p>
-
-<pre>
-  some_array = [1,2,3]
-  some_array.collect{|v| [v, v]}.flatten # will yield [1,1,2,2,3,3]
-</pre>
-
-
-<p>Now, all we need to do is use the splat (*) unary operator. The splat operator expands the supplied array into individual arguments which is what we need to convert array into a hash. You could also achieve the same with the following snippet:</p>
-
-<pre>
-  some_array = [1,2,3]
-  some_hash = Hash[*(some_array+some_array).sort] # yields {1=>1, 2=>2, 3=>3}
-</pre>
-
-
-<p>I hope you can work that out yourself. I hope this little discussion helped you.</p>
+<p>Hope you can use this to replace multiple calls to puts in your code.</p>
 </div>
 
 
@@ -147,7 +134,7 @@
 
 
 
-<time datetime="2011-01-03T00:00:00+00:00" pubdate  data-updated="true" >Jan 3<span>rd</span>, 2011</time>
+<time datetime="2014-06-15T00:00:00+01:00" pubdate  data-updated="true" >Jun 15<span>th</span>, 2014</time>
       
 
 
@@ -155,7 +142,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2011/01/03/convert-array-to-hash-mystery.html/" data-via="" data-counturl="Plough => Ruby/2011/01/03/convert-array-to-hash-mystery.html/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2014/06/15/ruby-puts-command.html/" data-via="" data-counturl="Plough => Ruby/2014/06/15/ruby-puts-command.html/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -168,10 +155,8 @@
     
     <p class="meta">
        
-        <a class="basic-alignment left" href="/2010/07/06/paperclip-and-rescue.html/" title="Previous Post: Paperclip and rescue">&laquo; Paperclip and rescue</a>
+        <a class="basic-alignment left" href="/2014/03/17/you-want-to-be-a-programmer%3F.html/" title="Previous Post: You want to be a programmer?">&laquo; You want to be a programmer?</a>
       
-       
-        <a class="basic-alignment right" href="/2011/01/03/method-default-arguments-and-passing-nil-value.html/" title="next Post: Method default arguments and passing nil value">Method default arguments and passing nil value &raquo;</a>
       
     </p>
   </footer>
