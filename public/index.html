@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Ruby&#8217;s puts command will lead the &#8216;most used command&#8217; competition in the language. It&#8217;s probably the first command you run ...">
+  <meta name="description" content="RSpec 3 has been full of some good stuff and I have full admiration forthe people behind it. Even the upgrade process was well thought outkeeping i...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -61,6 +61,57 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/09/20/rspec-verifying-doubles.html/">RSpec Verifying Doubles</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2014-09-20T00:00:00+01:00" pubdate  data-updated="true" >Sep 20<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>RSpec 3 has been full of some good stuff and I have full admiration for
+the people behind it. Even the upgrade process was well thought out
+keeping in mind the end users. As developers, we are used to handle poor
+upgrade process pretty well, but RSpec totally changed my opinion.</p>
+
+<p>Whilst <a href="https://github.com/andhapp/textrazor/pull/4">merging pull request for TextRazor</a>, I decided to upgrade the gem
+to RSpec3. I was meant to do that for sometime anyways, and the pull
+request opened up the perfect opportunity for it. I stumbled upon a very
+interesting new feature in RSpec3, called <a href="https://relishapp.com/rspec/rspec-mocks/v/3-0/docs/verifying-doubles/using-an-instance-double">verifying doubles</a>. This
+functionality makes <a href="https://github.com/xaviershay/rspec-fire">rspec-fire</a> totally obsolete. It verifies that any
+methods being stubbed would be present on the instance of the class
+being stubbed and also the number of argument the method accepts. This
+is pretty cool. I always used rspec-fire to make sure that my stubbed
+method existed on the class. In the light of these updates, I removed
+<a href="https://github.com/andhapp/textrazor/commit/48aeff496be89c7433dadfbbedd3e1d3e4375b64">rspec-fire as a dependency from TextRazor</a>. Makes it even more
+lightweight.</p>
+
+<p>Thanks again to RSpec team!</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -710,46 +761,6 @@ os.instance_variable_get(:@table) # returns the hash {:id=>12}
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/02/23/inspect-to_s-change-in-ruby2.html/">In Ruby2, Inspect Independent of To_s</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2013-02-23T00:00:00+00:00" pubdate  data-updated="true" >Feb 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://www.ruby-lang.org/en/news/2013/02/24/ruby-2-0-0-p0-is-released/">Ruby 2.0.0</a> has been released and there are a lot of new things, for example, keyword arguments, TracePoint API, DTrace and so on. Here&#8217;s <a href="https://github.com/ruby/ruby/blob/trunk/NEWS">Ruby NEWS</a> file, and some <a href="http://blog.marc-andre.ca/2013/02/23/ruby-2-by-example/">new features in Ruby 2</a>.</p>
-
-<p>One thing to add to that list is that the behaviour of inspect is no
-longer dependent on to_s. In Ruby 1.9, if to_s was overridden inspect
-would just execute that code. But in Ruby 2.0, to_s overriding doesn&#8217;t
-affect inspect anymore. Here&#8217;s code example for <a href="https://eval.in/11121">Ruby 1.9.3</a> and <a href="https://eval.in/11120">Ruby
-2</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -767,6 +778,10 @@ affect inspect anymore. Here&#8217;s code example for <a href="https://eval.in/1
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/09/20/rspec-verifying-doubles.html/">RSpec verifying doubles</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/06/15/ruby-puts-command.html/">Ruby puts command</a>
       </li>
     
@@ -780,10 +795,6 @@ affect inspect anymore. Here&#8217;s code example for <a href="https://eval.in/1
     
       <li class="post">
         <a href="/2014/01/07/cryptic-global-variables-in-ruby.html/">Cryptic global variables in Ruby</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2014/01/06/nested-exception-in-ruby-2.1.0.html/">Nested exceptions in Ruby 2.1.0</a>
       </li>
     
   </ul>

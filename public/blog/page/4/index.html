@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Alan seems to be doing an excellent job of explaining Ruby language. Here&#8217;s another great article on case statements in Ruby.Enjoy.">
+  <meta name="description" content="You can write a complete ruby script as a string and run it. Ruby (rather MRI) would just evalutae the string by executing it. For example:"#{def x...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -61,6 +61,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/09/24/ruby-idioms.html/">Ruby Idioms</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-09-24T00:00:00+01:00" pubdate  data-updated="true" >Sep 24<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>You can write a complete ruby script as a string and run it. Ruby (rather MRI) would just evalutae the string by executing it. For example:</p>
+
+<pre>
+"#{def x(s); puts(s.reverse); end; ('1'..'3').each{|aStr| x(aStr)} }"
+</pre>
+
+
+<p>This is absolutely valid.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -274,6 +315,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/09/20/rspec-verifying-doubles.html/">RSpec verifying doubles</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/06/15/ruby-puts-command.html/">Ruby puts command</a>
       </li>
     
@@ -287,10 +332,6 @@
     
       <li class="post">
         <a href="/2014/01/07/cryptic-global-variables-in-ruby.html/">Cryptic global variables in Ruby</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2014/01/06/nested-exception-in-ruby-2.1.0.html/">Nested exceptions in Ruby 2.1.0</a>
       </li>
     
   </ul>

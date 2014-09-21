@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Excellent tutorial on case/when - Plough => Ruby</title>
+  <title>RSpec verifying doubles - Plough => Ruby</title>
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Alan seems to be doing an excellent job of explaining Ruby language. Here&#8217;s another great article on case statements in Ruby.Enjoy.">
+  <meta name="description" content="RSpec 3 has been full of some good stuff and I have full admiration forthe people behind it. Even the upgrade process was well thought outkeeping i...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="Plough => Ruby/2009/08/24/excellent-tutorial-on-casewhen.html/">
+  <link rel="canonical" href="Plough => Ruby/2014/09/20/rspec-verifying-doubles.html/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -64,7 +64,7 @@
   
   <header>
     
-      <h1 class="entry-title">Excellent Tutorial on Case/when</h1>
+      <h1 class="entry-title">RSpec Verifying Doubles</h1>
     
     
       <p class="meta">
@@ -78,16 +78,31 @@
 
 
 
-<time datetime="2009-08-24T00:00:00+01:00" pubdate  data-updated="true" >Aug 24<span>th</span>, 2009</time>
+<time datetime="2014-09-20T00:00:00+01:00" pubdate  data-updated="true" >Sep 20<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><a href="http://www.skorks.com">Alan</a> seems to be doing an excellent job of explaining Ruby language. <a href="http://www.skorks.com/2009/08/how-a-ruby-case-statement-works-and-what-you-can-do-with-it/">Here&#8217;s</a> another great article on case statements in Ruby.</p>
+<div class="entry-content"><p>RSpec 3 has been full of some good stuff and I have full admiration for
+the people behind it. Even the upgrade process was well thought out
+keeping in mind the end users. As developers, we are used to handle poor
+upgrade process pretty well, but RSpec totally changed my opinion.</p>
 
-<p>Enjoy.</p>
+<p>Whilst <a href="https://github.com/andhapp/textrazor/pull/4">merging pull request for TextRazor</a>, I decided to upgrade the gem
+to RSpec3. I was meant to do that for sometime anyways, and the pull
+request opened up the perfect opportunity for it. I stumbled upon a very
+interesting new feature in RSpec3, called <a href="https://relishapp.com/rspec/rspec-mocks/v/3-0/docs/verifying-doubles/using-an-instance-double">verifying doubles</a>. This
+functionality makes <a href="https://github.com/xaviershay/rspec-fire">rspec-fire</a> totally obsolete. It verifies that any
+methods being stubbed would be present on the instance of the class
+being stubbed and also the number of argument the method accepts. This
+is pretty cool. I always used rspec-fire to make sure that my stubbed
+method existed on the class. In the light of these updates, I removed
+<a href="https://github.com/andhapp/textrazor/commit/48aeff496be89c7433dadfbbedd3e1d3e4375b64">rspec-fire as a dependency from TextRazor</a>. Makes it even more
+lightweight.</p>
+
+<p>Thanks again to RSpec team!</p>
 </div>
 
 
@@ -108,7 +123,7 @@
 
 
 
-<time datetime="2009-08-24T00:00:00+01:00" pubdate  data-updated="true" >Aug 24<span>th</span>, 2009</time>
+<time datetime="2014-09-20T00:00:00+01:00" pubdate  data-updated="true" >Sep 20<span>th</span>, 2014</time>
       
 
 
@@ -116,7 +131,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2009/08/24/excellent-tutorial-on-casewhen.html/" data-via="" data-counturl="Plough => Ruby/2009/08/24/excellent-tutorial-on-casewhen.html/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2014/09/20/rspec-verifying-doubles.html/" data-via="" data-counturl="Plough => Ruby/2014/09/20/rspec-verifying-doubles.html/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -129,10 +144,8 @@
     
     <p class="meta">
        
-        <a class="basic-alignment left" href="/2009/08/18/method-arguments-in-ruby.html/" title="Previous Post: Method arguments in ruby">&laquo; Method arguments in ruby</a>
+        <a class="basic-alignment left" href="/2014/06/15/ruby-puts-command.html/" title="Previous Post: Ruby puts command">&laquo; Ruby puts command</a>
       
-       
-        <a class="basic-alignment right" href="/2009/09/24/ruby-idioms.html/" title="next Post: Ruby idioms">Ruby idioms &raquo;</a>
       
     </p>
   </footer>
