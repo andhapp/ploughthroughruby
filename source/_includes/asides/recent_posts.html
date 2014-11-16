@@ -1,4 +1,19 @@
 <section>
+  <h1>My Business</h1>
+  <ul id="my_business">
+      <li class="post">
+        <a href="https://suggestion.io">Suggestion.io</a>
+      </li>
+      <li class="post">
+        <a href="http://www.newstrapper.com">NewsTrapper</a>
+      </li>
+      <li class="post">
+        <a href="http://andhapplimited.co.uk">Consultancy</a>
+      </li>
+  </ul>
+</section>
+
+<section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     {% for post in site.posts limit: site.recent_posts %}
@@ -19,5 +34,4 @@
 	<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
 </form>
 </div>
-
 <!--End mc_embed_signup-->
