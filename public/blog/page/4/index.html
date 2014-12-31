@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Anyone interested in learning ruby then head over to RubyLearning blog with plethora of online courses. Some of them are free and some charge a ver...">
+  <meta name="description" content="Right, so this is a tad confusing and the reason I am explaining is to ensure that I understand it properly.instance_eval - It creates singleton me...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -62,6 +62,60 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/09/30/define_method-instance_eval-and-class_eval.html/">Define_method, Instance_eval and Class_eval</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-09-30T00:00:00+01:00" pubdate  data-updated="true" >Sep 30<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Right, so this is a tad confusing and the reason I am explaining is to ensure that I understand it properly.</p>
+
+<p><strong>instance_eval</strong> - It creates singleton methods on the object it is invoked on. If it is invoked on a Class object then these methods become singleton methods of the class. Some people would call them <del datetime="2009-09-30T19:13:53+00:00">&#8220;class methods&#8221;</del> but these are simply methods in an object&#8217;s singleton class. Here&#8217;s the code:</p>
+
+<pre>
+SomeObject.instance_eval (def singleton_method; "singleton_method";end)
+</pre>
+
+
+<p><strong>class_eval</strong> - It creates an instance method on the object. Simple there is nothing confusing about this. Here&#8217;s an example:</p>
+
+<pre>
+SomeObject.class_eval(def instance_method;"instance_method";end)
+</pre>
+
+
+<p>Now, define method when used inside either class_eval or instance_eval s immune to the usual behaviour.</p>
+
+<p>Why, you may ask?</p>
+
+<p>Because the documentation says so. As per the documentation &#8220;define method - Defines an instance method in the receiver&#8221;. Therefore, it does not matter if you use define_method inside class_eval or instance_eval it would always create an instance method. Now, the question to ask is - &#8220;Is there no way to define a singleton method using defne_method?&#8221;. Well, I still need to investigate that. It would probably be in an update to this post. Hope it all makes sense. Ruby metaprogramming is awesome only if you know what you are doing and to get to that stage one needs to spend countless hours metaprogramming.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -365,6 +419,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac.html/">Setting Up Chrome Selenium driver for Capybara when using chrome canary on a Mac</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/10/19/an-unusual-thing-about-kanji%28Japanese%29.html/">An unsual thing about kanji(Japanese)</a>
       </li>
     
@@ -378,10 +436,6 @@
     
       <li class="post">
         <a href="/2014/03/17/you-want-to-be-a-programmer%3F.html/">You want to be a programmer?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2014/01/10/abbreviation-in-ruby.html/">Abbreviation in Ruby</a>
       </li>
     
   </ul>
