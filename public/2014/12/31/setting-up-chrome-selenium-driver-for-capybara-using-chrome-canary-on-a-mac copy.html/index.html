@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>An Interesting Ruby Method - Plough => Ruby</title>
+  <title>Setting Up Chrome Selenium driver for Capybara when using chrome canary on a Mac - Plough => Ruby</title>
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="In this post, I will talk about a ruby method that I had no idea existed which might come handy in debugging your code.The method I am talking abou...">
+  <meta name="description" content="We have been adding Rspec + Capybara to Suggestion.ioto ensure we don&#8217;t create any regression bugs. There are plenty of resourcesonline to se...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="Plough => Ruby/2011/04/17/an-interesting-ruby-method.html/">
+  <link rel="canonical" href="Plough => Ruby/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac+copy.html/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -65,7 +65,7 @@
   
   <header>
     
-      <h1 class="entry-title">An Interesting Ruby Method</h1>
+      <h1 class="entry-title">Setting Up Chrome Selenium Driver for Capybara When Using Chrome Canary on a Mac</h1>
     
     
       <p class="meta">
@@ -79,78 +79,67 @@
 
 
 
-<time datetime="2011-04-17T00:00:00+01:00" pubdate  data-updated="true" >Apr 17<span>th</span>, 2011</time>
+<time datetime="2014-12-31T00:00:00+00:00" pubdate  data-updated="true" >Dec 31<span>st</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>In this post, I will talk about a ruby method that I had no idea existed which might come handy in debugging your code.</p>
+<div class="entry-content"><p>We have been adding Rspec + Capybara to <a href="https://suggestion.io">Suggestion.io</a>
+to ensure we don&#8217;t create any regression bugs. There are plenty of resources
+online to set-up Capybara to use Selenium&#8217;s Chrome driver (instead of Firefox).</p>
 
-<p>The method I am talking about is <em>set_trace_func</em>. It&#8217;s part of the Kernel class and it does what it says. Allows one to set the method tracing on a method. The following snippet explains it further. Here, we have a class, TestingSetProcFunc:</p>
+<h3>But, what if you are using Chrome Canary as your browser?</h3>
 
-<pre>
-    class TestingSetProcFunc
-      def traceThisMethod
-        source = 1
-        target = 2
-      end
-    end
-</pre>
-
-
-<p>To inject set_trace_func in, it needs to be called before the method is invoked, like this:</p>
-
-<pre>    
-    puts "Event    File:Line                Id          Binding        Classname"
-    set_trace_func proc { |event, file, line, id, binding, classname|
-      printf "%8s %s:%-2d %20s %12s %8s\n", event, file, line, id, binding, classname
-    }
-</pre>
-
-
-<p>It takes a proc with upto 6 arguments. These are the events with their brief descriptions:</p>
-
-<ul>
-<li>c-call (call a C-language routine)</li>
-<li>c-return (return from a C-language routine)</li>
-<li>call (call a Ruby method)</li>
-<li>class (start a class or module definition)</li>
-<li>end (finish a class or module definition)</li>
-<li>line (execute code on a new line)</li>
-<li>raise (raise an exception)</li>
-<li>return (return from a Ruby method).</li>
-</ul>
-
-
-<p>Now, to run this we just need to call the method and look at the output:</p>
+<p>You would probably see the following error:</p>
 
 <pre>
-    tracer = TestingSetProcFunc.new
-    tracer.traceThisMethod
+Selenium::WebDriver::Error::UnknownError: unknown error: cannot find Chrome binary
 </pre>
 
 
-<p>This is what the output will look like when you run it on the command line:</p>
+<p>There are two ways to fix this issue:</p>
 
-<pre>    
-Event    File:Line                Id          Binding        Classname
-c-return test.rb:11       set_trace_func #<Binding:0x0b53c4>   Kernel
-    line test.rb:13                      #<Binding:0x0b52fc>         
-  c-call test.rb:13                  new #<Binding:0x0b525c>    Class
-  c-call test.rb:13           initialize #<Binding:0x0b5144> BasicObject
-c-return test.rb:13           initialize #<Binding:0x0b5090> BasicObject
-c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
-    line test.rb:14                      #<Binding:0x0b4f50>         
-    call test.rb:2       traceThisMethod #<Binding:0x0b4eb0> TestingSetProcFunc
-    line test.rb:3       traceThisMethod #<Binding:0x0b4dfc> TestingSetProcFunc
-    line test.rb:4       traceThisMethod #<Binding:0x0b4d5c> TestingSetProcFunc
-  return test.rb:5       traceThisMethod #<Binding:0x0b4cbc> TestingSetProcFunc    
+<h3> Solution 1 - Download Chrome</h3>
+
+<p>Whilst, searching for the solution, I ended up on <a href="https://code.google.com/p/selenium/wiki/ChromeDriver">ChromeDriver&#8217;s wiki</a>.
+It clearly states that Chrome driver expects the Chrome binary to be in:</p>
+
+<pre>
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
 </pre>
 
 
-<p>This output gives one a good idea about the work that is happening in the background. The weird looking Binding instance is the context at that particular place in the code. I have just scratched the surface and I am sure there&#8217;s a lot one can do with this method. Have a look at the <a href="https://github.com/ruby/ruby/blob/trunk/test/ruby/test_settracefunc.rb">ruby&#8217;s test for set_trace_func</a> for more useful ways of employing it.</p>
+<p>That&#8217;s exactly where Chrome is installed on a Mac, so, to fix this issue
+just download Chrome.</p>
+
+<h3>Solution 2 - Pass the location of Chrome Canary&#8217;s binary to Selenium Chrome Driver via Capybara</h3>
+
+<p>Downloading Chrome just for the sake of passing specs doesn&#8217;t make
+sense. Googling revealed that there&#8217;s something called &#8216;ChromeOptions&#8217;, but,
+how the hell do I pass that option from Capybara, so that it get&#8217;s passed
+correctly to Selenium Chrome driver. After, trawling through the
+capybara and selenium-webdriver source, I found a way to pass the location
+of Chrome Canary as the binary. Here&#8217;s how:</p>
+
+<pre>
+Capybara.register_driver :chrome do |app|
+  Capybara::Selenium::Driver.new(app, 
+    browser: :chrome, 
+    desired_capabilities: {
+      "chromeOptions" => {
+        "binary" => '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary' 
+      } 
+    })
+end
+</pre>
+
+
+<p>The &#8216;binary&#8217; option specifies the location of Chrome Canary&#8217;s binary on
+your Mac.</p>
+
+<p>That was a couple of hours well spent. Hope it helps!</p>
 </div>
 
 
@@ -171,7 +160,7 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
 
 
 
-<time datetime="2011-04-17T00:00:00+01:00" pubdate  data-updated="true" >Apr 17<span>th</span>, 2011</time>
+<time datetime="2014-12-31T00:00:00+00:00" pubdate  data-updated="true" >Dec 31<span>st</span>, 2014</time>
       
 
 
@@ -179,7 +168,7 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2011/04/17/an-interesting-ruby-method.html/" data-via="" data-counturl="Plough => Ruby/2011/04/17/an-interesting-ruby-method.html/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac+copy.html/" data-via="" data-counturl="Plough => Ruby/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac+copy.html/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -192,10 +181,10 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
     
     <p class="meta">
        
-        <a class="basic-alignment left" href="/2011/03/12/ruby-hacking-guide-chapter-1.html/" title="Previous Post: Ruby Hacking Guide - Chapter 1">&laquo; Ruby Hacking Guide - Chapter 1</a>
+        <a class="basic-alignment left" href="/2014/10/19/an-unusual-thing-about-kanji%28Japanese%29.html/" title="Previous Post: An unsual thing about kanji(Japanese)">&laquo; An unsual thing about kanji(Japanese)</a>
       
        
-        <a class="basic-alignment right" href="/2011/04/21/inconsistent-hashes.html/" title="next Post: Inconsistent hashes">Inconsistent hashes &raquo;</a>
+        <a class="basic-alignment right" href="/2015/01/25/ruby-command-line-flags.html/" title="next Post: Ruby command line flag for debugging">Ruby command line flag for debugging &raquo;</a>
       
     </p>
   </footer>

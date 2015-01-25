@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="Plough => Ruby/atom.xml&#8221; rel=&#8221;self&#8221;/>
   <link href="Plough => Ruby/&#8221;/>
-  <updated>2014-12-31T01:31:08+00:00</updated>
+  <updated>2015-01-25T19:41:47+00:00</updated>
   <id>Plough => Ruby/</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -14,10 +14,51 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Ruby command line flag for debugging]]></title>
+    <link href="Plough => Ruby/2015/01/25/ruby-command-line-flags.html/&#8221;/>
+    <updated>2015-01-25T00:00:00+00:00</updated>
+    <id>Plough => Ruby/2015/01/25/ruby-command-line-flags</id>
+    <content type="html"><![CDATA[<p>Reading open source code is almost always a good idea. Open source code
+has the benefit of being reviewed by a lot of committed users and it
+just shows one the good patterns of programming. For instance, I once
+looked at Arel, and the code demonstrates an exemplary use of visitor
+pattern. There isn&#8217;t much code there, yet it manages to achieve so much.</p>
+
+<p>Recently, I was reading some open source code recently and spotted $DEBUG
+environment variable in quite a few places. At the time, I thought it
+must be something the author used to simplify debugging. But, no, it&#8217;s
+defined and used by ruby core. Ruby provides a debug flag (-d or &#8211;debug)
+which when used would set the $DEBUG to true.</p>
+
+<p>Try running the following script in irb, pry or whatever else you use:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ruby -d -e 'if $DEBUG; puts "Debugging"; end'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and you should see something like this as output:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>RUBY_GC_HEAP_FREE_SLOTS=200000 (default value: 4096)
+</span><span class='line'>RUBY_GC_MALLOC_LIMIT=90000000 (default value: 16777216)
+</span><span class='line'>Exception `LoadError' at /Users/andhapp/.rvm/rubies/ruby-2.2.0/lib/ruby/2.2.0/rubygems.rb:1222 - cannot load such file -- rubygems/defaults/operating_system
+</span><span class='line'>Exception `LoadError' at /Users/andhapp/.rvm/rubies/ruby-2.2.0/lib/ruby/2.2.0/rubygems.rb:1231 - cannot load such file -- rubygems/defaults/ruby
+</span><span class='line'>Debugging</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Don&#8217;t worry about the two exceptions as in <a href="http://stackoverflow.com/a/1851232/20301">debug mode exceptions are displayed</a> even when they are rescued.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Setting Up Chrome Selenium driver for Capybara when using chrome canary on a Mac]]></title>
-    <link href="Plough => Ruby/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac.html/&#8221;/>
+    <link href="Plough => Ruby/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac+copy.html/&#8221;/>
     <updated>2014-12-31T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac</id>
+    <id>Plough => Ruby/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac copy</id>
     <content type="html"><![CDATA[<p>We have been adding Rspec + Capybara to <a href="https://suggestion.io">Suggestion.io</a>
 to ensure we don&#8217;t create any regression bugs. There are plenty of resources
 online to set-up Capybara to use Selenium&#8217;s Chrome driver (instead of Firefox).</p>
@@ -780,17 +821,6 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
     file = File.new("datamapper.log", "a")  
 </pre>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Ruby Hacking Guide]]></title>
-    <link href="Plough => Ruby/2011/01/17/ruby-hacking-guide.html/&#8221;/>
-    <updated>2011-01-17T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2011/01/17/ruby-hacking-guide</id>
-    <content type="html"><![CDATA[<p>I got hold of an out-of-date <a href="http://hawthorne-press.com/WebPage_RHG.html">Ruby Hacking Guide</a> and it looks very interesting. Therefore, in order to improve my understanding of Ruby internals, I have decided to spend time in reading it and the writing posts about it. The entire book can be downloaded in the form of HTML pages and might not make sense since some of it has been machine translated.</p>
-
-<p>I hope my efforts are useful for anyone willing to venture into Ruby Internals.</p>
 ]]></content>
   </entry>
   

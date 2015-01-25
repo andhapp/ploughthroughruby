@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Setting Up Chrome Selenium driver for Capybara when using chrome canary on a Mac - Plough => Ruby</title>
+  <title>Ruby command line flag for debugging - Plough => Ruby</title>
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="We have been adding Rspec + Capybara to Suggestion.ioto ensure we don&#8217;t create any regression bugs. There are plenty of resourcesonline to se...">
+  <meta name="description" content="Reading open source code is almost always a good idea. Open source codehas the benefit of being reviewed by a lot of committed users and itjust sho...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="Plough => Ruby/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac.html/">
+  <link rel="canonical" href="Plough => Ruby/2015/01/25/ruby-command-line-flags.html/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -65,7 +65,7 @@
   
   <header>
     
-      <h1 class="entry-title">Setting Up Chrome Selenium Driver for Capybara When Using Chrome Canary on a Mac</h1>
+      <h1 class="entry-title">Ruby Command Line Flag for Debugging</h1>
     
     
       <p class="meta">
@@ -79,67 +79,46 @@
 
 
 
-<time datetime="2014-12-31T00:00:00+00:00" pubdate  data-updated="true" >Dec 31<span>st</span>, 2014</time>
+<time datetime="2015-01-25T00:00:00+00:00" pubdate  data-updated="true" >Jan 25<span>th</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>We have been adding Rspec + Capybara to <a href="https://suggestion.io">Suggestion.io</a>
-to ensure we don&#8217;t create any regression bugs. There are plenty of resources
-online to set-up Capybara to use Selenium&#8217;s Chrome driver (instead of Firefox).</p>
+<div class="entry-content"><p>Reading open source code is almost always a good idea. Open source code
+has the benefit of being reviewed by a lot of committed users and it
+just shows one the good patterns of programming. For instance, I once
+looked at Arel, and the code demonstrates an exemplary use of visitor
+pattern. There isn&#8217;t much code there, yet it manages to achieve so much.</p>
 
-<h3>But, what if you are using Chrome Canary as your browser?</h3>
+<p>Recently, I was reading some open source code recently and spotted $DEBUG
+environment variable in quite a few places. At the time, I thought it
+must be something the author used to simplify debugging. But, no, it&#8217;s
+defined and used by ruby core. Ruby provides a debug flag (-d or &#8211;debug)
+which when used would set the $DEBUG to true.</p>
 
-<p>You would probably see the following error:</p>
+<p>Try running the following script in irb, pry or whatever else you use:</p>
 
-<pre>
-Selenium::WebDriver::Error::UnknownError: unknown error: cannot find Chrome binary
-</pre>
-
-
-<p>There are two ways to fix this issue:</p>
-
-<h3> Solution 1 - Download Chrome</h3>
-
-<p>Whilst, searching for the solution, I ended up on <a href="https://code.google.com/p/selenium/wiki/ChromeDriver">ChromeDriver&#8217;s wiki</a>.
-It clearly states that Chrome driver expects the Chrome binary to be in:</p>
-
-<pre>
-/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
-</pre>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ruby -d -e 'if $DEBUG; puts "Debugging"; end'</span></code></pre></td></tr></table></div></figure>
 
 
-<p>That&#8217;s exactly where Chrome is installed on a Mac, so, to fix this issue
-just download Chrome.</p>
+<p>and you should see something like this as output:</p>
 
-<h3>Solution 2 - Pass the location of Chrome Canary&#8217;s binary to Selenium Chrome Driver via Capybara</h3>
-
-<p>Downloading Chrome just for the sake of passing specs doesn&#8217;t make
-sense. Googling revealed that there&#8217;s something called &#8216;ChromeOptions&#8217;, but,
-how the hell do I pass that option from Capybara, so that it get&#8217;s passed
-correctly to Selenium Chrome driver. After, trawling through the
-capybara and selenium-webdriver source, I found a way to pass the location
-of Chrome Canary as the binary. Here&#8217;s how:</p>
-
-<pre>
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, 
-    browser: :chrome, 
-    desired_capabilities: {
-      "chromeOptions" => {
-        "binary" => '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary' 
-      } 
-    })
-end
-</pre>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>RUBY_GC_HEAP_FREE_SLOTS=200000 (default value: 4096)
+</span><span class='line'>RUBY_GC_MALLOC_LIMIT=90000000 (default value: 16777216)
+</span><span class='line'>Exception `LoadError' at /Users/andhapp/.rvm/rubies/ruby-2.2.0/lib/ruby/2.2.0/rubygems.rb:1222 - cannot load such file -- rubygems/defaults/operating_system
+</span><span class='line'>Exception `LoadError' at /Users/andhapp/.rvm/rubies/ruby-2.2.0/lib/ruby/2.2.0/rubygems.rb:1231 - cannot load such file -- rubygems/defaults/ruby
+</span><span class='line'>Debugging</span></code></pre></td></tr></table></div></figure>
 
 
-<p>The &#8216;binary&#8217; option specifies the location of Chrome Canary&#8217;s binary on
-your Mac.</p>
-
-<p>That was a couple of hours well spent. Hope it helps!</p>
+<p>Don&#8217;t worry about the two exceptions as in <a href="http://stackoverflow.com/a/1851232/20301">debug mode exceptions are displayed</a> even when they are rescued.</p>
 </div>
 
 
@@ -160,7 +139,7 @@ your Mac.</p>
 
 
 
-<time datetime="2014-12-31T00:00:00+00:00" pubdate  data-updated="true" >Dec 31<span>st</span>, 2014</time>
+<time datetime="2015-01-25T00:00:00+00:00" pubdate  data-updated="true" >Jan 25<span>th</span>, 2015</time>
       
 
 
@@ -168,7 +147,7 @@ your Mac.</p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac.html/" data-via="" data-counturl="Plough => Ruby/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac.html/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="Plough => Ruby/2015/01/25/ruby-command-line-flags.html/" data-via="" data-counturl="Plough => Ruby/2015/01/25/ruby-command-line-flags.html/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -181,7 +160,7 @@ your Mac.</p>
     
     <p class="meta">
        
-        <a class="basic-alignment left" href="/2014/10/19/an-unusual-thing-about-kanji%28Japanese%29.html/" title="Previous Post: An unsual thing about kanji(Japanese)">&laquo; An unsual thing about kanji(Japanese)</a>
+        <a class="basic-alignment left" href="/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac+copy.html/" title="Previous Post: Setting Up Chrome Selenium driver for Capybara when using chrome canary on a Mac">&laquo; Setting Up Chrome Selenium driver for Capybara when using chrome canary on a Mac</a>
       
       
     </p>
@@ -212,7 +191,11 @@ your Mac.</p>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac.html/">Setting Up Chrome Selenium driver for Capybara when using chrome canary on a Mac</a>
+        <a href="/2015/01/25/ruby-command-line-flags.html/">Ruby command line flag for debugging</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac+copy.html/">Setting Up Chrome Selenium driver for Capybara when using chrome canary on a Mac</a>
       </li>
     
       <li class="post">
@@ -225,10 +208,6 @@ your Mac.</p>
     
       <li class="post">
         <a href="/2014/06/15/ruby-puts-command.html/">Ruby puts command</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2014/03/17/you-want-to-be-a-programmer%3F.html/">You want to be a programmer?</a>
       </li>
     
   </ul>
@@ -256,7 +235,7 @@ your Mac.</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - andHapp -
+  Copyright &copy; 2015 - andHapp -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
