@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Right, so you know Ruby&#8217;s object model. Well here&#8217;s a little code snippet by JRuby creator Ola Bini and it drives the point home really...">
+  <meta name="description" content="Ruby is an object oriented programming. Let us look at a code sinpet: str =  String.new("ruby rocks")So, we define a variable called &#8220;str&#82...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="Plough => Ruby/blog/page/4/index.html">
+  <link rel="canonical" href="http://ploughthroughruby.co.uk//blog/page/4/index.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -47,7 +47,7 @@
 </ul>
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
-    <input type="hidden" name="q" value="site:Plough => Ruby" />
+    <input type="hidden" name="q" value="site:ploughthroughruby.co.uk/" />
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
   </fieldset>
 </form>
@@ -62,6 +62,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/10/31/class-names-are-constants.html/">Class Names Are Constants</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-10-31T00:00:00+00:00" pubdate  data-updated="true" >Oct 31<span>st</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Ruby is an object oriented programming. Let us look at a code sinpet:</p>
+
+<pre>
+ str =  String.new("ruby rocks")
+</pre>
+
+
+<p>So, we define a variable called &#8220;str&#8221;, which stores a pointer to the object created by sending &#8220;new&#8221; on &#8220;String&#8221;. Here, &#8220;String&#8221; receives the &#8220;new&#8221; message but for &#8220;String&#8221; to take any action when it receives &#8220;new&#8221; message it must have a reference to the object called String. Therefore, there must be a corresponding constant to every class in ruby. It can&#8217;t be a variable as it starts with an uppercase.</p>
+
+<p>Actually, that is exactly what happens. Every class in ruby has a global constant which stores a reference to the object and is used for method invocations. So, there are two things really one is the constant named String and the other is the object named String.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -340,7 +383,7 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
 
 <p>I will be posting an extension to this article highlighting some of the changes in Ruby 1.9 that I know of.</p>
 
-<p>Update: Aplogies Alan did actually use Ruby 1.9. I guess that means I do not have anything else to add to it then.</p>
+<p>Update: Apologies Alan did actually use Ruby 1.9. I guess that means I do not have anything else to add to it then.</p>
 </div>
   
   
@@ -501,6 +544,10 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2015/03/01/removing-a-method-in-ruby.html/">Removing a method in Ruby</a>
+      </li>
+    
+      <li class="post">
         <a href="/2015/01/25/ruby-command-line-flags.html/">Ruby command line flag for debugging</a>
       </li>
     
@@ -514,10 +561,6 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
     
       <li class="post">
         <a href="/2014/09/20/rspec-verifying-doubles.html/">RSpec verifying doubles</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2014/06/15/ruby-puts-command.html/">Ruby puts command</a>
       </li>
     
   </ul>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Plough => Ruby]]></title>
-  <link href="Plough => Ruby/atom.xml&#8221; rel=&#8221;self&#8221;/>
-  <link href="Plough => Ruby/&#8221;/>
-  <updated>2015-01-25T19:41:47+00:00</updated>
-  <id>Plough => Ruby/</id>
+  <link href="http://ploughthroughruby.co.uk//atom.xml" rel="self"/>
+  <link href="http://ploughthroughruby.co.uk//"/>
+  <updated>2015-03-02T21:06:36+00:00</updated>
+  <id>http://ploughthroughruby.co.uk//</id>
   <author>
     <name><![CDATA[andHapp]]></name>
     
@@ -14,13 +14,168 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Removing a method in Ruby]]></title>
+    <link href="http://ploughthroughruby.co.uk//2015/03/01/removing-a-method-in-ruby.html/"/>
+    <updated>2015-03-01T00:00:00+00:00</updated>
+    <id>http://ploughthroughruby.co.uk//2015/03/01/removing-a-method-in-ruby</id>
+    <content type="html"><![CDATA[<p>There are several ways of adding a method to a ruby class (or instance),
+for example, define_method, method_missing, or by just opening up the
+class itself.</p>
+
+<p><em>However, can we remove the methods from a Ruby class?</em></p>
+
+<p>I encountered two ways of removing methods from a class:</p>
+
+<ul>
+<li><p><a href="http://ruby-doc.org//core-2.2.0/Module.html#method-i-remove_method">remove_method</a></p></li>
+<li><p><a href="http://ruby-doc.org//core-2.2.0/Module.html#method-i-undef_method">undef_method</a></p></li>
+</ul>
+
+
+<p>There are subtle differences between the two. The former removes the
+method from the current class, where as the latter, stops responding to
+the methods in the current class.</p>
+
+<p>Let&#8217;s look at an example for the same. Imagine we have a parent class,
+Appliance (a.k.a Kitchen Appliance), and child class, Can opener. Here
+are the definitions for the two classes:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Appliance
+</span><span class='line'>  def name
+</span><span class='line'>   puts "I'm a kitchen appliance"
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>class CanOpener &lt; Appliance
+</span><span class='line'>  def name
+</span><span class='line'>    puts "I'm a can opener"
+</span><span class='line'>  end
+</span><span class='line'>end
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, let&#8217;s try <code>remove_method</code> and see what happens.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>can_opener = CanOpener.new
+</span><span class='line'>can_opener.name
+</span><span class='line'>
+</span><span class='line'>class CanOpener
+</span><span class='line'>  remove_method :name
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>can_opener.name
+</span><span class='line'>puts "Can Opener has a name? #{can_opener.respond_to?(:name)}"   </span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will produce the following output:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>I'm a can opener
+</span><span class='line'>I'm a kitchen appliance
+</span><span class='line'>Can Opener has a name? true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As soon as you remove a method from a class it treats the method as
+undefined and goes up the ancestor chain to look for an implementation,
+which it finds in the parent class. Since, there&#8217;s an implementation
+<code>respond_to</code> returns true.</p>
+
+<p>However, <code>undef_method</code> works slightly differently and let&#8217;s see how:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Appliance
+</span><span class='line'>  def name
+</span><span class='line'>   puts "I'm a kitchen appliance"
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>class CanOpener &lt; Appliance
+</span><span class='line'>  def name
+</span><span class='line'>    puts "I'm a can opener"
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>can_opener = CanOpener.new
+</span><span class='line'>can_opener.name
+</span><span class='line'>
+</span><span class='line'>class CanOpener
+</span><span class='line'>  undef_method :name
+</span><span class='line'>end
+</span><span class='line'> 
+</span><span class='line'>puts "Can Opener has a name? #{can_opener.respond_to?(:name)}"
+</span><span class='line'>can_opener.name</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will produce the following output:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>I'm a can opener
+</span><span class='line'>Can Opener has a name? true
+</span><span class='line'>/tmp/execpad-f7201e261f52/source-f7201e261f52:21:in `&lt;main&gt;': undefined method `name' for #&lt;CanOpener:0x41017dcc&gt; (NoMethodError)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Unlike <code>remove_method</code>, <code>undef_method</code> stops responding to the method
+and doesn&#8217;t travel up the ancestor chain. It totally disregards the
+method implementation in the parent class.</p>
+
+<p>Quite interesting, however, I&#8217;ve never seen it used in any of the
+production code before, so, hopefully, I will find a good use case for
+it soon.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Ruby command line flag for debugging]]></title>
-    <link href="Plough => Ruby/2015/01/25/ruby-command-line-flags.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2015/01/25/ruby-command-line-flags.html/"/>
     <updated>2015-01-25T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2015/01/25/ruby-command-line-flags</id>
+    <id>http://ploughthroughruby.co.uk//2015/01/25/ruby-command-line-flags</id>
     <content type="html"><![CDATA[<p>Reading open source code is almost always a good idea. Open source code
 has the benefit of being reviewed by a lot of committed users and it
-just shows one the good patterns of programming. For instance, I once
+just shows the good patterns of programming. For instance, I once
 looked at Arel, and the code demonstrates an exemplary use of visitor
 pattern. There isn&#8217;t much code there, yet it manages to achieve so much.</p>
 
@@ -56,9 +211,9 @@ which when used would set the $DEBUG to true.</p>
   
   <entry>
     <title type="html"><![CDATA[Setting Up Chrome Selenium driver for Capybara when using chrome canary on a Mac]]></title>
-    <link href="Plough => Ruby/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac+copy.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac+copy.html/"/>
     <updated>2014-12-31T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac copy</id>
+    <id>http://ploughthroughruby.co.uk//2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac copy</id>
     <content type="html"><![CDATA[<p>We have been adding Rspec + Capybara to <a href="https://suggestion.io">Suggestion.io</a>
 to ensure we don&#8217;t create any regression bugs. There are plenty of resources
 online to set-up Capybara to use Selenium&#8217;s Chrome driver (instead of Firefox).</p>
@@ -118,9 +273,9 @@ your Mac.</p>
   
   <entry>
     <title type="html"><![CDATA[An unsual thing about kanji(Japanese)]]></title>
-    <link href="Plough => Ruby/2014/10/19/an-unusual-thing-about-kanji%28Japanese%29.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2014/10/19/an-unusual-thing-about-kanji%28Japanese%29.html/"/>
     <updated>2014-10-19T00:00:00+01:00</updated>
-    <id>Plough => Ruby/2014/10/19/an-unusual-thing-about-kanji(Japanese)</id>
+    <id>http://ploughthroughruby.co.uk//2014/10/19/an-unusual-thing-about-kanji(Japanese)</id>
     <content type="html"><![CDATA[<p>Recently, I was reading an article on natural language processing of
 Japanese characters and came across something very unusual about the way
 Japanese characters are written, there is no delimiters between the
@@ -135,9 +290,9 @@ combination of characters could mean two entirely different things.</p>
   
   <entry>
     <title type="html"><![CDATA[RSpec verifying doubles]]></title>
-    <link href="Plough => Ruby/2014/09/20/rspec-verifying-doubles.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2014/09/20/rspec-verifying-doubles.html/"/>
     <updated>2014-09-20T00:00:00+01:00</updated>
-    <id>Plough => Ruby/2014/09/20/rspec-verifying-doubles</id>
+    <id>http://ploughthroughruby.co.uk//2014/09/20/rspec-verifying-doubles</id>
     <content type="html"><![CDATA[<p>RSpec 3 has been full of some good stuff and I have full admiration for
 the people behind it. Even the upgrade process was well thought out
 keeping in mind the end users. As developers, we are used to handle poor
@@ -161,9 +316,9 @@ lightweight.</p>
   
   <entry>
     <title type="html"><![CDATA[Ruby puts command]]></title>
-    <link href="Plough => Ruby/2014/06/15/ruby-puts-command.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2014/06/15/ruby-puts-command.html/"/>
     <updated>2014-06-15T00:00:00+01:00</updated>
-    <id>Plough => Ruby/2014/06/15/ruby-puts-command</id>
+    <id>http://ploughthroughruby.co.uk//2014/06/15/ruby-puts-command</id>
     <content type="html"><![CDATA[<p>Ruby&#8217;s puts command will lead the &#8216;most used command&#8217; competition in the language. It&#8217;s probably the first command you run when you fire up irb, or write HelloWorld.rb. I have been using it from day 1, for debugging, printing out the progress of long running scripts and so on. I recently found couple of nifty things you can do with puts command:</p>
 
 <ul>
@@ -198,9 +353,9 @@ Day
   
   <entry>
     <title type="html"><![CDATA[You want to be a programmer?]]></title>
-    <link href="Plough => Ruby/2014/03/17/you-want-to-be-a-programmer%3F.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2014/03/17/you-want-to-be-a-programmer%3F.html/"/>
     <updated>2014-03-17T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2014/03/17/you-want-to-be-a-programmer?</id>
+    <id>http://ploughthroughruby.co.uk//2014/03/17/you-want-to-be-a-programmer?</id>
     <content type="html"><![CDATA[<h3>But, you have no time</h3>
 
 
@@ -230,9 +385,9 @@ Day
   
   <entry>
     <title type="html"><![CDATA[Abbreviation in Ruby]]></title>
-    <link href="Plough => Ruby/2014/01/10/abbreviation-in-ruby.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2014/01/10/abbreviation-in-ruby.html/"/>
     <updated>2014-01-10T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2014/01/10/abbreviation-in-ruby</id>
+    <id>http://ploughthroughruby.co.uk//2014/01/10/abbreviation-in-ruby</id>
     <content type="html"><![CDATA[<p>Ruby&#8217;s standard library is filled with several unique, non-standard classes/modules, one such module is <a href="http://ruby-doc.org/stdlib-2.1.0/libdoc/abbrev/rdoc/Abbrev.html">Abbrev</a>.</p>
 
 <p>Abbrev calculates the set of unique abbreviations for a given set of strings. The following code demonstrates it properly:</p>
@@ -290,9 +445,9 @@ use-cases with the rest of us.</p>
   
   <entry>
     <title type="html"><![CDATA[Cryptic global variables in Ruby]]></title>
-    <link href="Plough => Ruby/2014/01/07/cryptic-global-variables-in-ruby.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2014/01/07/cryptic-global-variables-in-ruby.html/"/>
     <updated>2014-01-07T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2014/01/07/cryptic-global-variables-in-ruby</id>
+    <id>http://ploughthroughruby.co.uk//2014/01/07/cryptic-global-variables-in-ruby</id>
     <content type="html"><![CDATA[<p>Do you know what $! means in Ruby?</p>
 
 <p>Years ago, I was discussing some issue regarding GemCutter (now that makes
@@ -313,9 +468,9 @@ it makes code easier to read, just refer to that file.</p>
   
   <entry>
     <title type="html"><![CDATA[Nested exceptions in Ruby 2.1.0]]></title>
-    <link href="Plough => Ruby/2014/01/06/nested-exception-in-ruby-2.1.0.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2014/01/06/nested-exception-in-ruby-2.1.0.html/"/>
     <updated>2014-01-06T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2014/01/06/nested-exception-in-ruby-2.1.0</id>
+    <id>http://ploughthroughruby.co.uk//2014/01/06/nested-exception-in-ruby-2.1.0</id>
     <content type="html"><![CDATA[<p>With Ruby 2.1.0, one can easily trace the original exception.
 Previously, on rescuing an exception one would have no reference to the original exception
 (thrown by a gem/library). There are a couple of <a href="https://github.com/skorks/nesty">gems</a> that can help you
@@ -376,9 +531,9 @@ It&#8217;s not as sophisticated as the gems out there, but it&#8217;s getting th
   
   <entry>
     <title type="html"><![CDATA[Aspect Oriented Programming]]></title>
-    <link href="Plough => Ruby/2013/12/30/aspect-oriented-programming.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2013/12/30/aspect-oriented-programming.html/"/>
     <updated>2013-12-30T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2013/12/30/aspect-oriented-programming</id>
+    <id>http://ploughthroughruby.co.uk//2013/12/30/aspect-oriented-programming</id>
     <content type="html"><![CDATA[<p>I was looking into Ruby&#8217;s <a href="http://www.ruby-doc.org/core-2.0.0/TracePoint.html">TracePoint</a> class recently. TracePoint is an objectified Kernel#set_trace_func method. TracePoint was
 added in Ruby2, but before that there was a gem that had same function as TracePoint
 class. Surprisingly, it was also called <a href="https://github.com/rubyunworks/tracepoint">tracepoint</a>.</p>
@@ -449,9 +604,9 @@ Hope this post will encourage you to investigate and learn more about these topi
   
   <entry>
     <title type="html"><![CDATA[Mina, the deployer]]></title>
-    <link href="Plough => Ruby/2013/12/01/Mina-the-deployer.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2013/12/01/Mina-the-deployer.html/"/>
     <updated>2013-12-01T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2013/12/01/Mina-the-deployer</id>
+    <id>http://ploughthroughruby.co.uk//2013/12/01/Mina-the-deployer</id>
     <content type="html"><![CDATA[<p>I recently decided to setup a dedicated website for my company as opposed to just using my personal one. It’s a static site, with barely any content right now.</p>
 
 <p>Now, I usually rely on capistrano for deployment, but since capistrano had recently undergone a major facelift, I sensed it as an opportunity to try <a href="https://github.com/nadarei/mina">Mina</a>. I have known about the gem since it’s very beginning, but the pressures of modern web developer life means less time for playing around, and more for getting things done. In other words, don’t change the deployer, if it ain’t broken.</p>
@@ -466,9 +621,9 @@ Hope this post will encourage you to investigate and learn more about these topi
   
   <entry>
     <title type="html"><![CDATA[DTrace probes in Ruby 2 and a startling discovery]]></title>
-    <link href="Plough => Ruby/2013/04/10/dtrace-probes-in-ruby-2.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2013/04/10/dtrace-probes-in-ruby-2.html/"/>
     <updated>2013-04-10T00:00:00+01:00</updated>
-    <id>Plough => Ruby/2013/04/10/dtrace-probes-in-ruby-2</id>
+    <id>http://ploughthroughruby.co.uk//2013/04/10/dtrace-probes-in-ruby-2</id>
     <content type="html"><![CDATA[<p>DTrace is a static and dynamic instrumentation framework. I did a talk
 at LRUG back in October on DTrace and it&#8217;s addition in Ruby 2. There&#8217;s
 not much content in the presentation, but it will give you a little
@@ -550,9 +705,9 @@ ruby installed via rbenv and see what I get and then go from there.</p>
   
   <entry>
     <title type="html"><![CDATA[OpenStruct to hash]]></title>
-    <link href="Plough => Ruby/2013/04/08/openstruct-to-hash.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2013/04/08/openstruct-to-hash.html/"/>
     <updated>2013-04-08T00:00:00+01:00</updated>
-    <id>Plough => Ruby/2013/04/08/openstruct-to-hash</id>
+    <id>http://ploughthroughruby.co.uk//2013/04/08/openstruct-to-hash</id>
     <content type="html"><![CDATA[<p>OpenStruct is a handy class in ruby&#8217;s stdlib. I&#8217;ve used it in the past
 for creating test data, instead of using factory girl. It&#8217;s fast, and
 the fact that it behaves like a Hash, makes it super easy for stubbing
@@ -584,9 +739,9 @@ os.instance_variable_get(:@table) # returns the hash {:id=>12}
   
   <entry>
     <title type="html"><![CDATA[In Ruby2, inspect independent of to_s]]></title>
-    <link href="Plough => Ruby/2013/02/23/inspect-to_s-change-in-ruby2.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2013/02/23/inspect-to_s-change-in-ruby2.html/"/>
     <updated>2013-02-23T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2013/02/23/inspect-to_s-change-in-ruby2</id>
+    <id>http://ploughthroughruby.co.uk//2013/02/23/inspect-to_s-change-in-ruby2</id>
     <content type="html"><![CDATA[<p><a href="http://www.ruby-lang.org/en/news/2013/02/24/ruby-2-0-0-p0-is-released/">Ruby 2.0.0</a> has been released and there are a lot of new things, for example, keyword arguments, TracePoint API, DTrace and so on. Here&#8217;s <a href="https://github.com/ruby/ruby/blob/trunk/NEWS">Ruby NEWS</a> file, and some <a href="http://blog.marc-andre.ca/2013/02/23/ruby-2-by-example/">new features in Ruby 2</a>.</p>
 
 <p>One thing to add to that list is that the behaviour of inspect is no
@@ -599,9 +754,9 @@ affect inspect anymore. Here&#8217;s code example for <a href="https://eval.in/1
   
   <entry>
     <title type="html"><![CDATA[Installing any Ruby source on your local machine with RVM]]></title>
-    <link href="Plough => Ruby/2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm.html/"/>
     <updated>2011-12-04T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm</id>
+    <id>http://ploughthroughruby.co.uk//2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm</id>
     <content type="html"><![CDATA[<p>Update:
 <em>This approach doesn&#8217;t work with the latest version of rvm (1.17.0
 stable)</em></p>
@@ -697,9 +852,9 @@ ruby 2.0.0dev (2011-12-03 trunk 33936) [x86_64-darwin10.8.0]
   
   <entry>
     <title type="html"><![CDATA[Inconsistent hashes]]></title>
-    <link href="Plough => Ruby/2011/04/21/inconsistent-hashes.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2011/04/21/inconsistent-hashes.html/"/>
     <updated>2011-04-21T00:00:00+01:00</updated>
-    <id>Plough => Ruby/2011/04/21/inconsistent-hashes</id>
+    <id>http://ploughthroughruby.co.uk//2011/04/21/inconsistent-hashes</id>
     <content type="html"><![CDATA[<p>To clarify, hashes here does not mean the Hash class. Object&#8217;s in ruby have a hash method that returns a hash code for an object. The hash is also used in the background by the eql? method. So, it&#8217;s safe to say that two objects are equal if their hash methods return the same value.</p>
 
 <p>Now, carry out a simple exercise and see what happens. Fire up an IRB session and run the following code, one by one:</p>
@@ -717,9 +872,9 @@ ruby 2.0.0dev (2011-12-03 trunk 33936) [x86_64-darwin10.8.0]
   
   <entry>
     <title type="html"><![CDATA[An Interesting Ruby Method]]></title>
-    <link href="Plough => Ruby/2011/04/17/an-interesting-ruby-method.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2011/04/17/an-interesting-ruby-method.html/"/>
     <updated>2011-04-17T00:00:00+01:00</updated>
-    <id>Plough => Ruby/2011/04/17/an-interesting-ruby-method</id>
+    <id>http://ploughthroughruby.co.uk//2011/04/17/an-interesting-ruby-method</id>
     <content type="html"><![CDATA[<p>In this post, I will talk about a ruby method that I had no idea existed which might come handy in debugging your code.</p>
 
 <p>The method I am talking about is <em>set_trace_func</em>. It&#8217;s part of the Kernel class and it does what it says. Allows one to set the method tracing on a method. The following snippet explains it further. Here, we have a class, TestingSetProcFunc:</p>
@@ -790,9 +945,9 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
   
   <entry>
     <title type="html"><![CDATA[Ruby Hacking Guide - Chapter 1]]></title>
-    <link href="Plough => Ruby/2011/03/12/ruby-hacking-guide-chapter-1.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2011/03/12/ruby-hacking-guide-chapter-1.html/"/>
     <updated>2011-03-12T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2011/03/12/ruby-hacking-guide-chapter-1</id>
+    <id>http://ploughthroughruby.co.uk//2011/03/12/ruby-hacking-guide-chapter-1</id>
     <content type="html"><![CDATA[<p>I have completed proof-reading and testing the code from old Ruby Hacking Guide and re-releases in the wild again. It still needs some styling work but I will hopefully find time to sort that out this week.</p>
 
 <p>In the meantime, have a <a href="http://rubyhacking.andhapp.co.uk/2011/01/30/chapter-1.html">read through</a> and see if you spot any mistakes.</p>
@@ -801,26 +956,10 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
   
   <entry>
     <title type="html"><![CDATA[Free Ruby 1.9 Online Book]]></title>
-    <link href="Plough => Ruby/2011/03/12/free-ruby-1.9-online-book.html/&#8221;/>
+    <link href="http://ploughthroughruby.co.uk//2011/03/12/free-ruby-1.9-online-book.html/"/>
     <updated>2011-03-12T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2011/03/12/free-ruby-1.9-online-book</id>
+    <id>http://ploughthroughruby.co.uk//2011/03/12/free-ruby-1.9-online-book</id>
     <content type="html"><![CDATA[<p>Just found this nicely done online book on <a href="http://ruby.runpaint.org/">Ruby 1.9</a>, in particular. It&#8217;s a must see.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Ruby File append mode]]></title>
-    <link href="Plough => Ruby/2011/01/21/ruby-file-append-mode.html/&#8221;/>
-    <updated>2011-01-21T00:00:00+00:00</updated>
-    <id>Plough => Ruby/2011/01/21/ruby-file-append-mode</id>
-    <content type="html"><![CDATA[<p>There are different file modes available to the developer when creating and opening new files in Ruby. One that I didn&#8217;t know about was &#8220;a&#8221; which basically means append to the end of the file rather than starting a new one. What could it be useful for? One example would be as a log file of some sort where one wants to preserve the old data and add new data to the end of the file. Very trivial but helpful if you know about these things. Just makes you a better developer.</p>
-
-<p>A simple code example would be:</p>
-
-<pre>
-    file = File.new("datamapper.log", "a")  
-</pre>
-
 ]]></content>
   </entry>
   

@@ -8,4 +8,4 @@ Found a very nice article on metod arguments in Ruby. Please visit the <a href="
 
 I will be posting an extension to this article highlighting some of the changes in Ruby 1.9 that I know of.
 
-Update: Aplogies Alan did actually use Ruby 1.9. I guess that means I do not have anything else to add to it then.
+Update: Apologies Alan did actually use Ruby 1.9. I guess that means I do not have anything else to add to it then.

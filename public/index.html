@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Reading open source code is almost always a good idea. Open source codehas the benefit of being reviewed by a lot of committed users and itjust sho...">
+  <meta name="description" content="There are several ways of adding a method to a ruby class (or instance),for example, define_method, method_missing, or by just opening up theclass ...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="Plough => Ruby/index.html">
+  <link rel="canonical" href="http://ploughthroughruby.co.uk//index.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -47,7 +47,7 @@
 </ul>
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
-    <input type="hidden" name="q" value="site:Plough => Ruby" />
+    <input type="hidden" name="q" value="site:ploughthroughruby.co.uk/" />
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
   </fieldset>
 </form>
@@ -62,6 +62,186 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2015/03/01/removing-a-method-in-ruby.html/">Removing a Method in Ruby</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2015-03-01T00:00:00+00:00" pubdate  data-updated="true" >Mar 1<span>st</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There are several ways of adding a method to a ruby class (or instance),
+for example, define_method, method_missing, or by just opening up the
+class itself.</p>
+
+<p><em>However, can we remove the methods from a Ruby class?</em></p>
+
+<p>I encountered two ways of removing methods from a class:</p>
+
+<ul>
+<li><p><a href="http://ruby-doc.org//core-2.2.0/Module.html#method-i-remove_method">remove_method</a></p></li>
+<li><p><a href="http://ruby-doc.org//core-2.2.0/Module.html#method-i-undef_method">undef_method</a></p></li>
+</ul>
+
+
+<p>There are subtle differences between the two. The former removes the
+method from the current class, where as the latter, stops responding to
+the methods in the current class.</p>
+
+<p>Let&#8217;s look at an example for the same. Imagine we have a parent class,
+Appliance (a.k.a Kitchen Appliance), and child class, Can opener. Here
+are the definitions for the two classes:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Appliance
+</span><span class='line'>  def name
+</span><span class='line'>   puts "I'm a kitchen appliance"
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>class CanOpener &lt; Appliance
+</span><span class='line'>  def name
+</span><span class='line'>    puts "I'm a can opener"
+</span><span class='line'>  end
+</span><span class='line'>end
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, let&#8217;s try <code>remove_method</code> and see what happens.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>can_opener = CanOpener.new
+</span><span class='line'>can_opener.name
+</span><span class='line'>
+</span><span class='line'>class CanOpener
+</span><span class='line'>  remove_method :name
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>can_opener.name
+</span><span class='line'>puts "Can Opener has a name? #{can_opener.respond_to?(:name)}"   </span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will produce the following output:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>I'm a can opener
+</span><span class='line'>I'm a kitchen appliance
+</span><span class='line'>Can Opener has a name? true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As soon as you remove a method from a class it treats the method as
+undefined and goes up the ancestor chain to look for an implementation,
+which it finds in the parent class. Since, there&#8217;s an implementation
+<code>respond_to</code> returns true.</p>
+
+<p>However, <code>undef_method</code> works slightly differently and let&#8217;s see how:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Appliance
+</span><span class='line'>  def name
+</span><span class='line'>   puts "I'm a kitchen appliance"
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>class CanOpener &lt; Appliance
+</span><span class='line'>  def name
+</span><span class='line'>    puts "I'm a can opener"
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>can_opener = CanOpener.new
+</span><span class='line'>can_opener.name
+</span><span class='line'>
+</span><span class='line'>class CanOpener
+</span><span class='line'>  undef_method :name
+</span><span class='line'>end
+</span><span class='line'> 
+</span><span class='line'>puts "Can Opener has a name? #{can_opener.respond_to?(:name)}"
+</span><span class='line'>can_opener.name</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will produce the following output:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>I'm a can opener
+</span><span class='line'>Can Opener has a name? true
+</span><span class='line'>/tmp/execpad-f7201e261f52/source-f7201e261f52:21:in `&lt;main&gt;': undefined method `name' for #&lt;CanOpener:0x41017dcc&gt; (NoMethodError)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Unlike <code>remove_method</code>, <code>undef_method</code> stops responding to the method
+and doesn&#8217;t travel up the ancestor chain. It totally disregards the
+method implementation in the parent class.</p>
+
+<p>Quite interesting, however, I&#8217;ve never seen it used in any of the
+production code before, so, hopefully, I will find a good use case for
+it soon.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -91,7 +271,7 @@
 
   <div class="entry-content"><p>Reading open source code is almost always a good idea. Open source code
 has the benefit of being reviewed by a lot of committed users and it
-just shows one the good patterns of programming. For instance, I once
+just shows the good patterns of programming. For instance, I once
 looked at Arel, and the code demonstrates an exemplary use of visitor
 pattern. There isn&#8217;t much code there, yet it manages to achieve so much.</p>
 
@@ -649,104 +829,6 @@ It&#8217;s not as sophisticated as the gems out there, but it&#8217;s getting th
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/12/30/aspect-oriented-programming.html/">Aspect Oriented Programming</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2013-12-30T00:00:00+00:00" pubdate  data-updated="true" >Dec 30<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I was looking into Ruby&#8217;s <a href="http://www.ruby-doc.org/core-2.0.0/TracePoint.html">TracePoint</a> class recently. TracePoint is an objectified Kernel#set_trace_func method. TracePoint was
-added in Ruby2, but before that there was a gem that had same function as TracePoint
-class. Surprisingly, it was also called <a href="https://github.com/rubyunworks/tracepoint">tracepoint</a>.</p>
-
-<p>Anyways, TracePoint is not the scope of this post. This post is all about AOP,
-or Aspect Oriented Programming.</p>
-
-<p>Wikipedia defines it as <em>&#8220;aspect-oriented programming (AOP) is a programming paradigm that aims to increase modularity by allowing the separation of cross-cutting concerns. AOP forms a basis for aspect-oriented software development.&#8221;</em></p>
-
-<p>There are couple of things worth noting, Modularity and Cross-cutting concerns.</p>
-
-<h3>Modularity</h3>
-
-<p>In English, Modularity means based on modules, easily assembled, or repaired
-and the reason it&#8217;s easily repaired is because modules are
-self-contained and talk to each other via a defined interface. Interface
-could be hardware pins, RAM slots, or intangible ones, defined in your
-Ruby or Java class.</p>
-
-<p>In Ruby world, modules and modularity is the go-to thing to achieve
-separation of concern. You got a piece of code that is used in two
-different places and has no state of its own, just create a
-module to be included/extended or prepended.</p>
-
-<h3>Cross-cutting concerns</h3>
-
-<p>Cross-cutting concern can be defined as any piece of code that&#8217;s more widely
-used across the application, for example, logging, security, or authentication, perhaps.
-Something, like a before_filter in Rails controllers that&#8217;s applied to a set of actions.</p>
-
-<p>There are libraries that one could use to achieve same and even more
-than before_filter functionality outside of Rails. The one that I
-briefly looked at is called
-<a href="https://github.com/gcao/aspector">Aspector</a>. It provides a lot of examples
-as well just in case you are stuck.</p>
-
-<h3>Why not just use Ruby Modules?</h3>
-
-<p>Ruby modules are similar but not exactly same as the AOP concept. One
-important difference is that you can apply an aspect (aspect is the
-piece of code with common functionality, like a module) to a class from
-outside, without opening the class. Here&#8217;s some aspector code snippet to
-elaborate the point:</p>
-
-<pre>
-TestAspect.apply A
-</pre>
-
-
-<p>Here A is the class, and TestAspect is the aspect. As you can see, you
-can just apply it from outside. Sorry, not very clear, but I didn&#8217;t want
-to tie the concept to a particular library implementation.</p>
-
-<p>One good use case of using AOP concepts would be with something like
-debugging, for example, a user performed an action and you want to check
-the log for parameters that are getting passed in to methods, or what
-methods are getting called when certain action is performed. But, that&#8217;s
-what TracePoint does, right? Well, it definitely allows one to hook into
-the events and print debugging information. With AOP, one can create
-more focussed debugging. Imagine, a request going through Rails stack
-will hit a lot of methods and you don&#8217;t want to enable tracing and then
-having to go through a long console output.</p>
-
-<p>These are just some of the initial thoughts I had on reading AOP and TracePoint.
-Hope this post will encourage you to investigate and learn more about these topics.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -779,6 +861,10 @@ Hope this post will encourage you to investigate and learn more about these topi
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2015/03/01/removing-a-method-in-ruby.html/">Removing a method in Ruby</a>
+      </li>
+    
+      <li class="post">
         <a href="/2015/01/25/ruby-command-line-flags.html/">Ruby command line flag for debugging</a>
       </li>
     
@@ -792,10 +878,6 @@ Hope this post will encourage you to investigate and learn more about these topi
     
       <li class="post">
         <a href="/2014/09/20/rspec-verifying-doubles.html/">RSpec verifying doubles</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2014/06/15/ruby-puts-command.html/">Ruby puts command</a>
       </li>
     
   </ul>
