@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Immediate Values - Plough => Ruby</title>
+  <title>Rebooting an old gem - Plough => Ruby</title>
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="In a previous post, I have explained that variables are basically passed by values in ruby but since they have a reference to the original object a...">
+  <meta name="description" content="Novelty of writing a gem has worn off. Back in the days when Rails hadjust come out, writing a gem (or a plugin) was an achievement in itself.What ...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://ploughthroughruby.co.uk//2009/10/31/immediate-values.html/">
+  <link rel="canonical" href="http://ploughthroughruby.co.uk//2015/10/04/rebooting-an-old-gem.html/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -65,7 +65,7 @@
   
   <header>
     
-      <h1 class="entry-title">Immediate Values</h1>
+      <h1 class="entry-title">Rebooting an Old Gem</h1>
     
     
       <p class="meta">
@@ -79,36 +79,59 @@
 
 
 
-<time datetime="2009-10-31T00:00:00+00:00" pubdate  data-updated="true" >Oct 31<span>st</span>, 2009</time>
+<time datetime="2015-10-04T00:00:00+01:00" pubdate  data-updated="true" >Oct 4<span>th</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>In a <a href="http://www.ploughthroughruby.co.uk/2009/08/is-variable-an-object/">previous post</a>, I have explained that variables are basically passed by values in ruby but since they have a reference to the original object any mutator methods can bascially modify the object itself. However, there are two exceptions to this; Fixnum and Symbol.</p>
+<div class="entry-content"><p>Novelty of writing a gem has worn off. Back in the days when Rails had
+just come out, writing a gem (or a plugin) was an achievement in itself.</p>
 
-<p>Both, Fixnum and Symbol, store the values and have no reference to the object. This also applies that there are no mutator methods for Fixnum and Symbol and they are immutable. So, how can we actually prove this fact. Let us do a simple experiment and I think I might have done this before but I do not want you going back and forth between posts so let us just do it again. Run the code snippet and we are going through each step:</p>
+<p>What has a gem got to do with Rails? You write ruby gems and rails is
+just another gem, no?</p>
 
-<pre>
-  fixnum_1 = 3
-  p fixnum_1.object_id
-  fixnum_2 = 3
-  p fixnum_2.object_id
-  str_1 = "3"
-  p str_1.object_id
-  str_2 = "3"
-  p str_2.object_id
-</pre>
+<p>Correct!</p>
+
+<p>It has nothing to do with Rails but my Ruby adventure began with Rails
+and I for one give the credit where it&#8217;s due, without a shadow of doubt.</p>
+
+<h4>History</h4>
+
+<p>Anyways, around 4 years ago, I created a gem called <a href="https://github.com/andhapp/is_bot">is_bot</a>. It offers some spam protection for web forms. I can&#8217;t even remember the project I used it on back then.
+However, recently we&#8217;ve been marketing <a href="https://www.suggestion.io/">Suggestion.io</a> and encountered a lot of spam sign ups and decided to fix the issue.</p>
+
+<h4>Why not just use a captcha?</h4>
+
+<p>I hate asking prospective clients to fill in yet another field. You want
+to make it easier not difficult to sign up. is_bot is different. It just
+adds a invisible text field making it hidden from the actual users. Time
+to get one back on the damn bots!</p>
+
+<h4>Why reboot? Why not use a Rails 4 gem?</h4>
+
+<p>I looked at few existing gems but none worked nicely. It was time to
+reboot is_bot. Back then it was written for Rails 3 so had to upgrade it
+for Rails 4 APIs which was a bit of a pain since it&#8217;s hard to find what
+changed from Rails 3 to Rails 4, easily. Reading through Rails source
+code and looking at some of the other gems got us through.</p>
+
+<h4>Technology is flying&#8230;</h4>
+
+<p>I also took this opportunity to change a few more things&#8230;I say a few,
+but so much has changed, hasn&#8217;t it?</p>
+
+<ul>
+<li>Replaced Jeweler with Bundler as a gem to manage my ruby gem. Just
+find it easier to use.</li>
+<li>Started using semantic versioning. Makes sense for open source code.</li>
+<li>Upgraded to latest RSpec</li>
+<li>Replaced <code>.rvmrc</code> to <code>.ruby-gemset</code> and <code>.ruby-version</code></li>
+</ul>
 
 
-<p>You will see that both the fixnum variables have the same object_id where as with str variables they will be different. So, what does that mean? It simply means that two fixnums of same value always represent the same object instance, so instance variables for Fixnum with value 1 are shared across the system. The same is the case with Symbol.</p>
-
-<p>Ok. Fine. This makes perfect sense but why should I bother with all this explanation. Well, that is a million dollar question really and the answer to that is &#8220;You can&#8217;t define singleton methods on Fixnums and Symbols&#8221;. What? Why? I know this is confusing but when in doubt think of an example.</p>
-
-<p>We previously established that all the fixnum variables with same value are actually pointing to the same object instance. If let us say I want to define a singleton method on one then it would really define the singleton method on that object instance which means all the fixnum variables with same value would really share that new method you have added. Therefore, in order to cut that possibilty out one cannot define singleton methods on Fixnum, and Symbls.</p>
-
-<p>Update: I have just realised that true (TrueClass), false (FalseClass) and nil (NilClass) also store the references as immediate values. And, yes there is a TrueClass, FalseClass and NilClass and true, false and nil are singleton instances of these classes.</p>
+<p>It was a bit of a work, but in the end all the efforts paid off.</p>
 </div>
 
 
@@ -129,7 +152,7 @@
 
 
 
-<time datetime="2009-10-31T00:00:00+00:00" pubdate  data-updated="true" >Oct 31<span>st</span>, 2009</time>
+<time datetime="2015-10-04T00:00:00+01:00" pubdate  data-updated="true" >Oct 4<span>th</span>, 2015</time>
       
 
 
@@ -137,7 +160,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://ploughthroughruby.co.uk//2009/10/31/immediate-values.html/" data-via="" data-counturl="http://ploughthroughruby.co.uk//2009/10/31/immediate-values.html/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://ploughthroughruby.co.uk//2015/10/04/rebooting-an-old-gem.html/" data-via="" data-counturl="http://ploughthroughruby.co.uk//2015/10/04/rebooting-an-old-gem.html/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -150,10 +173,8 @@
     
     <p class="meta">
        
-        <a class="basic-alignment left" href="/2009/10/31/class-names-are-constants.html/" title="Previous Post: Class names are constants ">&laquo; Class names are constants </a>
+        <a class="basic-alignment left" href="/2015/03/01/removing-a-method-in-ruby.html/" title="Previous Post: Removing a method in Ruby">&laquo; Removing a method in Ruby</a>
       
-       
-        <a class="basic-alignment right" href="/2009/11/04/serendipity.html/" title="next Post: Serendipity">Serendipity &raquo;</a>
       
     </p>
   </footer>

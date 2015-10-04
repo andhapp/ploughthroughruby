@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="There are several ways of adding a method to a ruby class (or instance),for example, define_method, method_missing, or by just opening up theclass ...">
+  <meta name="description" content="Novelty of writing a gem has worn off. Back in the days when Rails hadjust come out, writing a gem (or a plugin) was an achievement in itself.What ...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -62,6 +62,85 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2015/10/04/rebooting-an-old-gem.html/">Rebooting an Old Gem</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2015-10-04T00:00:00+01:00" pubdate  data-updated="true" >Oct 4<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Novelty of writing a gem has worn off. Back in the days when Rails had
+just come out, writing a gem (or a plugin) was an achievement in itself.</p>
+
+<p>What has a gem got to do with Rails? You write ruby gems and rails is
+just another gem, no?</p>
+
+<p>Correct!</p>
+
+<p>It has nothing to do with Rails but my Ruby adventure began with Rails
+and I for one give the credit where it&#8217;s due, without a shadow of doubt.</p>
+
+<h4>History</h4>
+
+<p>Anyways, around 4 years ago, I created a gem called <a href="https://github.com/andhapp/is_bot">is_bot</a>. It offers some spam protection for web forms. I can&#8217;t even remember the project I used it on back then.
+However, recently we&#8217;ve been marketing <a href="https://www.suggestion.io/">Suggestion.io</a> and encountered a lot of spam sign ups and decided to fix the issue.</p>
+
+<h4>Why not just use a captcha?</h4>
+
+<p>I hate asking prospective clients to fill in yet another field. You want
+to make it easier not difficult to sign up. is_bot is different. It just
+adds a invisible text field making it hidden from the actual users. Time
+to get one back on the damn bots!</p>
+
+<h4>Why reboot? Why not use a Rails 4 gem?</h4>
+
+<p>I looked at few existing gems but none worked nicely. It was time to
+reboot is_bot. Back then it was written for Rails 3 so had to upgrade it
+for Rails 4 APIs which was a bit of a pain since it&#8217;s hard to find what
+changed from Rails 3 to Rails 4, easily. Reading through Rails source
+code and looking at some of the other gems got us through.</p>
+
+<h4>Technology is flying&#8230;</h4>
+
+<p>I also took this opportunity to change a few more things&#8230;I say a few,
+but so much has changed, hasn&#8217;t it?</p>
+
+<ul>
+<li>Replaced Jeweler with Bundler as a gem to manage my ruby gem. Just
+find it easier to use.</li>
+<li>Started using semantic versioning. Makes sense for open source code.</li>
+<li>Upgraded to latest RSpec</li>
+<li>Replaced <code>.rvmrc</code> to <code>.ruby-gemset</code> and <code>.ruby-version</code></li>
+</ul>
+
+
+<p>It was a bit of a work, but in the end all the efforts paid off.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -741,94 +820,6 @@ it makes code easier to read, just refer to that file.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2014/01/06/nested-exception-in-ruby-2.1.0.html/">Nested Exceptions in Ruby 2.1.0</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2014-01-06T00:00:00+00:00" pubdate  data-updated="true" >Jan 6<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>With Ruby 2.1.0, one can easily trace the original exception.
-Previously, on rescuing an exception one would have no reference to the original exception
-(thrown by a gem/library). There are a couple of <a href="https://github.com/skorks/nesty">gems</a> that can help you
-keep track of the exceptions, but with Ruby 2.1.0 you can work with
-nested exceptions without any issues. Here&#8217;s some trivial code to
-achieve the same:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Car
-</span><span class='line'>  def self.start
-</span><span class='line'>    begin
-</span><span class='line'>      1/0
-</span><span class='line'>    rescue =&gt; ex
-</span><span class='line'>      puts "Exception: #{ex}"
-</span><span class='line'>      raise StandardError.new "Can't start the car"
-</span><span class='line'>    end
-</span><span class='line'>   end
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>begin
-</span><span class='line'>  Car.start
-</span><span class='line'>rescue =&gt; ex
-</span><span class='line'>  puts "Cause: #{ex.cause}"
-</span><span class='line'>  puts "Exception: #{ex}"
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This will produce the following output:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Exception: divided by 0
-</span><span class='line'>Cause: divided by 0
-</span><span class='line'>Exception: Can't start the car</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You can <a href="https://eval.in/86466">play around</a> with the code yourself.
-It&#8217;s not as sophisticated as the gems out there, but it&#8217;s getting there.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -861,6 +852,10 @@ It&#8217;s not as sophisticated as the gems out there, but it&#8217;s getting th
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2015/10/04/rebooting-an-old-gem.html/">Rebooting an old gem</a>
+      </li>
+    
+      <li class="post">
         <a href="/2015/03/01/removing-a-method-in-ruby.html/">Removing a method in Ruby</a>
       </li>
     
@@ -874,10 +869,6 @@ It&#8217;s not as sophisticated as the gems out there, but it&#8217;s getting th
     
       <li class="post">
         <a href="/2014/10/19/an-unusual-thing-about-kanji%28Japanese%29.html/">An unsual thing about kanji(Japanese)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2014/09/20/rspec-verifying-doubles.html/">RSpec verifying doubles</a>
       </li>
     
   </ul>

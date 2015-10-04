@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="http://ploughthroughruby.co.uk//atom.xml" rel="self"/>
   <link href="http://ploughthroughruby.co.uk//"/>
-  <updated>2015-03-02T21:23:41+00:00</updated>
+  <updated>2015-10-04T18:44:47+01:00</updated>
   <id>http://ploughthroughruby.co.uk//</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -12,6 +12,60 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rebooting an old gem]]></title>
+    <link href="http://ploughthroughruby.co.uk//2015/10/04/rebooting-an-old-gem.html/"/>
+    <updated>2015-10-04T00:00:00+01:00</updated>
+    <id>http://ploughthroughruby.co.uk//2015/10/04/rebooting-an-old-gem</id>
+    <content type="html"><![CDATA[<p>Novelty of writing a gem has worn off. Back in the days when Rails had
+just come out, writing a gem (or a plugin) was an achievement in itself.</p>
+
+<p>What has a gem got to do with Rails? You write ruby gems and rails is
+just another gem, no?</p>
+
+<p>Correct!</p>
+
+<p>It has nothing to do with Rails but my Ruby adventure began with Rails
+and I for one give the credit where it&#8217;s due, without a shadow of doubt.</p>
+
+<h4>History</h4>
+
+<p>Anyways, around 4 years ago, I created a gem called <a href="https://github.com/andhapp/is_bot">is_bot</a>. It offers some spam protection for web forms. I can&#8217;t even remember the project I used it on back then.
+However, recently we&#8217;ve been marketing <a href="https://www.suggestion.io/">Suggestion.io</a> and encountered a lot of spam sign ups and decided to fix the issue.</p>
+
+<h4>Why not just use a captcha?</h4>
+
+<p>I hate asking prospective clients to fill in yet another field. You want
+to make it easier not difficult to sign up. is_bot is different. It just
+adds a invisible text field making it hidden from the actual users. Time
+to get one back on the damn bots!</p>
+
+<h4>Why reboot? Why not use a Rails 4 gem?</h4>
+
+<p>I looked at few existing gems but none worked nicely. It was time to
+reboot is_bot. Back then it was written for Rails 3 so had to upgrade it
+for Rails 4 APIs which was a bit of a pain since it&#8217;s hard to find what
+changed from Rails 3 to Rails 4, easily. Reading through Rails source
+code and looking at some of the other gems got us through.</p>
+
+<h4>Technology is flying&#8230;</h4>
+
+<p>I also took this opportunity to change a few more things&#8230;I say a few,
+but so much has changed, hasn&#8217;t it?</p>
+
+<ul>
+<li>Replaced Jeweler with Bundler as a gem to manage my ruby gem. Just
+find it easier to use.</li>
+<li>Started using semantic versioning. Makes sense for open source code.</li>
+<li>Upgraded to latest RSpec</li>
+<li>Replaced <code>.rvmrc</code> to <code>.ruby-gemset</code> and <code>.ruby-version</code></li>
+</ul>
+
+
+<p>It was a bit of a work, but in the end all the efforts paid off.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Removing a method in Ruby]]></title>
@@ -951,15 +1005,6 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
     <content type="html"><![CDATA[<p>I have completed proof-reading and testing the code from old Ruby Hacking Guide and re-releases in the wild again. It still needs some styling work but I will hopefully find time to sort that out this week.</p>
 
 <p>In the meantime, have a <a href="http://rubyhacking.andhapp.co.uk/2011/01/30/chapter-1.html">read through</a> and see if you spot any mistakes.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Free Ruby 1.9 Online Book]]></title>
-    <link href="http://ploughthroughruby.co.uk//2011/03/12/free-ruby-1.9-online-book.html/"/>
-    <updated>2011-03-12T00:00:00+00:00</updated>
-    <id>http://ploughthroughruby.co.uk//2011/03/12/free-ruby-1.9-online-book</id>
-    <content type="html"><![CDATA[<p>Just found this nicely done online book on <a href="http://ruby.runpaint.org/">Ruby 1.9</a>, in particular. It&#8217;s a must see.</p>
 ]]></content>
   </entry>
   
