@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="With Ruby 2.1.0, one can easily trace the original exception.Previously, on rescuing an exception one would have no reference to the original excep...">
+  <meta name="description" content="Do you know what $! means in Ruby?Years ago, I was discussing some issue regarding GemCutter (now that makesit ancient in programming age), and we ...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -62,6 +62,54 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/01/07/cryptic-global-variables-in-ruby.html/">Cryptic Global Variables in Ruby</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2014-01-07T00:00:00+00:00" pubdate  data-updated="true" >Jan 7<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Do you know what $! means in Ruby?</p>
+
+<p>Years ago, I was discussing some issue regarding GemCutter (now that makes
+it ancient in programming age), and we were talking about global
+variables in Ruby, for example, $; and $/. At the time, we couldn&#8217;t
+really find a place to look them up, even Google <a href="https://www.google.co.uk/search?q=%24!+Ruby&amp;oq=%24!+Ruby&amp;aqs=chrome..69i57.2487j0j7&amp;sourceid=chrome&amp;espv=210&amp;es_sm=91&amp;ie=UTF-8">isn&#8217;t very effective</a> given
+the nature of the query.</p>
+
+<p>Anyways, while looking through Ruby&#8217;s standard library, I found the file
+<a href="http://ruby-doc.org/stdlib-2.1.0/libdoc/English/rdoc/English.html">English.rb</a>.
+This library has English names for all the cryptic global variables. For
+example: $ERROR_INFO represents $!.</p>
+
+<p>If you ever have to look up the English names, which I suggest you do as
+it makes code easier to read, just refer to that file.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -765,42 +813,6 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2011/03/12/ruby-hacking-guide-chapter-1.html/">Ruby Hacking Guide - Chapter 1</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-03-12T00:00:00+00:00" pubdate  data-updated="true" >Mar 12<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have completed proof-reading and testing the code from old Ruby Hacking Guide and re-releases in the wild again. It still needs some styling work but I will hopefully find time to sort that out this week.</p>
-
-<p>In the meantime, have a <a href="http://rubyhacking.andhapp.co.uk/2011/01/30/chapter-1.html">read through</a> and see if you spot any mistakes.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -835,6 +847,10 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2015/11/30/integrate-react-es6-webpack-babel-with-rails.html/">Integrate React, ES6, Webpack and Babel with Rails</a>
+      </li>
+    
+      <li class="post">
         <a href="/2015/10/04/rebooting-an-old-gem.html/">Rebooting an old gem</a>
       </li>
     
@@ -848,10 +864,6 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
     
       <li class="post">
         <a href="/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac+copy.html/">Setting Up Chrome Selenium driver for Capybara when using chrome canary on a Mac</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2014/10/19/an-unusual-thing-about-kanji%28Japanese%29.html/">An unsual thing about kanji(Japanese)</a>
       </li>
     
   </ul>

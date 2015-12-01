@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="In a previous post, I have explained that variables are basically passed by values in ruby but since they have a reference to the original object a...">
+  <meta name="description" content="I accidently found a nifty way of calling class singleton methods. Imagine you have this code:class FoundANewWay    def self.to_call_a_singleton_me...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -62,6 +62,63 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/11/04/serendipity.html/">Serendipity</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-11-04T00:00:00+00:00" pubdate  data-updated="true" >Nov 4<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I accidently found a nifty way of calling <del datetime="2009-11-04T09:19:06+00:00">class</del> singleton methods. Imagine you have this code:</p>
+
+<pre>
+
+class FoundANewWay
+    def self.to_call_a_singleton_method
+        puts "It works!"
+    end
+end
+</pre>
+
+
+<p>and you can call it like this:</p>
+
+<pre>
+FoundANewWay.to_call_a_singleton_method
+
+or
+
+FoundANewWay::to_call_a_singleton_method
+</pre>
+
+
+<p>Cool!</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -530,46 +587,10 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/08/16/hello-world.html/">Hello Ruby World!</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2009-08-16T00:00:00+01:00" pubdate  data-updated="true" >Aug 16<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have been reading a lot about Ruby the language and decided that it was about time I blogged my journey.</p>
-
-<p>Hence the blog, Plough Through Ruby.</p>
-
-<p>Have fun!</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
+      
+        <a class="prev" href="/blog/page/5/">&larr; Older</a>
       
       <a href="/blog/archives">Blog Archives</a>
       
@@ -600,6 +621,10 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2015/11/30/integrate-react-es6-webpack-babel-with-rails.html/">Integrate React, ES6, Webpack and Babel with Rails</a>
+      </li>
+    
+      <li class="post">
         <a href="/2015/10/04/rebooting-an-old-gem.html/">Rebooting an old gem</a>
       </li>
     
@@ -613,10 +638,6 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
     
       <li class="post">
         <a href="/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac+copy.html/">Setting Up Chrome Selenium driver for Capybara when using chrome canary on a Mac</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2014/10/19/an-unusual-thing-about-kanji%28Japanese%29.html/">An unsual thing about kanji(Japanese)</a>
       </li>
     
   </ul>

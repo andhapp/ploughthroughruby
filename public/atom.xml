@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="http://ploughthroughruby.co.uk//atom.xml" rel="self"/>
   <link href="http://ploughthroughruby.co.uk//"/>
-  <updated>2015-10-04T18:44:47+01:00</updated>
+  <updated>2015-12-01T06:52:55+00:00</updated>
   <id>http://ploughthroughruby.co.uk//</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -12,6 +12,355 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Integrate React, ES6, Webpack and Babel with Rails]]></title>
+    <link href="http://ploughthroughruby.co.uk//2015/11/30/integrate-react-es6-webpack-babel-with-rails.html/"/>
+    <updated>2015-11-30T00:00:00+00:00</updated>
+    <id>http://ploughthroughruby.co.uk//2015/11/30/integrate-react-es6-webpack-babel-with-rails</id>
+    <content type="html"><![CDATA[<h3>Roll your own</h3>
+
+<p>If you have got two projects using the same functionality, then write a <strong>Rubygem</strong> to promote code reuse and modularity. Writing a gem is not a new thing. In fact, there are 6,710,940,000 gems and counting, as per the <a href="https://rubygems.org/">rubygems homepage</a>.</p>
+
+<p>Years ago Jamis Buck said in one of his blogs that if you don&#8217;t understand the inner workings of a gem, don&#8217;t use it as a dependency. Very fair comment indeed! I&#8217;m guilty of using the gems without really knowing their inner workings. To be honest, as a modern day programmer with a constant client expectation to deliver solutions, it&#8217;s okay to take your eyes of the ball.</p>
+
+<p>However, I decided to make amendments when it came to integrating a react app into rails. I wanted to learn and fix the issues that comes with integrating and therefore, decided to start it from scratch. If you wish to use, there are a couple of nice integrate react with rails gems out there, namely, <a href="https://github.com/shakacode/react_on_rails">react_on_rails</a> and <a href="https://github.com/reactjs/react-rails">react-rails</a>.</p>
+
+<h3>What are we going to do</h3>
+
+<p>Recently, I have crossed over to the Javascript world and been doing a lot of React, ES6 (with babel) and webpack and I wanted to use the same ideas in a Rails project.</p>
+
+<p>There are a few things to keep in mind:</p>
+
+<ol>
+<li>A react component will serve as the client talking to the rails as a backend.</li>
+<li>The rails will be used a backend.</li>
+<li>It&#8217;s not an isomorphic application meaning there will be no server-side rendering of react components.</li>
+<li>It should play nicely with rails asset pipeline.</li>
+</ol>
+
+
+<p>As part of this article, we are going to set-up a react app in both development and production-mode that will play nicely with a rails app.</p>
+
+<h3>Setting up a rails app</h3>
+
+<p>As a seasoned rails developer, I expect you guys to know how to do this.</p>
+
+<h3>Setting up a react app</h3>
+
+<ul>
+<li>Create a directory called <code>client</code> at the same level as the <code>app</code>.</li>
+<li>Create a file called <code>package.json</code> in the <code>client</code> directory. Package.json is to npm what Gemfile is to Bundler. Copy the following contents into the client/package.json. Most of it is pretty self-explanatory except the scripts section. Npm allows you to create these tasks inside the scripts section runnable from the command line via <code>npm run</code> command. Under <code>scripts</code>, <code>start</code> starts a webpack dev server useful for reloading the app whilst working in development. <code>build</code> is for building the app locally and uses the default webpack config and finally, <code>build:prod</code> builds the final distributable js file using webpack&#8217;s production config.</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{
+</span><span class='line'>  "name": "react-app",
+</span><span class='line'>  "version": "0.0.1",
+</span><span class='line'>  "description": "React App",
+</span><span class='line'>  "scripts": {
+</span><span class='line'>    "start": "webpack-dev-server --content-base dist/ --port 9999",
+</span><span class='line'>    "build": "./node_modules/webpack/bin/webpack.js --progress",
+</span><span class='line'>    "build:prod": "./node_modules/webpack/bin/webpack.js -p --progress --config webpack.production.config.js"
+</span><span class='line'>  },
+</span><span class='line'>  "dependencies": {
+</span><span class='line'>    "react": "^0.14.2",
+</span><span class='line'>    "react-dom": "^0.14.2"
+</span><span class='line'>  },
+</span><span class='line'>  "devDependencies": {
+</span><span class='line'>    "babel-core": "^6.0.20",
+</span><span class='line'>    "babel-eslint": "^4.1.5",
+</span><span class='line'>    "babel-loader": "^6.0.1",
+</span><span class='line'>    "babel-preset-es2015": "^6.0.15",
+</span><span class='line'>    "babel-preset-react": "^6.0.15",
+</span><span class='line'>    "babel-preset-stage-0": "^6.0.15",
+</span><span class='line'>    "eslint": "^1.8.0",
+</span><span class='line'>    "eslint-loader": "^1.1.1",
+</span><span class='line'>    "eslint-plugin-react": "^3.6.3",
+</span><span class='line'>    "html-webpack-plugin": "^1.6.2",
+</span><span class='line'>    "react-hot-loader": "^1.3.0",
+</span><span class='line'>    "webpack": "^1.12.2",
+</span><span class='line'>    "webpack-dev-server": "^1.12.1"
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Create <code>webpack.base.config.js</code> in the <code>client</code> directory with the following contents:*</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var webpack = require('webpack');
+</span><span class='line'>
+</span><span class='line'>module.exports = {
+</span><span class='line'>    entry: './src/js/app.js',
+</span><span class='line'>    output: {
+</span><span class='line'>        path: '../app/assets/javascripts/',
+</span><span class='line'>        filename: "bundle.js"
+</span><span class='line'>    },
+</span><span class='line'>    module: {
+</span><span class='line'>        preLoaders: [
+</span><span class='line'>            {
+</span><span class='line'>                test: /(\.js$)/,
+</span><span class='line'>                exclude: /node_modules/,
+</span><span class='line'>                loader: "eslint-loader"
+</span><span class='line'>            }
+</span><span class='line'>        ],
+</span><span class='line'>        loaders: [
+</span><span class='line'>            {
+</span><span class='line'>                test: /\.js$/,
+</span><span class='line'>                exclude: /node_modules/,
+</span><span class='line'>                loader: "babel-loader",
+</span><span class='line'>                query: {
+</span><span class='line'>                   presets: [ "react", "es2015", "stage-0" ]
+</span><span class='line'>                }
+</span><span class='line'>            }
+</span><span class='line'>        ]
+</span><span class='line'>    },
+</span><span class='line'>    eslint: {
+</span><span class='line'>        configFile: '.eslintrc'
+</span><span class='line'>    },
+</span><span class='line'>    plugins: [
+</span><span class='line'>        new webpack.NoErrorsPlugin()
+</span><span class='line'>    ]
+</span><span class='line'>}
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Create <code>webpack.config.js</code>  in the <code>client</code> directory with the following contents. This is the default config used by webpack.</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var webpack = require('webpack'),
+</span><span class='line'>    config = require('./webpack.base.config.js');
+</span><span class='line'>
+</span><span class='line'>config.entry = [
+</span><span class='line'>    'webpack-dev-server/client?http://0.0.0.0:9999',
+</span><span class='line'>    config.entry
+</span><span class='line'>];
+</span><span class='line'>
+</span><span class='line'>config.output = {
+</span><span class='line'>    path: config.output.path,
+</span><span class='line'>    filename: config.output.filename
+</span><span class='line'>};
+</span><span class='line'>
+</span><span class='line'>module.exports = config;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Finally, create <code>webpack.production.config.js</code>  in the <code>client</code> directory with the following contents. This is mainly used for creating a production ready distributable bundle. It is invoked with a <code>-p</code> option at the command line to trigger automatic minification.</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var webpack = require('webpack'),
+</span><span class='line'>    config = require('./webpack.base.config.js');
+</span><span class='line'>
+</span><span class='line'>config.entry = [
+</span><span class='line'>    config.entry
+</span><span class='line'>];
+</span><span class='line'>
+</span><span class='line'>config.output = {
+</span><span class='line'>  path: config.output.path,
+</span><span class='line'>    filename: config.output.filename
+</span><span class='line'>};
+</span><span class='line'>
+</span><span class='line'>module.exports = config;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>Create a directory called <code>src/js</code> in the <code>client</code> directory.</p></li>
+<li><p>In the <code>src/js</code> directory, create a file called <code>app.js</code>. This is the entry file for webpack. Entry file is the file webpack uses to workout all the other dependencies that it needs to bundle up in the final distributable file.</p></li>
+<li><p>The <code>app.js</code> file should have the following contents. This is the entry point for the app. Here it&#8217;s rendering the react app in a dom node with the id <code>react-app</code>. Make sure a dom node with the same id exists in the layout file of your rails app, otherwise, react will have no place to mount the app.</p></li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import React from 'react'
+</span><span class='line'>import ReactDOM from 'react-dom'
+</span><span class='line'>import App from './components/App.react'
+</span><span class='line'>
+</span><span class='line'>ReactDOM.render(
+</span><span class='line'>    &lt;App /&gt;,
+</span><span class='line'>    document.getElementById('react-app')
+</span><span class='line'>);</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>One last thing, create the following directory, src/js/components and in there create a root react component called App.react.js with the following contents. As you can see, the <code>App</code> is written in ES6 classes and takes advantage of the modular dependency provided by ES6 out of the box.</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import React, { Component, PropTypes } from 'react'
+</span><span class='line'>
+</span><span class='line'>class App extends Component {
+</span><span class='line'>    render() {
+</span><span class='line'>        return (
+</span><span class='line'>            &lt;div&gt;
+</span><span class='line'>                &lt;h1&gt;React App&lt;/h1&gt;
+</span><span class='line'>            &lt;/div&gt;
+</span><span class='line'>        );
+</span><span class='line'>    }
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>export default App
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Workflow</h3>
+
+<ol>
+<li>Open a terminal window and navigate to the client directory that we created above.</li>
+<li>Run <code>npm run build</code>. This will create a bundle.js (development version) and to <code>app/assets/javascripts</code> directory.</li>
+<li>Make sure to refer to it from the layout file. I added it to the <code>config/initializers/assets.rb</code> as a precompiled file:</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Rails.application.config.assets.precompile += %w( bundle.js )</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<ol>
+<li><p>Added it at the bottom of the layout file with a script tag to ensure the DOM node that react app depends upon is there before react&#8217;s mounting kicks in.</p></li>
+<li><p>Opened the rails root page in a browser to check the react app is being mounted correctly and <code>React App</code> (the contents of the App.react.js component) is being rendered on the page.</p></li>
+</ol>
+
+
+<h3>Phew, further investigation things!</h3>
+
+<ul>
+<li>Firstly, you will see there is an error in the dev tools. The app still works fine. This means the at the time of the mount react didn&#8217;t find the DOM node which seems bizzare because it works fine. I noticed removing the line of code that brings in <code>application.js</code> in your rails layout file fixes this issue.</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Uncaught Error: Invariant Violation: _registerComponent(...): Target container is not a DOM element.</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>You will also notice a lot of sock.js errors in the dev tools. This is because the in the webpack development config we&#8217;ve set it up to communicate with the local webpack dev server and update any changes to the app via websocket. I haven&#8217;t quite worked out how the webpack-dev-server communication with this will work, so ignore those for now, or just build the bundle.js using webpack production config.</li>
+</ul>
+
+
+<p>And, that&#8217;s it!</p>
+
+<p>I don&#8217;t prefer to write such long articles because they are difficult to follow and I made a genuine exception in this case.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rebooting an old gem]]></title>
@@ -57,9 +406,9 @@ but so much has changed, hasn&#8217;t it?</p>
 <ul>
 <li>Replaced Jeweler with Bundler as a gem to manage my ruby gem. Just
 find it easier to use.</li>
-<li>Started using semantic versioning. Makes sense for open source code.</li>
-<li>Upgraded to latest RSpec</li>
-<li>Replaced <code>.rvmrc</code> to <code>.ruby-gemset</code> and <code>.ruby-version</code></li>
+<li>Started using semantic versioning. Makes perfect sense for open source project.</li>
+<li>Upgraded to latest RSpec.</li>
+<li>Replaced <code>.rvmrc</code> to <code>.ruby-gemset</code> and <code>.ruby-version</code>.</li>
 </ul>
 
 
@@ -994,17 +1343,6 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
 
 
 <p>This output gives one a good idea about the work that is happening in the background. The weird looking Binding instance is the context at that particular place in the code. I have just scratched the surface and I am sure there&#8217;s a lot one can do with this method. Have a look at the <a href="https://github.com/ruby/ruby/blob/trunk/test/ruby/test_settracefunc.rb">ruby&#8217;s test for set_trace_func</a> for more useful ways of employing it.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Ruby Hacking Guide - Chapter 1]]></title>
-    <link href="http://ploughthroughruby.co.uk//2011/03/12/ruby-hacking-guide-chapter-1.html/"/>
-    <updated>2011-03-12T00:00:00+00:00</updated>
-    <id>http://ploughthroughruby.co.uk//2011/03/12/ruby-hacking-guide-chapter-1</id>
-    <content type="html"><![CDATA[<p>I have completed proof-reading and testing the code from old Ruby Hacking Guide and re-releases in the wild again. It still needs some styling work but I will hopefully find time to sort that out this week.</p>
-
-<p>In the meantime, have a <a href="http://rubyhacking.andhapp.co.uk/2011/01/30/chapter-1.html">read through</a> and see if you spot any mistakes.</p>
 ]]></content>
   </entry>
   
