@@ -389,11 +389,11 @@
 
 <h3>Workflow</h3>
 
-<ol>
+<ul>
 <li>Open a terminal window and navigate to the client directory that we created above.</li>
 <li>Run <code>npm run build</code>. This will create a bundle.js (development version) and to <code>app/assets/javascripts</code> directory.</li>
 <li>Make sure to refer to it from the layout file. I added it to the <code>config/initializers/assets.rb</code> as a precompiled file:</li>
-</ol>
+</ul>
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -402,10 +402,10 @@
 
 <p></p>
 
-<ol>
+<ul>
 <li><p>Added it at the bottom of the layout file with a script tag to ensure the DOM node that react app depends upon is there before react&#8217;s mounting kicks in.</p></li>
 <li><p>Opened the rails root page in a browser to check the react app is being mounted correctly and <code>React App</code> (the contents of the App.react.js component) is being rendered on the page.</p></li>
-</ol>
+</ul>
 
 
 <h3>Phew, further investigation things!</h3>
@@ -425,8 +425,6 @@
 
 
 <p>And, that&#8217;s it!</p>
-
-<p>I don&#8217;t prefer to write such long articles because they are difficult to follow and I made a genuine exception in this case.</p>
 </div>
 
 
