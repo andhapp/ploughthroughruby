@@ -425,6 +425,54 @@
 
 
 <p>And, that&#8217;s it!</p>
+
+<p><strong>Update: 06 December 2015</strong></p>
+
+<p>The following error</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Uncaught Error: Invariant Violation: _registerComponent(...): Target container is not a DOM element.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>is my fault. In my <code>app/assets/javascripts/application.js</code>, I had the line to include the bundle.js file and since this file is brought into the layout in the head section - when the DOM node that react app needs is not ready - it throws an error. We use <code>bundle.js</code> as a precompiled asset, so we don&#8217;t need to bring it in as part of <code>appication.js</code>. There&#8217;s an easy fix in Sprockets for it. If you would like to ignore a file in your directory you use the <code>stub</code> call. So, my <code>application.js</code> file now looks like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// This is a manifest file that'll be compiled into application.js, which will include all the files
+</span><span class='line'>// listed below.
+</span><span class='line'>//
+</span><span class='line'>// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, vendor/assets/javascripts,
+</span><span class='line'>// or any plugin's vendor/assets/javascripts directory can be referenced here using a relative path.
+</span><span class='line'>//
+</span><span class='line'>// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
+</span><span class='line'>// compiled file.
+</span><span class='line'>//
+</span><span class='line'>// Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
+</span><span class='line'>// about supported directives.
+</span><span class='line'>//
+</span><span class='line'>//= require jquery
+</span><span class='line'>//= require jquery_ujs
+</span><span class='line'>//= require turbolinks
+</span><span class='line'>//= require_tree .
+</span><span class='line'>//= stub bundle</span></code></pre></td></tr></table></div></figure>
+
+
+
 </div>
 
 

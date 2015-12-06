@@ -211,3 +211,35 @@ Uncaught Error: Invariant Violation: _registerComponent(...): Target container i
 
 
 And, that's it!
+
+
+**Update: 06 December 2015**
+
+The following error
+
+```
+Uncaught Error: Invariant Violation: _registerComponent(...): Target container is not a DOM element.
+```
+
+is my fault. In my `app/assets/javascripts/application.js`, I had the line to include the bundle.js file and since this file is brought into the layout in the head section - when the DOM node that react app needs is not ready - it throws an error. We use `bundle.js` as a precompiled asset, so we don't need to bring it in as part of `appication.js`. There's an easy fix in Sprockets for it. If you would like to ignore a file in your directory you use the `stub` call. So, my `application.js` file now looks like:
+
+```
+// This is a manifest file that'll be compiled into application.js, which will include all the files
+// listed below.
+//
+// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, vendor/assets/javascripts,
+// or any plugin's vendor/assets/javascripts directory can be referenced here using a relative path.
+//
+// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
+// compiled file.
+//
+// Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
+// about supported directives.
+//
+//= require jquery
+//= require jquery_ujs
+//= require turbolinks
+//= require_tree .
+//= stub bundle
+```
+
