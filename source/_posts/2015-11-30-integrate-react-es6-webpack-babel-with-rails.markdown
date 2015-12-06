@@ -242,4 +242,3 @@ is my fault. In my `app/assets/javascripts/application.js`, I had the line to in
 //= require_tree .
 //= stub bundle
 ```
-

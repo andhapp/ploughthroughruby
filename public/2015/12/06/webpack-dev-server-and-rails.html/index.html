@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Nested exceptions in Ruby 2.1.0 - Plough => Ruby</title>
+  <title>Webpack dev server and Rails - Plough => Ruby</title>
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="With Ruby 2.1.0, one can easily trace the original exception.Previously, on rescuing an exception one would have no reference to the original excep...">
+  <meta name="description" content="Webpack dev server is pretty awesome. In my last post, I set up React, ES6, Babel and Webpack and the only thing outstanding was the webpack dev se...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://ploughthroughruby.co.uk//2014/01/06/nested-exception-in-ruby-2.1.0.html/">
+  <link rel="canonical" href="http://ploughthroughruby.co.uk//2015/12/06/webpack-dev-server-and-rails.html/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -65,7 +65,7 @@
   
   <header>
     
-      <h1 class="entry-title">Nested Exceptions in Ruby 2.1.0</h1>
+      <h1 class="entry-title">Webpack Dev Server and Rails</h1>
     
     
       <p class="meta">
@@ -79,19 +79,32 @@
 
 
 
-<time datetime="2014-01-06T00:00:00+00:00" pubdate  data-updated="true" >Jan 6<span>th</span>, 2014</time>
+<time datetime="2015-12-06T00:00:00+00:00" pubdate  data-updated="true" >Dec 6<span>th</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>With Ruby 2.1.0, one can easily trace the original exception.
-Previously, on rescuing an exception one would have no reference to the original exception
-(thrown by a gem/library). There are a couple of <a href="https://github.com/skorks/nesty">gems</a> that can help you
-keep track of the exceptions, but with Ruby 2.1.0 you can work with
-nested exceptions without any issues. Here&#8217;s some trivial code to
-achieve the same:</p>
+<div class="entry-content"><p><a href="https://webpack.github.io/docs/webpack-dev-server.html">Webpack dev server</a> is pretty awesome. In my <a href="http://ploughthroughruby.co.uk/2015/11/30/integrate-react-es6-webpack-babel-with-rails.html/">last post</a>, I set up React, ES6, Babel and Webpack and the only thing outstanding was the webpack dev server.</p>
+
+<p>With a webpack dev server running, developers can update their code and have the code changes show up straightaway in the browser, thanks to websockets. In order to implement it for a rails application, I did the following:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;% if Rails.env.development? %&gt;
+</span><span class='line'>  &lt;%= javascript_include_tag 'http://localhost:9999/bundle.js', 'data-turbolinks-track' =&gt; true %&gt;
+</span><span class='line'>&lt;% else %&gt;
+</span><span class='line'>  &lt;%= javascript_include_tag 'bundle', 'data-turbolinks-track' =&gt; true %&gt;
+</span><span class='line'>&lt;% end %&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For development mode, I am downloading the <code>bundle.js</code> from <code>localhost:9999</code>. That&#8217;s the port where the webpack dev server is running at. For the production mode, the <code>bundle.js</code> is being read from the `app/assets/javascripts&#8217; directory.</p>
+
+<p>I have the following in my <code>package.json</code> to to run the webpack dev server on port 9999:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -110,37 +123,54 @@ achieve the same:</p>
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Car
-</span><span class='line'>  def self.start
-</span><span class='line'>    begin
-</span><span class='line'>      1/0
-</span><span class='line'>    rescue =&gt; ex
-</span><span class='line'>      puts "Exception: #{ex}"
-</span><span class='line'>      raise StandardError.new "Can't start the car"
-</span><span class='line'>    end
-</span><span class='line'>   end
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>begin
-</span><span class='line'>  Car.start
-</span><span class='line'>rescue =&gt; ex
-</span><span class='line'>  puts "Cause: #{ex.cause}"
-</span><span class='line'>  puts "Exception: #{ex}"
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{
+</span><span class='line'>  "name": "ecommerce-checklist",
+</span><span class='line'>  "version": "0.0.1",
+</span><span class='line'>  "description": "Ecommerce checklist",
+</span><span class='line'>  "scripts": {
+</span><span class='line'>    "start": "webpack-dev-server --content-base ../app/assets/javascripts --port 9999",
+</span><span class='line'>    "build": "./node_modules/webpack/bin/webpack.js --progress",
+</span><span class='line'>    "build:prod": "./node_modules/webpack/bin/webpack.js -p --progress --config webpack.production.config.js"
+</span><span class='line'>  },
+</span><span class='line'>  "dependencies": {
+</span><span class='line'>    "react": "^0.14.2",
+</span><span class='line'>    "react-dom": "^0.14.2"
+</span><span class='line'>  },
+</span><span class='line'>  "devDependencies": {
+</span><span class='line'>    "babel-core": "^6.0.20",
+</span><span class='line'>    "babel-eslint": "^4.1.5",
+</span><span class='line'>    "babel-loader": "^6.0.1",
+</span><span class='line'>    "babel-preset-es2015": "^6.0.15",
+</span><span class='line'>    "babel-preset-react": "^6.0.15",
+</span><span class='line'>    "babel-preset-stage-0": "^6.0.15",
+</span><span class='line'>    "eslint": "^1.8.0",
+</span><span class='line'>    "eslint-loader": "^1.1.1",
+</span><span class='line'>    "eslint-plugin-react": "^3.6.3",
+</span><span class='line'>    "html-webpack-plugin": "^1.6.2",
+</span><span class='line'>    "react-hot-loader": "^1.3.0",
+</span><span class='line'>    "webpack": "^1.12.2",
+</span><span class='line'>    "webpack-dev-server": "^1.12.1"
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
 
-<p>This will produce the following output:</p>
+<p>Note the bit under <code>scripts -&gt; start</code>.</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Exception: divided by 0
-</span><span class='line'>Cause: divided by 0
-</span><span class='line'>Exception: Can't start the car</span></code></pre></td></tr></table></div></figure>
+<p>This completes the react and webapck setup for a rails application.</p>
 
-
-<p>You can <a href="https://eval.in/86466">play around</a> with the code yourself.
-It&#8217;s not as sophisticated as the gems out there, but it&#8217;s getting there.</p>
+<p>One thing to bear in mind, is to create a production ready bundle.js before deploying this application, but that can be part of a capistrano deployment hook.</p>
 </div>
 
 
@@ -161,7 +191,7 @@ It&#8217;s not as sophisticated as the gems out there, but it&#8217;s getting th
 
 
 
-<time datetime="2014-01-06T00:00:00+00:00" pubdate  data-updated="true" >Jan 6<span>th</span>, 2014</time>
+<time datetime="2015-12-06T00:00:00+00:00" pubdate  data-updated="true" >Dec 6<span>th</span>, 2015</time>
       
 
 
@@ -169,7 +199,7 @@ It&#8217;s not as sophisticated as the gems out there, but it&#8217;s getting th
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://ploughthroughruby.co.uk//2014/01/06/nested-exception-in-ruby-2.1.0.html/" data-via="" data-counturl="http://ploughthroughruby.co.uk//2014/01/06/nested-exception-in-ruby-2.1.0.html/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://ploughthroughruby.co.uk//2015/12/06/webpack-dev-server-and-rails.html/" data-via="" data-counturl="http://ploughthroughruby.co.uk//2015/12/06/webpack-dev-server-and-rails.html/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -182,10 +212,8 @@ It&#8217;s not as sophisticated as the gems out there, but it&#8217;s getting th
     
     <p class="meta">
        
-        <a class="basic-alignment left" href="/2013/12/30/aspect-oriented-programming.html/" title="Previous Post: Aspect Oriented Programming">&laquo; Aspect Oriented Programming</a>
+        <a class="basic-alignment left" href="/2015/11/30/integrate-react-es6-webpack-babel-with-rails.html/" title="Previous Post: Integrate React, ES6, Webpack and Babel with Rails">&laquo; Integrate React, ES6, Webpack and Babel with Rails</a>
       
-       
-        <a class="basic-alignment right" href="/2014/01/07/cryptic-global-variables-in-ruby.html/" title="next Post: Cryptic global variables in Ruby">Cryptic global variables in Ruby &raquo;</a>
       
     </p>
   </footer>

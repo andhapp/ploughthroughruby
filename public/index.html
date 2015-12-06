@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Roll your ownIf you have got two projects using the same functionality, then write a Rubygem to promote code reuse and modularity. Writing a gem is...">
+  <meta name="description" content="Webpack dev server is pretty awesome. In my last post, I set up React, ES6, Babel and Webpack and the only thing outstanding was the webpack dev se...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -62,6 +62,124 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2015/12/06/webpack-dev-server-and-rails.html/">Webpack Dev Server and Rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2015-12-06T00:00:00+00:00" pubdate  data-updated="true" >Dec 6<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://webpack.github.io/docs/webpack-dev-server.html">Webpack dev server</a> is pretty awesome. In my <a href="http://ploughthroughruby.co.uk/2015/11/30/integrate-react-es6-webpack-babel-with-rails.html/">last post</a>, I set up React, ES6, Babel and Webpack and the only thing outstanding was the webpack dev server.</p>
+
+<p>With a webpack dev server running, developers can update their code and have the code changes show up straightaway in the browser, thanks to websockets. In order to implement it for a rails application, I did the following:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;% if Rails.env.development? %&gt;
+</span><span class='line'>  &lt;%= javascript_include_tag 'http://localhost:9999/bundle.js', 'data-turbolinks-track' =&gt; true %&gt;
+</span><span class='line'>&lt;% else %&gt;
+</span><span class='line'>  &lt;%= javascript_include_tag 'bundle', 'data-turbolinks-track' =&gt; true %&gt;
+</span><span class='line'>&lt;% end %&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For development mode, I am downloading the <code>bundle.js</code> from <code>localhost:9999</code>. That&#8217;s the port where the webpack dev server is running at. For the production mode, the <code>bundle.js</code> is being read from the `app/assets/javascripts&#8217; directory.</p>
+
+<p>I have the following in my <code>package.json</code> to to run the webpack dev server on port 9999:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{
+</span><span class='line'>  "name": "ecommerce-checklist",
+</span><span class='line'>  "version": "0.0.1",
+</span><span class='line'>  "description": "Ecommerce checklist",
+</span><span class='line'>  "scripts": {
+</span><span class='line'>    "start": "webpack-dev-server --content-base ../app/assets/javascripts --port 9999",
+</span><span class='line'>    "build": "./node_modules/webpack/bin/webpack.js --progress",
+</span><span class='line'>    "build:prod": "./node_modules/webpack/bin/webpack.js -p --progress --config webpack.production.config.js"
+</span><span class='line'>  },
+</span><span class='line'>  "dependencies": {
+</span><span class='line'>    "react": "^0.14.2",
+</span><span class='line'>    "react-dom": "^0.14.2"
+</span><span class='line'>  },
+</span><span class='line'>  "devDependencies": {
+</span><span class='line'>    "babel-core": "^6.0.20",
+</span><span class='line'>    "babel-eslint": "^4.1.5",
+</span><span class='line'>    "babel-loader": "^6.0.1",
+</span><span class='line'>    "babel-preset-es2015": "^6.0.15",
+</span><span class='line'>    "babel-preset-react": "^6.0.15",
+</span><span class='line'>    "babel-preset-stage-0": "^6.0.15",
+</span><span class='line'>    "eslint": "^1.8.0",
+</span><span class='line'>    "eslint-loader": "^1.1.1",
+</span><span class='line'>    "eslint-plugin-react": "^3.6.3",
+</span><span class='line'>    "html-webpack-plugin": "^1.6.2",
+</span><span class='line'>    "react-hot-loader": "^1.3.0",
+</span><span class='line'>    "webpack": "^1.12.2",
+</span><span class='line'>    "webpack-dev-server": "^1.12.1"
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note the bit under <code>scripts -&gt; start</code>.</p>
+
+<p>This completes the react and webapck setup for a rails application.</p>
+
+<p>One thing to bear in mind, is to create a production ready bundle.js before deploying this application, but that can be part of a capistrano deployment hook.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -473,8 +591,6 @@
 </span><span class='line'>//= require turbolinks
 </span><span class='line'>//= require_tree .
 </span><span class='line'>//= stub bundle</span></code></pre></td></tr></table></div></figure>
-
-
 
 </div>
   
@@ -1107,91 +1223,6 @@ Day
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2014/01/10/abbreviation-in-ruby.html/">Abbreviation in Ruby</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2014-01-10T00:00:00+00:00" pubdate  data-updated="true" >Jan 10<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Ruby&#8217;s standard library is filled with several unique, non-standard classes/modules, one such module is <a href="http://ruby-doc.org/stdlib-2.1.0/libdoc/abbrev/rdoc/Abbrev.html">Abbrev</a>.</p>
-
-<p>Abbrev calculates the set of unique abbreviations for a given set of strings. The following code demonstrates it properly:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>require 'abbrev'
-</span><span class='line'>require 'pp'
-</span><span class='line'>
-</span><span class='line'>pp Abbrev.abbrev(['ruby', 'rules'])</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This code produces the following output where all the keys are
-abbreviated and unique, and point to their respective words.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{"ruby"=&gt;"ruby",
-</span><span class='line'> "rub"=&gt;"ruby",
-</span><span class='line'> "rules"=&gt;"rules",
-</span><span class='line'> "rule"=&gt;"rules",
-</span><span class='line'> "rul"=&gt;"rules"}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This also provides an extension for an Array, so you can call &#8216;abbrev&#8217;
-method straight on an array. The code above will then become:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>require 'abbrev'
-</span><span class='line'>require 'pp'
-</span><span class='line'>
-</span><span class='line'>pp ['ruby', 'rules'].abbrev</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I found a couple of use cases of the Abbrev module on Google:</p>
-
-<ol>
-<li><p>For creating <a href="http://www.aimred.com/news/developers/2010/05/11/rediscovering_ruby_abbrev/">unique labels</a> for a bar graph.</p></li>
-<li><p>For creating an <a href="http://endofline.wordpress.com/2010/12/25/ruby-standard-library-abbrev/">auto-completer</a> on console, intriguing, right?</p></li>
-</ol>
-
-
-<p>Hope this will make you aware of such a nifty module and please share your
-use-cases with the rest of us.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -1224,6 +1255,10 @@ use-cases with the rest of us.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2015/12/06/webpack-dev-server-and-rails.html/">Webpack dev server and Rails</a>
+      </li>
+    
+      <li class="post">
         <a href="/2015/11/30/integrate-react-es6-webpack-babel-with-rails.html/">Integrate React, ES6, Webpack and Babel with Rails</a>
       </li>
     
@@ -1237,10 +1272,6 @@ use-cases with the rest of us.</p>
     
       <li class="post">
         <a href="/2015/01/25/ruby-command-line-flags.html/">Ruby command line flag for debugging</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac+copy.html/">Setting Up Chrome Selenium driver for Capybara when using chrome canary on a Mac</a>
       </li>
     
   </ul>
