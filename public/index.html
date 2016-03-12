@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Webpack dev server is pretty awesome. In my last post, I set up React, ES6, Babel and Webpack and the only thing outstanding was the webpack dev se...">
+  <meta name="description" content="DisclaimerFirstly, I am not a security expert and this post is my attempt to learn a bit more about web security.Why now?Well, I am signed up to Ru...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -62,6 +62,123 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2016/02/21/timing-attack-ruby-vulnerability.html/">Timing Attack Vulnerability in Rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2016-02-21T00:00:00+00:00" pubdate  data-updated="true" >Feb 21<span>st</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>Disclaimer</h3>
+
+<p>Firstly, I am not a security expert and this post is my attempt to learn a bit more about web security.</p>
+
+<h3>Why now?</h3>
+
+<p>Well, I am signed up to Ruby on Rails security mailing list to make sure vulnerabilities don&#8217;t go unnoticed and all my projects are running patched versions. Usually I just read the emails and ensure to upgrade or patch the affected versions and this system has worked very smoothly, however, I have never been happy with this approach and when <a href="https://groups.google.com/forum/#!topic/rubyonrails-security/ANv0HDHEC3k">a timing attack vulnerability</a>was announced on 25th January 2016 (CVE-2015-7576), I decided to research and learn more about it.</p>
+
+<h3>What is a timing attack?</h3>
+
+<p>A timing attack allows an adversary to learn more about the system under attack by statistically analysing information based on different response times. Here are a few examples:</p>
+
+<ol>
+<li><p>The size of response for a signed in user and a signed out user will be significantlly different, thus allowing the adversary to determine user&#8217;s current state.</p></li>
+<li><p>A string comparison with no matching characters will be slightly faster than one with 2 matching characters.</p></li>
+</ol>
+
+
+<p>There are many more examples along the same lines. One thing worth mentioning is that it takes a lot more analysis and patience for a successful timing attack, but it&#8217;s not impossible.</p>
+
+<h3>How can we fix the string comparision to run in constant time?</h3>
+
+<p>Although, there are several ways to use the timing attack but in the interest of this article the scope is limited to secure string comparison in Ruby. There are two ways to do it:</p>
+
+<h4>Activesupport</h4>
+
+<p>Activesupport provides a <code>secure_compare</code> method that can be used like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ActiveSupport::SecurityUtils.secure_compare(a, b)</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Don&#8217;t use Activesupport</h4>
+
+<p>I took this implementation from <a href="https://goo.gl/nMFEqk">Time Trial - Racing Towards Practical Remote Timing Attacks</a> paper and looks similar to activesupport&#8217;s implementation.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def secure_compare(a, b)   return false if a.empty? || b.empty? || a.bytesize != b.bytesize l = a.unpack "C#{a.bytesize}"  res = 0  b.each_byte { |byte| res |= byte ^ l.shift }   res == 0end</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Why no secure compare in Ruby?</h4>
+
+<p>You may ask why does Ruby not have a secure compare as part of the core API? I have no idea, but, there has been movement on that front lately and you can follow that discussion in <a href="https://bugs.ruby-lang.org/issues/10098#change-56910">ruby&#8217;s bug discussion area</a>. It&#8217;s currently waiting for Matz approval.</p>
+
+<h3>Research</h3>
+
+<p>I don&#8217;t want to repeat the research that has been conducted by others, so here&#8217;s a review of things I researched and if you&#8217;re interested you should read these to gain more understanding.</p>
+
+<h4>Tools</h4>
+
+<p>Whilst researching I came across the following tools to test for a timing attack. I&#8217;ve not tried them myself but give them a go:</p>
+
+<ul>
+<li>https://github.com/dmayer/time_trial</li>
+<li>https://github.com/ecbftw/nanown</li>
+<li>https://github.com/aj-code/TimingIntrusionTool5000</li>
+</ul>
+
+
+<h4>Papers/Articles</h4>
+
+<ul>
+<li><p><a href="https://codeseekah.com/2012/04/29/timing-attacks-in-web-applications/">Timing Attacks in Web Applications</a> -
+Gives a very basic introduction to timing attack vulnerability.</p></li>
+<li><p><a href="https://codahale.com/a-lesson-in-timing-attacks/">A Lesson In Timing Attacks (or, Don’t use MessageDigest.isEquals)</a> - A very detailed explanation with examples of the actual vulnerability with solutions to fix the issue.</p></li>
+<li><p><a href="http://www.security-assessment.com/files/documents/presentations/TimingAttackPresentation2012.pdf">Login timing attacks for mischief and mayhem</a> - This is a presentation into the timing attacks but being a persentation with no audio it&#8217;s a bit hard to know the intention of the speaker, nonetheless, full of useful information.</p></li>
+<li><p><a href="https://www.securitee.org/files/timing-attacks_ccs2015.pdf">The Clock is Still Ticking:
+Timing Attacks in the Modern Web</a> - Probably one of the best papers I read with practical examples of attacking popular sites like Facebook and LinkedIn to gain a lot more information
+regarding site users.</p></li>
+<li><p><a href="http://www.cs.rice.edu/~dwallach/pub/crosby-timing2009.pdf">Opportunities and Limits of Remote
+Timing Attacks</a> - This paper goes into the details of the actual statistical mesaurements required as part of the a successful timing attack. To be honest, I read the beginning
+and realised the Maths was too complicated for my simple brain.</p></li>
+<li><p><a href="https://www.blackhat.com/docs/us-15/materials/us-15-Morgan-Web-Timing-Attacks-Made-Practical-wp.pdf">Web Timing Attacks Made Practical</a> - Again, very thought provoking yet a bit heavy on the statistical analysis which is an integral part of a timing attack.</p></li>
+<li><p><a href="https://goo.gl/nMFEqk">Time Trial - Racing Towards Practical Remote Timing Attacks</a> - Very detailed and full of great insights. Here&#8217;s a <a href="https://www.youtube.com/watch?v=md6NEmq1n-A">companion presentation</a> on youtube.</p></li>
+</ul>
+
+
+<h4>Books</h4>
+
+<ul>
+<li>The Tagled Web A Guide to Securing Modern Web Applications</li>
+<li>The Web Application Hackers Handbook</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1166,63 +1283,6 @@ Day
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2014/03/17/you-want-to-be-a-programmer%3F.html/">You Want to Be a Programmer?</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2014-03-17T00:00:00+00:00" pubdate  data-updated="true" >Mar 17<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>But, you have no time</h3>
-
-
-<p>No one has time!</p>
-
-<p>The rise of billion dollar startups that get acquired in 6 months (or longer, perhaps) from launch gives a false impression that programming is easy, and hence shouldn’t take very long to learn. After all, you have a billion dollar idea you would like to start working on.</p>
-
-<p>Let’s conduct a small study. Why don’t you spend an hour on StackOverflow? Why? To observe how users, without doing any research, ask the same questions over and over and over again. They just want to learn how this works, not why this works and not something else. I’m possibly guilty of the same mistakes, and I have been trying to amend them ever since.</p>
-
-<h3>You need this</h3>
-
-
-<p>As a result of these observations, and experience in teaching, I’ve come up up with a list of few qualities that can make you a better programmer:</p>
-
-<ul>
-<li><p>Learner - Learning never stops for a programmer and that’s the fun of it. You will have to spend extra hours every week to brush up your skills, gain new skills, and get better at your trade.</p></li>
-<li><p>Committed - It’s not easy to become a programmer. It will require a lot of commitment, practice, and more programming, of course.</p></li>
-<li><p>Investigative - You may end up spending days trying to fix a Javascript memory leak, or why your Rails app is running slow and leaking memory. It will require a lot of investigation, research and thinking about every aspect of the application, and it’s behaviour. You will have to read API documents, source code, and so on.</p></li>
-</ul>
-
-
-<p>All in all, it’s not going to be easy.</p>
-
-<p>Now, do you still want to be a programmer?</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -1255,6 +1315,10 @@ Day
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/02/21/timing-attack-ruby-vulnerability.html/">Timing attack vulnerability in Rails</a>
+      </li>
+    
+      <li class="post">
         <a href="/2015/12/06/webpack-dev-server-and-rails.html/">Webpack dev server and Rails</a>
       </li>
     
@@ -1268,10 +1332,6 @@ Day
     
       <li class="post">
         <a href="/2015/03/01/removing-a-method-in-ruby.html/">Removing a method in Ruby</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2015/01/25/ruby-command-line-flags.html/">Ruby command line flag for debugging</a>
       </li>
     
   </ul>
@@ -1298,7 +1358,7 @@ Day
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - andHapp -
+  Copyright &copy; 2016 - andHapp -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
