@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="http://ploughthroughruby.co.uk//atom.xml" rel="self"/>
   <link href="http://ploughthroughruby.co.uk//"/>
-  <updated>2016-03-17T06:12:42+00:00</updated>
+  <updated>2016-08-29T23:57:06+01:00</updated>
   <id>http://ploughthroughruby.co.uk//</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -12,6 +12,34 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Improve Bundler CLI]]></title>
+    <link href="http://ploughthroughruby.co.uk//2016/08/29/Improve-bundler-cli.html/"/>
+    <updated>2016-08-29T00:00:00+01:00</updated>
+    <id>http://ploughthroughruby.co.uk//2016/08/29/Improve-bundler-cli</id>
+    <content type="html"><![CDATA[<p>Learn another programming language.</p>
+
+<p>Learn from another programming ecosystem.</p>
+
+<p>Learn from another programming language&#8217;s tools and bring it back to the language you love.</p>
+
+<p>Fact is, I love Ruby!</p>
+
+<p>However, I&#8217;ve been spending a lot of time with Node.js lately. NPM provides a nice way to install
+any new packages straight from the command line, like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>npm install react --save</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I like this convenience.</p>
+
+<p>With an intention to improve Ruby&#8217;s ecosystem and tools, I would like to bring this to Ruby.</p>
+
+<p>So, I&#8217;ve added a <a href="https://github.com/bundler/bundler/issues/4932">new issue</a> to Bundler. Let&#8217;s see what others feel about it.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Timing attack vulnerability in Rails]]></title>
@@ -1400,104 +1428,6 @@ longer dependent on to_s. In Ruby 1.9, if to_s was overridden inspect
 would just execute that code. But in Ruby 2.0, to_s overriding doesn&#8217;t
 affect inspect anymore. Here&#8217;s code example for <a href="https://eval.in/11121">Ruby 1.9.3</a> and <a href="https://eval.in/11120">Ruby
 2</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Installing any Ruby source on your local machine with RVM]]></title>
-    <link href="http://ploughthroughruby.co.uk//2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm.html/"/>
-    <updated>2011-12-04T00:00:00+00:00</updated>
-    <id>http://ploughthroughruby.co.uk//2011/12/04/installing-any-ruby-source-on-your-local-machine-with-rvm</id>
-    <content type="html"><![CDATA[<p>Update:
-<em>This approach doesn&#8217;t work with the latest version of rvm (1.17.0
-stable)</em></p>
-
-<p>Now, if you are like me you probably have ruby source checked out on your machine to ensure that you stay informed with the newest features and ponder through the ruby source at will. I started wondering what if I want to install the ruby from the source and test my gems out and test it against well-known libraries to see how they fare. Firstly, I thought of doing the ./configure -> make -> make install dance but then I realised&#8230;yes you&#8217;re absolutely right, why not use <a href="https://github.com/wayneeseguin/rvm">RVM</a>.</p>
-
-<p>What RVM? I must be out of mind.</p>
-
-<p>But, hey, RVM downloads ruby source code and installs it on your machine. The only difference is that I have got the ruby source checked-out on my machine and I want to use that as the source. And yes, RVM is awesome. I have spoken to <a href="https://github.com/wayneeseguin">Wayne</a> (via IRC) and the man is an absolute genius, very polite and helpful.</p>
-
-<p>So, somehow, I need to accomplish the following:</p>
-
-<ul>
-<li>Hey RVM, don&#8217;t download the ruby source.</li>
-<li>Here&#8217;s the location of the ruby source, use that and install it.</li>
-<li>Voila!</li>
-</ul>
-
-
-<p>But, how do I do that? I started looking at RVM source code and I am not an expert at bash scripting, so I figured why not just mail RVM mailing list. I got the following helpful response from <a href="https://github.com/mpapis">Micheal Papis</a>.</p>
-
-<pre>
-it's not yet supported to use sources/rubies provided by user, but it
-will be in rvm 2.0
-
-as for using it now, you could use $rvm_path/src - and provide your
-sources there ... not sure how it will work, you have to experiment a
-bit
-</pre>
-
-
-<p>That clue was enough for me and like he said, I experimented a little bit. When you run something like:</p>
-
-<pre>
-rvm install ruby-1.9.2
-</pre>
-
-
-<p>RVM downloads the source code into $rvm_path/repos, moves it over to $rvm_path/src and then does the configure, compile dance. I created a symlink in $rvm_path/repos pointing at the local ruby git repository on my machine. And, then I ran the install command. Here&#8217;s the output I get:</p>
-
-<pre>
-~/.rvm/src$ rvm install ruby-head
-Installing Ruby from source to: /Users/andhapp/.rvm/rubies/ruby-head, this may take a while depending on your cpu(s)...
-
-ruby-head - #fetching 
-HEAD is now at 02035ba Merge branch 'trunk' of git://github.com/ruby/ruby into trunk
-
-From github.com:andhapp/ruby
- * branch            trunk      -> FETCH_HEAD
-Already up-to-date.
-Copying from repo to src path...
-ruby-head - #configuring 
-ruby-head - #compiling 
-ruby-head - #installing 
-Retrieving rubygems-1.8.10
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100  243k  100  243k    0     0   456k      0 --:--:-- --:--:-- --:--:--  540k
-
-Extracting rubygems-1.8.10 ...
-Removing old Rubygems files...
--e:1: Use RbConfig instead of obsolete and deprecated Config.
-Installing rubygems-1.8.10 for ruby-head ...
-Installation of rubygems completed successfully.
-ruby-head - adjusting #shebangs for (gem irb erb ri rdoc testrb rake).
-ruby-head - #importing default gemsets (/Users/andhapp/.rvm/gemsets/)
-Install of ruby-head - #complete 
-
-</pre>
-
-
-<p>This line &#8216;HEAD is now at 02035ba Merge branch &#8216;trunk&#8217; of git://github.com/ruby/ruby into trunk&#8217; is the last commit message on my local ruby git repository.</p>
-
-<p>This line &#8216;From github.com:andhapp/ruby&#8217; reflects the fact that rvm is using my git repository and not ruby&#8217;s repository and updating the local source to the latest before installing.</p>
-
-<p>I decided to call the ruby installation ruby-head. You can call it anything you fancy.</p>
-
-<p>Here&#8217;s the version on my machine now:</p>
-
-<pre>
-~/.rvm/src$ rvm use ruby-head
-Using /Users/andhapp/.rvm/gems/ruby-head
-~/.rvm/src$ ruby -v
-ruby 2.0.0dev (2011-12-03 trunk 33936) [x86_64-darwin10.8.0]
-</pre>
-
-
-<p>Awesome!</p>
-
-<p>PS: I am sure there are other details about RVM&#8217;s installation procedure that I have missed out and Wayne or Micheal will be kind enough to enlighten me.</p>
 ]]></content>
   </entry>
   

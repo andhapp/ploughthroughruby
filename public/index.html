@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="DisclaimerI am not a security expert and this post is my attempt to learn a bit more about web security.Why now?Well, I am signed up to Ruby on Rai...">
+  <meta name="description" content="Learn another programming language.Learn from another programming ecosystem.Learn from another programming language&#8217;s tools and bring it back...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -62,6 +62,59 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2016/08/29/Improve-bundler-cli.html/">Improve Bundler CLI</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2016-08-29T00:00:00+01:00" pubdate  data-updated="true" >Aug 29<span>th</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Learn another programming language.</p>
+
+<p>Learn from another programming ecosystem.</p>
+
+<p>Learn from another programming language&#8217;s tools and bring it back to the language you love.</p>
+
+<p>Fact is, I love Ruby!</p>
+
+<p>However, I&#8217;ve been spending a lot of time with Node.js lately. NPM provides a nice way to install
+any new packages straight from the command line, like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>npm install react --save</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I like this convenience.</p>
+
+<p>With an intention to improve Ruby&#8217;s ecosystem and tools, I would like to bring this to Ruby.</p>
+
+<p>So, I&#8217;ve added a <a href="https://github.com/bundler/bundler/issues/4932">new issue</a> to Bundler. Let&#8217;s see what others feel about it.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1240,68 +1293,6 @@ lightweight.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2014/06/15/ruby-puts-command.html/">Ruby Puts Command</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2014-06-15T00:00:00+01:00" pubdate  data-updated="true" >Jun 15<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Ruby&#8217;s puts command will lead the &#8216;most used command&#8217; competition in the language. It&#8217;s probably the first command you run when you fire up irb, or write HelloWorld.rb. I have been using it from day 1, for debugging, printing out the progress of long running scripts and so on. I recently found couple of nifty things you can do with puts command:</p>
-
-<ul>
-<li>You can pass it multiple arguments and it will print them on the screen with a line break, for example:</li>
-</ul>
-
-
-<pre>
-irb(main):001:0> puts "First", "day"
-First
-day
-=> nil
-</pre>
-
-
-<ul>
-<li>Secondly, you can pass it an array of elements, and it will print the elements with a line break, for example:</li>
-</ul>
-
-
-<pre>
-irb(main):004:0> puts ["Second", "Day"]
-Second
-Day
-=> nil
-</pre>
-
-
-<p>Hope you can use this to replace multiple calls to puts in your code.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -1334,6 +1325,10 @@ Day
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/08/29/Improve-bundler-cli.html/">Improve Bundler CLI</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/02/21/timing-attack-ruby-vulnerability.html/">Timing attack vulnerability in Rails</a>
       </li>
     
@@ -1347,10 +1342,6 @@ Day
     
       <li class="post">
         <a href="/2015/10/04/rebooting-an-old-gem.html/">Rebooting an old gem</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2015/03/01/removing-a-method-in-ruby.html/">Removing a method in Ruby</a>
       </li>
     
   </ul>
