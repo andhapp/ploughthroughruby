@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="http://ploughthroughruby.co.uk//atom.xml" rel="self"/>
   <link href="http://ploughthroughruby.co.uk//"/>
-  <updated>2016-08-29T23:57:06+01:00</updated>
+  <updated>2016-08-31T22:39:45+01:00</updated>
   <id>http://ploughthroughruby.co.uk//</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -38,6 +38,20 @@ any new packages straight from the command line, like:</p>
 <p>With an intention to improve Ruby&#8217;s ecosystem and tools, I would like to bring this to Ruby.</p>
 
 <p>So, I&#8217;ve added a <a href="https://github.com/bundler/bundler/issues/4932">new issue</a> to Bundler. Let&#8217;s see what others feel about it.</p>
+
+<p><strong>Update - 31 August 2016</strong></p>
+
+<p>I had a couple of responses for my Bundler issue and it turns out there is indeed a way to add gems via bundler&#8217;s CLI.</p>
+
+<p>You can use the <code>inject</code> command like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>bundle inject pg 0.18.4</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You have to specify the exact version that you want to add though.</p>
+
+<p>Next version of Bundler is going one better and will expose <code>add</code> command that will add the gem without needing a version number.</p>
 ]]></content>
   </entry>
   
