@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Update:This approach doesn&#8217;t work with the latest version of rvm (1.17.0stable)Now, if you are like me you probably have ruby source checked ...">
+  <meta name="description" content="Ruby 2.0.0 has been released and there are a lot of new things, for example, keyword arguments, TracePoint API, DTrace and so on. Here&#8217;s Ruby...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -62,6 +62,46 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2013/02/23/inspect-to_s-change-in-ruby2.html/">In Ruby2, Inspect Independent of To_s</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2013-02-23T00:00:00+00:00" pubdate  data-updated="true" >Feb 23<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://www.ruby-lang.org/en/news/2013/02/24/ruby-2-0-0-p0-is-released/">Ruby 2.0.0</a> has been released and there are a lot of new things, for example, keyword arguments, TracePoint API, DTrace and so on. Here&#8217;s <a href="https://github.com/ruby/ruby/blob/trunk/NEWS">Ruby NEWS</a> file, and some <a href="http://blog.marc-andre.ca/2013/02/23/ruby-2-by-example/">new features in Ruby 2</a>.</p>
+
+<p>One thing to add to that list is that the behaviour of inspect is no
+longer dependent on to_s. In Ruby 1.9, if to_s was overridden inspect
+would just execute that code. But in Ruby 2.0, to_s overriding doesn&#8217;t
+affect inspect anymore. Here&#8217;s code example for <a href="https://eval.in/11121">Ruby 1.9.3</a> and <a href="https://eval.in/11120">Ruby
+2</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -596,59 +636,6 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2010/07/06/paperclip-and-rescue.html/">Paperclip and Rescue</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2010-07-06T00:00:00+01:00" pubdate  data-updated="true" >Jul 6<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Reading Open Source Code is probably the best way of learning new ways. Paperclip is an amazing file upload tool by brilliant guys at Thoughtbot. And yesterday, while going through their code I realised that <strong>rescue</strong> can be used as a statement modifier. For example, consider this block of code below:</p>
-
-<pre>
-  type = (self.path.match(/\.(\w+)$/)[1] rescue "octet-stream").downcase
-</pre>
-
-
-<p>What do you think happens here?
-Its quite simple really. If the first statement (the match bit) raises and exception the second statement is executed instead.</p>
-
-<p>Another way to write this would be:</p>
-
-<pre>
-  begin
-    type = (self.path.match(/\.(\w+)$/)[1]).downcase
-  rescue
-    "octet-stream"
-  end
-</pre>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -683,6 +670,10 @@ Its quite simple really. If the first statement (the match bit) raises and excep
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/09/14/Use-Sequel-for-non-rails-ruby-apps.html/">Use Sequel for non-rails ruby apps</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/08/29/Improve-bundler-cli.html/">Improve Bundler CLI</a>
       </li>
     
@@ -696,10 +687,6 @@ Its quite simple really. If the first statement (the match bit) raises and excep
     
       <li class="post">
         <a href="/2015/11/30/integrate-react-es6-webpack-babel-with-rails.html/">Integrate React, ES6, Webpack and Babel with Rails</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2015/10/04/rebooting-an-old-gem.html/">Rebooting an old gem</a>
       </li>
     
   </ul>

@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>RSpec verifying doubles - Plough => Ruby</title>
+  <title>Use Sequel for non-rails ruby apps - Plough => Ruby</title>
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="RSpec 3 has been full of some good stuff and I have full admiration forthe people behind it. Even the upgrade process was well thought outkeeping i...">
+  <meta name="description" content="I am writing a ruby script to retireve some data via HTTP call and then add it to the database.Now, I decided to use ActiveRecord as an ORM and wro...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://ploughthroughruby.co.uk//2014/09/20/rspec-verifying-doubles.html/">
+  <link rel="canonical" href="http://ploughthroughruby.co.uk//2016/09/14/Use-Sequel-for-non-rails-ruby-apps.html/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -65,7 +65,7 @@
   
   <header>
     
-      <h1 class="entry-title">RSpec Verifying Doubles</h1>
+      <h1 class="entry-title">Use Sequel for Non-rails Ruby Apps</h1>
     
     
       <p class="meta">
@@ -79,31 +79,36 @@
 
 
 
-<time datetime="2014-09-20T00:00:00+01:00" pubdate  data-updated="true" >Sep 20<span>th</span>, 2014</time>
+<time datetime="2016-09-14T00:00:00+01:00" pubdate  data-updated="true" >Sep 14<span>th</span>, 2016</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>RSpec 3 has been full of some good stuff and I have full admiration for
-the people behind it. Even the upgrade process was well thought out
-keeping in mind the end users. As developers, we are used to handle poor
-upgrade process pretty well, but RSpec totally changed my opinion.</p>
+<div class="entry-content"><p>I am writing a ruby script to retireve some data via HTTP call and then add it to the database.</p>
 
-<p>Whilst <a href="https://github.com/andhapp/textrazor/pull/4">merging pull request for TextRazor</a>, I decided to upgrade the gem
-to RSpec3. I was meant to do that for sometime anyways, and the pull
-request opened up the perfect opportunity for it. I stumbled upon a very
-interesting new feature in RSpec3, called <a href="https://relishapp.com/rspec/rspec-mocks/v/3-0/docs/verifying-doubles/using-an-instance-double">verifying doubles</a>. This
-functionality makes <a href="https://github.com/xaviershay/rspec-fire">rspec-fire</a> totally obsolete. It verifies that any
-methods being stubbed would be present on the instance of the class
-being stubbed and also the number of argument the method accepts. This
-is pretty cool. I always used rspec-fire to make sure that my stubbed
-method existed on the class. In the light of these updates, I removed
-<a href="https://github.com/andhapp/textrazor/commit/48aeff496be89c7433dadfbbedd3e1d3e4375b64">rspec-fire as a dependency from TextRazor</a>. Makes it even more
-lightweight.</p>
+<p>Now, I decided to use ActiveRecord as an ORM and wrote a <a href="https://github.com/andhapp/activerecord_sans_rails">gem</a> for the same.</p>
 
-<p>Thanks again to RSpec team!</p>
+<p>Nothing complicated. It&#8217;s just a Rakefile that provides popular activerecord rake tasks.</p>
+
+<p>But, then I stumbled across blog post on <a href="https://www.toptal.com/ruby/api-with-sinatra-and-sequel-ruby-tutorial">Sequel</a> and I feel
+Sequel is a better choice for an ORM for a non-rails app.</p>
+
+<p>Why?</p>
+
+<p>Because, Rails is opinionated.</p>
+
+<p>And it&#8217;s nuances works nice for a Rails app.</p>
+
+<p>Anything outside of the realms of a standard Rails app and all bets are off.</p>
+
+<p>It is like fitting a square peg in a round hole. It&#8217;s possible but you will have to shave off the extra bits.</p>
+
+<p>Sequel on the other hand seems like a better fit for a ruby script.</p>
+
+<p>Will post my experience with Sequel. It has ample documentation and the project was last updated on 16th September 2016.
+There are no outstanding pull requests or issues on github which implies the project is active and nicely looked after.</p>
 </div>
 
 
@@ -124,7 +129,7 @@ lightweight.</p>
 
 
 
-<time datetime="2014-09-20T00:00:00+01:00" pubdate  data-updated="true" >Sep 20<span>th</span>, 2014</time>
+<time datetime="2016-09-14T00:00:00+01:00" pubdate  data-updated="true" >Sep 14<span>th</span>, 2016</time>
       
 
 
@@ -132,7 +137,7 @@ lightweight.</p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://ploughthroughruby.co.uk//2014/09/20/rspec-verifying-doubles.html/" data-via="" data-counturl="http://ploughthroughruby.co.uk//2014/09/20/rspec-verifying-doubles.html/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://ploughthroughruby.co.uk//2016/09/14/Use-Sequel-for-non-rails-ruby-apps.html/" data-via="" data-counturl="http://ploughthroughruby.co.uk//2016/09/14/Use-Sequel-for-non-rails-ruby-apps.html/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -145,10 +150,8 @@ lightweight.</p>
     
     <p class="meta">
        
-        <a class="basic-alignment left" href="/2014/06/15/ruby-puts-command.html/" title="Previous Post: Ruby puts command">&laquo; Ruby puts command</a>
+        <a class="basic-alignment left" href="/2016/08/29/Improve-bundler-cli.html/" title="Previous Post: Improve Bundler CLI">&laquo; Improve Bundler CLI</a>
       
-       
-        <a class="basic-alignment right" href="/2014/10/19/an-unusual-thing-about-kanji%28Japanese%29.html/" title="next Post: An unsual thing about kanji(Japanese)">An unsual thing about kanji(Japanese) &raquo;</a>
       
     </p>
   </footer>

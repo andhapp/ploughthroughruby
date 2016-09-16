@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Learn another programming language.Learn from another programming ecosystem.Learn from another programming language&#8217;s tools and bring it back...">
+  <meta name="description" content="I am writing a ruby script to retireve some data via HTTP call and then add it to the database.Now, I decided to use ActiveRecord as an ORM and wro...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -62,6 +62,62 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2016/09/14/Use-Sequel-for-non-rails-ruby-apps.html/">Use Sequel for Non-rails Ruby Apps</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2016-09-14T00:00:00+01:00" pubdate  data-updated="true" >Sep 14<span>th</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I am writing a ruby script to retireve some data via HTTP call and then add it to the database.</p>
+
+<p>Now, I decided to use ActiveRecord as an ORM and wrote a <a href="https://github.com/andhapp/activerecord_sans_rails">gem</a> for the same.</p>
+
+<p>Nothing complicated. It&#8217;s just a Rakefile that provides popular activerecord rake tasks.</p>
+
+<p>But, then I stumbled across blog post on <a href="https://www.toptal.com/ruby/api-with-sinatra-and-sequel-ruby-tutorial">Sequel</a> and I feel
+Sequel is a better choice for an ORM for a non-rails app.</p>
+
+<p>Why?</p>
+
+<p>Because, Rails is opinionated.</p>
+
+<p>And it&#8217;s nuances works nice for a Rails app.</p>
+
+<p>Anything outside of the realms of a standard Rails app and all bets are off.</p>
+
+<p>It is like fitting a square peg in a round hole. It&#8217;s possible but you will have to shave off the extra bits.</p>
+
+<p>Sequel on the other hand seems like a better fit for a ruby script.</p>
+
+<p>Will post my experience with Sequel. It has ample documentation and the project was last updated on 16th September 2016.
+There are no outstanding pull requests or issues on github which implies the project is active and nicely looked after.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1256,57 +1312,6 @@ combination of characters could mean two entirely different things.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2014/09/20/rspec-verifying-doubles.html/">RSpec Verifying Doubles</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2014-09-20T00:00:00+01:00" pubdate  data-updated="true" >Sep 20<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>RSpec 3 has been full of some good stuff and I have full admiration for
-the people behind it. Even the upgrade process was well thought out
-keeping in mind the end users. As developers, we are used to handle poor
-upgrade process pretty well, but RSpec totally changed my opinion.</p>
-
-<p>Whilst <a href="https://github.com/andhapp/textrazor/pull/4">merging pull request for TextRazor</a>, I decided to upgrade the gem
-to RSpec3. I was meant to do that for sometime anyways, and the pull
-request opened up the perfect opportunity for it. I stumbled upon a very
-interesting new feature in RSpec3, called <a href="https://relishapp.com/rspec/rspec-mocks/v/3-0/docs/verifying-doubles/using-an-instance-double">verifying doubles</a>. This
-functionality makes <a href="https://github.com/xaviershay/rspec-fire">rspec-fire</a> totally obsolete. It verifies that any
-methods being stubbed would be present on the instance of the class
-being stubbed and also the number of argument the method accepts. This
-is pretty cool. I always used rspec-fire to make sure that my stubbed
-method existed on the class. In the light of these updates, I removed
-<a href="https://github.com/andhapp/textrazor/commit/48aeff496be89c7433dadfbbedd3e1d3e4375b64">rspec-fire as a dependency from TextRazor</a>. Makes it even more
-lightweight.</p>
-
-<p>Thanks again to RSpec team!</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -1339,6 +1344,10 @@ lightweight.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/09/14/Use-Sequel-for-non-rails-ruby-apps.html/">Use Sequel for non-rails ruby apps</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/08/29/Improve-bundler-cli.html/">Improve Bundler CLI</a>
       </li>
     
@@ -1352,10 +1361,6 @@ lightweight.</p>
     
       <li class="post">
         <a href="/2015/11/30/integrate-react-es6-webpack-babel-with-rails.html/">Integrate React, ES6, Webpack and Babel with Rails</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2015/10/04/rebooting-an-old-gem.html/">Rebooting an old gem</a>
       </li>
     
   </ul>

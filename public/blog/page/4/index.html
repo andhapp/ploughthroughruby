@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="This is not entirely realted to ruby but if you ever program with ruby you will find yourself using pg and mysql gems and the issue is how exactly ...">
+  <meta name="description" content="Reading Open Source Code is probably the best way of learning new ways. Paperclip is an amazing file upload tool by brilliant guys at Thoughtbot. A...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -62,6 +62,59 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2010/07/06/paperclip-and-rescue.html/">Paperclip and Rescue</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-07-06T00:00:00+01:00" pubdate  data-updated="true" >Jul 6<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Reading Open Source Code is probably the best way of learning new ways. Paperclip is an amazing file upload tool by brilliant guys at Thoughtbot. And yesterday, while going through their code I realised that <strong>rescue</strong> can be used as a statement modifier. For example, consider this block of code below:</p>
+
+<pre>
+  type = (self.path.match(/\.(\w+)$/)[1] rescue "octet-stream").downcase
+</pre>
+
+
+<p>What do you think happens here?
+Its quite simple really. If the first statement (the match bit) raises and exception the second statement is executed instead.</p>
+
+<p>Another way to write this would be:</p>
+
+<pre>
+  begin
+    type = (self.path.match(/\.(\w+)$/)[1]).downcase
+  rescue
+    "octet-stream"
+  end
+</pre>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -625,47 +678,6 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/09/24/ruby-idioms.html/">Ruby Idioms</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2009-09-24T00:00:00+01:00" pubdate  data-updated="true" >Sep 24<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>You can write a complete ruby script as a string and run it. Ruby (rather MRI) would just evalutae the string by executing it. For example:</p>
-
-<pre>
-"#{def x(s); puts(s.reverse); end; ('1'..'3').each{|aStr| x(aStr)} }"
-</pre>
-
-
-<p>This is absolutely valid.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -700,6 +712,10 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/09/14/Use-Sequel-for-non-rails-ruby-apps.html/">Use Sequel for non-rails ruby apps</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/08/29/Improve-bundler-cli.html/">Improve Bundler CLI</a>
       </li>
     
@@ -713,10 +729,6 @@ SomeObject.class_eval(def instance_method;"instance_method";end)
     
       <li class="post">
         <a href="/2015/11/30/integrate-react-es6-webpack-babel-with-rails.html/">Integrate React, ES6, Webpack and Babel with Rails</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2015/10/04/rebooting-an-old-gem.html/">Rebooting an old gem</a>
       </li>
     
   </ul>

@@ -192,14 +192,20 @@
     </url>
     <url>
         <loc>http://ploughthroughruby.co.uk//2016/08/29/Improve-bundler-cli.html/</loc>
-        <lastmod>2016-08-31T22:39:42+01:00</lastmod>
+        <lastmod>2016-08-31T22:58:06+01:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://ploughthroughruby.co.uk//2016/09/14/Use-Sequel-for-non-rails-ruby-apps.html/
+        </loc>
+        <lastmod>2016-09-16T22:16:26+01:00</lastmod>
     </url>
     <url>
         <loc>http://ploughthroughruby.co.uk//blog/archives/</loc>
-        <lastmod>2016-08-31T22:39:42+01:00</lastmod>
+        <lastmod>2016-09-16T22:16:26+01:00</lastmod>
     </url>
     <url>
         <loc>http://ploughthroughruby.co.uk//</loc>
-        <lastmod>2016-08-31T22:39:42+01:00</lastmod>
+        <lastmod>2016-09-16T22:16:26+01:00</lastmod>
     </url>
 </urlset>

@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="http://ploughthroughruby.co.uk//atom.xml" rel="self"/>
   <link href="http://ploughthroughruby.co.uk//"/>
-  <updated>2016-08-31T22:39:45+01:00</updated>
+  <updated>2016-09-16T22:16:37+01:00</updated>
   <id>http://ploughthroughruby.co.uk//</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -12,6 +12,37 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Use Sequel for non-rails ruby apps]]></title>
+    <link href="http://ploughthroughruby.co.uk//2016/09/14/Use-Sequel-for-non-rails-ruby-apps.html/"/>
+    <updated>2016-09-14T00:00:00+01:00</updated>
+    <id>http://ploughthroughruby.co.uk//2016/09/14/Use-Sequel-for-non-rails-ruby-apps</id>
+    <content type="html"><![CDATA[<p>I am writing a ruby script to retireve some data via HTTP call and then add it to the database.</p>
+
+<p>Now, I decided to use ActiveRecord as an ORM and wrote a <a href="https://github.com/andhapp/activerecord_sans_rails">gem</a> for the same.</p>
+
+<p>Nothing complicated. It&#8217;s just a Rakefile that provides popular activerecord rake tasks.</p>
+
+<p>But, then I stumbled across blog post on <a href="https://www.toptal.com/ruby/api-with-sinatra-and-sequel-ruby-tutorial">Sequel</a> and I feel
+Sequel is a better choice for an ORM for a non-rails app.</p>
+
+<p>Why?</p>
+
+<p>Because, Rails is opinionated.</p>
+
+<p>And it&#8217;s nuances works nice for a Rails app.</p>
+
+<p>Anything outside of the realms of a standard Rails app and all bets are off.</p>
+
+<p>It is like fitting a square peg in a round hole. It&#8217;s possible but you will have to shave off the extra bits.</p>
+
+<p>Sequel on the other hand seems like a better fit for a ruby script.</p>
+
+<p>Will post my experience with Sequel. It has ample documentation and the project was last updated on 16th September 2016.
+There are no outstanding pull requests or issues on github which implies the project is active and nicely looked after.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Improve Bundler CLI]]></title>
@@ -1427,21 +1458,6 @@ os = OpenStruct.new(:id => 12)
 os.instance_variable_get(:@table) # returns the hash {:id=>12}
 </pre>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[In Ruby2, inspect independent of to_s]]></title>
-    <link href="http://ploughthroughruby.co.uk//2013/02/23/inspect-to_s-change-in-ruby2.html/"/>
-    <updated>2013-02-23T00:00:00+00:00</updated>
-    <id>http://ploughthroughruby.co.uk//2013/02/23/inspect-to_s-change-in-ruby2</id>
-    <content type="html"><![CDATA[<p><a href="http://www.ruby-lang.org/en/news/2013/02/24/ruby-2-0-0-p0-is-released/">Ruby 2.0.0</a> has been released and there are a lot of new things, for example, keyword arguments, TracePoint API, DTrace and so on. Here&#8217;s <a href="https://github.com/ruby/ruby/blob/trunk/NEWS">Ruby NEWS</a> file, and some <a href="http://blog.marc-andre.ca/2013/02/23/ruby-2-by-example/">new features in Ruby 2</a>.</p>
-
-<p>One thing to add to that list is that the behaviour of inspect is no
-longer dependent on to_s. In Ruby 1.9, if to_s was overridden inspect
-would just execute that code. But in Ruby 2.0, to_s overriding doesn&#8217;t
-affect inspect anymore. Here&#8217;s code example for <a href="https://eval.in/11121">Ruby 1.9.3</a> and <a href="https://eval.in/11120">Ruby
-2</a></p>
 ]]></content>
   </entry>
   
