@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="I am writing a ruby script to retireve some data via HTTP call and then add it to the database.Now, I decided to use ActiveRecord as an ORM and wro...">
+  <meta name="description" content="Technlogy changes fast!And it&#8217;s a blatant fact.And with changing technology opinions, benchmarks and blog posts become obsolete, fast.I was r...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -62,6 +62,62 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2016/10/06/dont-blindly-follow-blog-posts.html/">Don&#8217;t Blindly Follow Blog Posts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2016-10-06T00:00:00+01:00" pubdate  data-updated="true" >Oct 6<span>th</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Technlogy changes fast!</p>
+
+<p>And it&#8217;s a blatant fact.</p>
+
+<p>And with changing technology opinions, benchmarks and blog posts become obsolete, fast.</p>
+
+<p>I was reading a blog post recently about adding some <a href="http://marianposaceanu.com/articles/improve-rails-performance-by-adding-a-few-gems">performance related gems</a>
+to improve rails&#8217;s performace. It&#8217;s a very nice, detailed article with benchmarks.</p>
+
+<p>Instead of just blindly adding the suggested gems to the project, I ran the scripts again and found that:</p>
+
+<ul>
+<li><code>escape_utils</code> gem makes things worse on <code>ruby 2.3.1</code> and <code>rails 5</code>, so no point in adding it.</li>
+<li><code>fast_blank</code> gem, on the other hand, makes things slightly better, so definitely worth adding. With
+slightly better I mean you are able to make more requests/sec.</li>
+<li><code>je</code> and <code>jemalloc</code> gem didn&#8217;t install for <code>ruby 2.3.1</code> at all.</li>
+</ul>
+
+
+<p>Well, the point of this short blog post was to make you aware that blog posts go out of date and sometimes
+it&#8217;s necessary to re-evaluate the findings and ensure you are adding the gems for the right reasons.</p>
+
+<p>Hope it helps!</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1270,48 +1326,6 @@ your Mac.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2014/10/19/an-unusual-thing-about-kanji%28Japanese%29.html/">An Unsual Thing About kanji(Japanese)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2014-10-19T00:00:00+01:00" pubdate  data-updated="true" >Oct 19<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Recently, I was reading an article on natural language processing of
-Japanese characters and came across something very unusual about the way
-Japanese characters are written, there is no delimiters between the
-words, for example, if &#8216;Ruby&#8217; and &#8216;Blog&#8217; are two kanji characters then
-they will be written as &#8216;RubyBlog&#8217; with no delimiter (space in English)
-between them. It makes segmenting Japanese text a lot harder since
-combination of characters could mean two entirely different things.</p>
-
-<p>I just found it very fascinating and challenging at the same time.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -1344,6 +1358,10 @@ combination of characters could mean two entirely different things.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/10/06/dont-blindly-follow-blog-posts.html/">Don&#8217;t blindly follow blog posts</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/09/14/Use-Sequel-for-non-rails-ruby-apps.html/">Use Sequel for non-rails ruby apps</a>
       </li>
     
@@ -1357,10 +1375,6 @@ combination of characters could mean two entirely different things.</p>
     
       <li class="post">
         <a href="/2015/12/06/webpack-dev-server-and-rails.html/">Webpack dev server and Rails</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2015/11/30/integrate-react-es6-webpack-babel-with-rails.html/">Integrate React, ES6, Webpack and Babel with Rails</a>
       </li>
     
   </ul>

@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="RSpec 3 has been full of some good stuff and I have full admiration forthe people behind it. Even the upgrade process was well thought outkeeping i...">
+  <meta name="description" content="Recently, I was reading an article on natural language processing ofJapanese characters and came across something very unusual about the wayJapanes...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -62,6 +62,48 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/10/19/an-unusual-thing-about-kanji%28Japanese%29.html/">An Unsual Thing About kanji(Japanese)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2014-10-19T00:00:00+01:00" pubdate  data-updated="true" >Oct 19<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Recently, I was reading an article on natural language processing of
+Japanese characters and came across something very unusual about the way
+Japanese characters are written, there is no delimiters between the
+words, for example, if &#8216;Ruby&#8217; and &#8216;Blog&#8217; are two kanji characters then
+they will be written as &#8216;RubyBlog&#8217; with no delimiter (space in English)
+between them. It makes segmenting Japanese text a lot harder since
+combination of characters could mean two entirely different things.</p>
+
+<p>I just found it very fascinating and challenging at the same time.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -703,65 +745,6 @@ ruby installed via rbenv and see what I get and then go from there.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/04/08/openstruct-to-hash.html/">OpenStruct to Hash</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2013-04-08T00:00:00+01:00" pubdate  data-updated="true" >Apr 8<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>OpenStruct is a handy class in ruby&#8217;s stdlib. I&#8217;ve used it in the past
-for creating test data, instead of using factory girl. It&#8217;s fast, and
-the fact that it behaves like a Hash, makes it super easy for stubbing
-object behaviours.</p>
-
-<p>The other day, I had this requirement to convert an open struct instance
-into a hash. I foolishly tried to_hash call, considering that it acts as
-a hash, so there must be a to_hash call on it. But, unfortunately, there
-isn&#8217;t any to_hash methods on OpenStruct. However, there are other ways
-to convert an open struct instance to a hash quite easily. Here&#8217;s how:</p>
-
-<h3>Option 1</h3>
-
-<pre>
-os = OpenStruct.new(:id => 12)
-os.marshal_dump # returns the hash {:id=>12}
-</pre>
-
-
-<h3>Option 2</h3>
-
-<pre>
-os = OpenStruct.new(:id => 12)
-os.instance_variable_get(:@table) # returns the hash {:id=>12}
-</pre>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -796,6 +779,10 @@ os.instance_variable_get(:@table) # returns the hash {:id=>12}
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2016/10/06/dont-blindly-follow-blog-posts.html/">Don&#8217;t blindly follow blog posts</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/09/14/Use-Sequel-for-non-rails-ruby-apps.html/">Use Sequel for non-rails ruby apps</a>
       </li>
     
@@ -809,10 +796,6 @@ os.instance_variable_get(:@table) # returns the hash {:id=>12}
     
       <li class="post">
         <a href="/2015/12/06/webpack-dev-server-and-rails.html/">Webpack dev server and Rails</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2015/11/30/integrate-react-es6-webpack-babel-with-rails.html/">Integrate React, ES6, Webpack and Babel with Rails</a>
       </li>
     
   </ul>
