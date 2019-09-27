@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="OpenStruct is a handy class in ruby&#8217;s stdlib. I&#8217;ve used it in the pastfor creating test data, instead of using factory girl. It&#8217;s...">
+  <meta name="description" content="I recently decided to setup a dedicated website for my company as opposed to just using my personal one. It’s a static site, with barely any conten...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -62,6 +62,157 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2013/12/01/Mina-the-deployer.html/">Mina, the Deployer</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2013-12-01T00:00:00+00:00" pubdate  data-updated="true" >Dec 1<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I recently decided to setup a dedicated website for my company as opposed to just using my personal one. It’s a static site, with barely any content right now.</p>
+
+<p>Now, I usually rely on capistrano for deployment, but since capistrano had recently undergone a major facelift, I sensed it as an opportunity to try <a href="https://github.com/nadarei/mina">Mina</a>. I have known about the gem since it’s very beginning, but the pressures of modern web developer life means less time for playing around, and more for getting things done. In other words, don’t change the deployer, if it ain’t broken.</p>
+
+<p>Mina is very similar to Capistrano, except one small yet pivotal fact. Instead of running commands one-by-one over SSH, it creates a bash script from your configuration and executes it remotely as one SSH command. Sounds astute to me. It has the same configuration and deploy setup as Capistrano, and anyone with some Capistrano experience will pick it up pretty quickly.</p>
+
+<p>One thing that really stuck out for me and propelled me to write this post is it’s reliance on the existing SSH set-up on your machine. For example, in Capistrano, one has to explicitly set up the ssh forward agent in the deploy script itself. But, in Mina, one just needs to specify forward agent in their SSH config, and Mina will pick that up. It’s quite logical, no idea why it wasn’t the case for Capistrano.</p>
+
+<p>Anyways, hope this will motivate you guys to try Mina as well.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2013/04/10/dtrace-probes-in-ruby-2.html/">DTrace Probes in Ruby 2 and a Startling Discovery</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2013-04-10T00:00:00+01:00" pubdate  data-updated="true" >Apr 10<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>DTrace is a static and dynamic instrumentation framework. I did a talk
+at LRUG back in October on DTrace and it&#8217;s addition in Ruby 2. There&#8217;s
+not much content in the presentation, but it will give you a little
+pointers to the present situation of DTrace in general, and in Ruby.</p>
+
+<p>The more I look into DTrace, the more I find it intriguing, challenging,
+surprising, and yet thoroughly enjoyable. Recently, I was refactoring some
+of the tests for a project, and the test suite takes forever to run,
+therefore, I decided to use Object.new for creating an instance of the
+interested object (stub the requests). Another colleague came along and
+commented&#8230;&#8221;Oh, why are you not using OpenStruct&#8221;. OpenStruct is handy,
+as it has a hash like structre, which means a method call that hasn&#8217;t
+been stubbed or instantiated will just return nil, just like a hash call
+when the key is absent from the hash.</p>
+
+<p>I ran some quick benchmarks and here are the results:</p>
+
+<pre>
+Calculating -------------------------------------
+         Struct.new       7341 i/100ms
+         Object.new      57600 i/100ms
+     OpenStruct.new       5462 i/100ms
+-------------------------------------------------
+         Struct.new     90353.5 (±10.0%) i/s -     447801 in   5.017170s
+         Object.new   2335283.3 (±3.2%) i/s -   11692800 in   5.012149s
+     OpenStruct.new     65014.7 (±4.9%) i/s -     327720 in   5.053209s
+</pre>
+
+
+<p>One thing is obvious, if you don&#8217;t need the dynamic nature of an
+OpenStruct, just use Object.new. This led me to think, why Object.new is
+superfast as compared to Struct or OpenStruct. I wanted to see what
+method calls is Struct or OpenStruct making, you know, just for my own
+knowledge. I decided to use DTrace for that purpose. DTrace has been
+added to Ruby 2, but I still couldn&#8217;t find any documentation. However,
+<a href="https://github.com/ruby/ruby/blob/trunk/probes.d">probes.d</a> file gives
+a details of all the probe names, arguments in the probe and so on.
+Please look at that file if you&#8217;d like to use DTrace with ruby.</p>
+
+<p>I created a simple ruby file called <code>test.rb</code>, like this:</p>
+
+<pre>
+Object.new
+</pre>
+
+
+<p>and ran the following dtrace command on a Mac OS X:</p>
+
+<pre>
+sudo dtrace -c 'ruby test.rb' -Zn 'ruby*::method-entry { @[copyinstr(arg0)] = count(); }'
+</pre>
+
+
+<p>to receive the following output:</p>
+
+<pre>
+dtrace: description 'ruby*::method-entry ' matched 2 probes
+dtrace: pid 14009 has exited
+
+  Gem                                                              12
+  Gem::Requirement                                                 23
+  Gem::Version                                                     36
+  Gem::Specification                                              267
+  RbConfig                                                        309
+</pre>
+
+
+<p>Here column 1 is the Class name and the column 2 is the number of
+times that class was accessed while running this ruby file. This was
+quite surprising that RbConfig was accessed 309 times. Why? After much
+thinking, I thought may be RVM has got a hand in this. I haven&#8217;t found a
+solution yet.</p>
+
+<p>I leave you here with this startling discovery and hope to solve
+it for my next post. I&#8217;m planning to run the same dtrace command with
+ruby installed via rbenv and see what I get and then go from there.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -539,87 +690,6 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2011/01/17/ruby-hacking-guide.html/">Ruby Hacking Guide</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-01-17T00:00:00+00:00" pubdate  data-updated="true" >Jan 17<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I got hold of an out-of-date <a href="http://hawthorne-press.com/WebPage_RHG.html">Ruby Hacking Guide</a> and it looks very interesting. Therefore, in order to improve my understanding of Ruby internals, I have decided to spend time in reading it and the writing posts about it. The entire book can be downloaded in the form of HTML pages and might not make sense since some of it has been machine translated.</p>
-
-<p>I hope my efforts are useful for anyone willing to venture into Ruby Internals.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2011/01/03/method-default-arguments-and-passing-nil-value.html/">Method Default Arguments and Passing Nil Value</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-01-03T00:00:00+00:00" pubdate  data-updated="true" >Jan 3<span>rd</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This is something very trivial and I kind of observed it whilst programming couple of weeks ago. For example, you had a method like this:</p>
-
-<pre>
-  class SomeClass
-    def some_method(some_argument = '')
-      raise ArgumentError unless some_argument
-    end
-  end
-</pre>
-
-
-<p>Now, I was under the impression that if I passed in a nil into this method, for some reason some_argument will still have the default value(&#8221;) as opposed to the nil value passed in but default arguments come into play when no value is passed in for the method arguments. But I was passing in nil which is an instance of NilClass and therefore some_argument gets assigned the nil value and an exception is raised.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -654,6 +724,14 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2019/09/27/yarn-install-on-mojave.html/">Yarn install on Mojave</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2019/09/27/installing-ffi-1.11.1-on-mojave.html/">Installing ffi 1.11.1 on Mojave</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/10/06/dont-blindly-follow-blog-posts.html/">Don&#8217;t blindly follow blog posts</a>
       </li>
     
@@ -663,14 +741,6 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
     
       <li class="post">
         <a href="/2016/08/29/Improve-bundler-cli.html/">Improve Bundler CLI</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2016/02/21/timing-attack-ruby-vulnerability.html/">Timing attack vulnerability in Rails</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2015/12/06/webpack-dev-server-and-rails.html/">Webpack dev server and Rails</a>
       </li>
     
   </ul>
@@ -697,7 +767,7 @@ c-return test.rb:13                  new #<Binding:0x0b4ff0>    Class
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2016 - andHapp -
+  Copyright &copy; 2019 - andHapp -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

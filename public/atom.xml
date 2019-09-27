@@ -4,7 +4,7 @@
   <title><![CDATA[Plough => Ruby]]></title>
   <link href="http://ploughthroughruby.co.uk//atom.xml" rel="self"/>
   <link href="http://ploughthroughruby.co.uk//"/>
-  <updated>2016-10-06T23:42:13+01:00</updated>
+  <updated>2019-09-27T20:38:50+01:00</updated>
   <id>http://ploughthroughruby.co.uk//</id>
   <author>
     <name><![CDATA[andHapp]]></name>
@@ -12,6 +12,90 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Yarn install on Mojave]]></title>
+    <link href="http://ploughthroughruby.co.uk//2019/09/27/yarn-install-on-mojave.html/"/>
+    <updated>2019-09-27T00:00:00+01:00</updated>
+    <id>http://ploughthroughruby.co.uk//2019/09/27/yarn-install-on-mojave</id>
+    <content type="html"><![CDATA[<p>If you&#8217;re having issues in <code>yarn install</code> on Mojave, then it&#8217;s probably down to the fact
+that Mojave doesn&#8217;t support different i386 architecture and anything that involves native
+building, gems or node modules, seems to fail. The solution is to clean the slate and start
+fresh. That&#8217;s exactly what I had to do to fix the yarn installation errors:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rm yarn.lock
+</span><span class='line'>yarn cache clean
+</span><span class='line'>yarn install</span></code></pre></td></tr></table></div></figure>
+
+
+<p>These commands worked like a charm!</p>
+
+<p>Hope it helps!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Installing ffi 1.11.1 on Mojave]]></title>
+    <link href="http://ploughthroughruby.co.uk//2019/09/27/installing-ffi-1.11.1-on-mojave.html/"/>
+    <updated>2019-09-27T00:00:00+01:00</updated>
+    <id>http://ploughthroughruby.co.uk//2019/09/27/installing-ffi-1.11.1-on-mojave</id>
+    <content type="html"><![CDATA[<p>If you&#8217;ve installed to Mojave and are frustrated by the errors you get on installing ffi (1.11.1), then this blog
+post is for you.</p>
+
+<p>I had the same issue last week and after trawling through the internet and trying every possible suggestion, one finally
+worked!</p>
+
+<p>But, before that, a little discussion on the actual error is in order. Below is a small snippet of the actual error on <code>bundle install</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Configuring libffi for i386
+</span><span class='line'>configure: error: in `/Users/andhapp/Projects/github/startup/pimful/vendor/ruby/2.6.0/gems/ffi-1.11.1/ext/ffi_c/libffi-i386':
+</span><span class='line'>configure: error: C compiler cannot create executables
+</span><span class='line'>See `config.log' for more details
+</span><span class='line'>make[1]: *** No targets specified and no makefile found.  Stop.
+</span><span class='line'>make: *** ["/Users/andhapp/Projects/github/startup/pimful/vendor/ruby/2.6.0/gems/ffi-1.11.1/ext/ffi_c"/libffi-i386/.libs/libffi_convenience.a] Error 2</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>libffi</code> is trying to configure for i386 architecture. Mojave doesn&#8217;t support that architecture, so the actual linking file is missing. A peek into the
+<code>config.log</code> reveals that fact:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ld: warning: The i386 architecture is deprecated for macOS (remove from the Xcode build setting: ARCHS)
+</span><span class='line'>ld: warning: ignoring file /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib/libSystem.tbd, missing required architecture i386 in file /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib/libSystem.tbd
+</span><span class='line'>ld: dynamic main executables must link with libSystem.dylib for architecture i386
+</span><span class='line'>clang: error: linker command failed with exit code 1 (use -v to see invocation)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There are several suggestion to actually link the file present in Mojave and make the missing file available that way, but that doesn&#8217;t work either.</p>
+
+<p>After several frustrating hours, the following suggestion worked perfectly:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>brew reinstall libffi
+</span><span class='line'>
+</span><span class='line'>export LDFLAGS="-L/usr/local/opt/libffi/lib"
+</span><span class='line'>export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Reinstallation of <code>libffi</code> installs it correctly for Mojave and then <code>bundle install</code> works like a charm.</p>
+
+<p>Hope it helps!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Don't blindly follow blog posts]]></title>
@@ -1354,107 +1438,6 @@ having to go through a long console output.</p>
 
 <p>These are just some of the initial thoughts I had on reading AOP and TracePoint.
 Hope this post will encourage you to investigate and learn more about these topics.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Mina, the deployer]]></title>
-    <link href="http://ploughthroughruby.co.uk//2013/12/01/Mina-the-deployer.html/"/>
-    <updated>2013-12-01T00:00:00+00:00</updated>
-    <id>http://ploughthroughruby.co.uk//2013/12/01/Mina-the-deployer</id>
-    <content type="html"><![CDATA[<p>I recently decided to setup a dedicated website for my company as opposed to just using my personal one. It’s a static site, with barely any content right now.</p>
-
-<p>Now, I usually rely on capistrano for deployment, but since capistrano had recently undergone a major facelift, I sensed it as an opportunity to try <a href="https://github.com/nadarei/mina">Mina</a>. I have known about the gem since it’s very beginning, but the pressures of modern web developer life means less time for playing around, and more for getting things done. In other words, don’t change the deployer, if it ain’t broken.</p>
-
-<p>Mina is very similar to Capistrano, except one small yet pivotal fact. Instead of running commands one-by-one over SSH, it creates a bash script from your configuration and executes it remotely as one SSH command. Sounds astute to me. It has the same configuration and deploy setup as Capistrano, and anyone with some Capistrano experience will pick it up pretty quickly.</p>
-
-<p>One thing that really stuck out for me and propelled me to write this post is it’s reliance on the existing SSH set-up on your machine. For example, in Capistrano, one has to explicitly set up the ssh forward agent in the deploy script itself. But, in Mina, one just needs to specify forward agent in their SSH config, and Mina will pick that up. It’s quite logical, no idea why it wasn’t the case for Capistrano.</p>
-
-<p>Anyways, hope this will motivate you guys to try Mina as well.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[DTrace probes in Ruby 2 and a startling discovery]]></title>
-    <link href="http://ploughthroughruby.co.uk//2013/04/10/dtrace-probes-in-ruby-2.html/"/>
-    <updated>2013-04-10T00:00:00+01:00</updated>
-    <id>http://ploughthroughruby.co.uk//2013/04/10/dtrace-probes-in-ruby-2</id>
-    <content type="html"><![CDATA[<p>DTrace is a static and dynamic instrumentation framework. I did a talk
-at LRUG back in October on DTrace and it&#8217;s addition in Ruby 2. There&#8217;s
-not much content in the presentation, but it will give you a little
-pointers to the present situation of DTrace in general, and in Ruby.</p>
-
-<p>The more I look into DTrace, the more I find it intriguing, challenging,
-surprising, and yet thoroughly enjoyable. Recently, I was refactoring some
-of the tests for a project, and the test suite takes forever to run,
-therefore, I decided to use Object.new for creating an instance of the
-interested object (stub the requests). Another colleague came along and
-commented&#8230;&#8221;Oh, why are you not using OpenStruct&#8221;. OpenStruct is handy,
-as it has a hash like structre, which means a method call that hasn&#8217;t
-been stubbed or instantiated will just return nil, just like a hash call
-when the key is absent from the hash.</p>
-
-<p>I ran some quick benchmarks and here are the results:</p>
-
-<pre>
-Calculating -------------------------------------
-         Struct.new       7341 i/100ms
-         Object.new      57600 i/100ms
-     OpenStruct.new       5462 i/100ms
--------------------------------------------------
-         Struct.new     90353.5 (±10.0%) i/s -     447801 in   5.017170s
-         Object.new   2335283.3 (±3.2%) i/s -   11692800 in   5.012149s
-     OpenStruct.new     65014.7 (±4.9%) i/s -     327720 in   5.053209s
-</pre>
-
-
-<p>One thing is obvious, if you don&#8217;t need the dynamic nature of an
-OpenStruct, just use Object.new. This led me to think, why Object.new is
-superfast as compared to Struct or OpenStruct. I wanted to see what
-method calls is Struct or OpenStruct making, you know, just for my own
-knowledge. I decided to use DTrace for that purpose. DTrace has been
-added to Ruby 2, but I still couldn&#8217;t find any documentation. However,
-<a href="https://github.com/ruby/ruby/blob/trunk/probes.d">probes.d</a> file gives
-a details of all the probe names, arguments in the probe and so on.
-Please look at that file if you&#8217;d like to use DTrace with ruby.</p>
-
-<p>I created a simple ruby file called <code>test.rb</code>, like this:</p>
-
-<pre>
-Object.new
-</pre>
-
-
-<p>and ran the following dtrace command on a Mac OS X:</p>
-
-<pre>
-sudo dtrace -c 'ruby test.rb' -Zn 'ruby*::method-entry { @[copyinstr(arg0)] = count(); }'
-</pre>
-
-
-<p>to receive the following output:</p>
-
-<pre>
-dtrace: description 'ruby*::method-entry ' matched 2 probes
-dtrace: pid 14009 has exited
-
-  Gem                                                              12
-  Gem::Requirement                                                 23
-  Gem::Version                                                     36
-  Gem::Specification                                              267
-  RbConfig                                                        309
-</pre>
-
-
-<p>Here column 1 is the Class name and the column 2 is the number of
-times that class was accessed while running this ruby file. This was
-quite surprising that RbConfig was accessed 309 times. Why? After much
-thinking, I thought may be RVM has got a hand in this. I haven&#8217;t found a
-solution yet.</p>
-
-<p>I leave you here with this startling discovery and hope to solve
-it for my next post. I&#8217;m planning to run the same dtrace command with
-ruby installed via rbenv and see what I get and then go from there.</p>
 ]]></content>
   </entry>
   

@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Aspect Oriented Programming - Plough => Ruby</title>
+  <title>Installing ffi 1.11.1 on Mojave - Plough => Ruby</title>
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="I was looking into Ruby&#8217;s TracePoint class recently. TracePoint is an objectified Kernel#set_trace_func method. TracePoint wasadded in Ruby2,...">
+  <meta name="description" content="If you&#8217;ve installed to Mojave and are frustrated by the errors you get on installing ffi (1.11.1), then this blogpost is for you.I had the sa...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://ploughthroughruby.co.uk//2013/12/30/aspect-oriented-programming.html/">
+  <link rel="canonical" href="http://ploughthroughruby.co.uk//2019/09/27/installing-ffi-1.11.1-on-mojave.html/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -65,7 +65,7 @@
   
   <header>
     
-      <h1 class="entry-title">Aspect Oriented Programming</h1>
+      <h1 class="entry-title">Installing Ffi 1.11.1 on Mojave</h1>
     
     
       <p class="meta">
@@ -79,78 +79,65 @@
 
 
 
-<time datetime="2013-12-30T00:00:00+00:00" pubdate  data-updated="true" >Dec 30<span>th</span>, 2013</time>
+<time datetime="2019-09-27T00:00:00+01:00" pubdate  data-updated="true" >Sep 27<span>th</span>, 2019</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I was looking into Ruby&#8217;s <a href="http://www.ruby-doc.org/core-2.0.0/TracePoint.html">TracePoint</a> class recently. TracePoint is an objectified Kernel#set_trace_func method. TracePoint was
-added in Ruby2, but before that there was a gem that had same function as TracePoint
-class. Surprisingly, it was also called <a href="https://github.com/rubyunworks/tracepoint">tracepoint</a>.</p>
+<div class="entry-content"><p>If you&#8217;ve installed to Mojave and are frustrated by the errors you get on installing ffi (1.11.1), then this blog
+post is for you.</p>
 
-<p>Anyways, TracePoint is not the scope of this post. This post is all about AOP,
-or Aspect Oriented Programming.</p>
+<p>I had the same issue last week and after trawling through the internet and trying every possible suggestion, one finally
+worked!</p>
 
-<p>Wikipedia defines it as <em>&#8220;aspect-oriented programming (AOP) is a programming paradigm that aims to increase modularity by allowing the separation of cross-cutting concerns. AOP forms a basis for aspect-oriented software development.&#8221;</em></p>
+<p>But, before that, a little discussion on the actual error is in order. Below is a small snippet of the actual error on <code>bundle install</code>:</p>
 
-<p>There are couple of things worth noting, Modularity and Cross-cutting concerns.</p>
-
-<h3>Modularity</h3>
-
-<p>In English, Modularity means based on modules, easily assembled, or repaired
-and the reason it&#8217;s easily repaired is because modules are
-self-contained and talk to each other via a defined interface. Interface
-could be hardware pins, RAM slots, or intangible ones, defined in your
-Ruby or Java class.</p>
-
-<p>In Ruby world, modules and modularity is the go-to thing to achieve
-separation of concern. You got a piece of code that is used in two
-different places and has no state of its own, just create a
-module to be included/extended or prepended.</p>
-
-<h3>Cross-cutting concerns</h3>
-
-<p>Cross-cutting concern can be defined as any piece of code that&#8217;s more widely
-used across the application, for example, logging, security, or authentication, perhaps.
-Something, like a before_filter in Rails controllers that&#8217;s applied to a set of actions.</p>
-
-<p>There are libraries that one could use to achieve same and even more
-than before_filter functionality outside of Rails. The one that I
-briefly looked at is called
-<a href="https://github.com/gcao/aspector">Aspector</a>. It provides a lot of examples
-as well just in case you are stuck.</p>
-
-<h3>Why not just use Ruby Modules?</h3>
-
-<p>Ruby modules are similar but not exactly same as the AOP concept. One
-important difference is that you can apply an aspect (aspect is the
-piece of code with common functionality, like a module) to a class from
-outside, without opening the class. Here&#8217;s some aspector code snippet to
-elaborate the point:</p>
-
-<pre>
-TestAspect.apply A
-</pre>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Configuring libffi for i386
+</span><span class='line'>configure: error: in `/Users/andhapp/Projects/github/startup/pimful/vendor/ruby/2.6.0/gems/ffi-1.11.1/ext/ffi_c/libffi-i386':
+</span><span class='line'>configure: error: C compiler cannot create executables
+</span><span class='line'>See `config.log' for more details
+</span><span class='line'>make[1]: *** No targets specified and no makefile found.  Stop.
+</span><span class='line'>make: *** ["/Users/andhapp/Projects/github/startup/pimful/vendor/ruby/2.6.0/gems/ffi-1.11.1/ext/ffi_c"/libffi-i386/.libs/libffi_convenience.a] Error 2</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Here A is the class, and TestAspect is the aspect. As you can see, you
-can just apply it from outside. Sorry, not very clear, but I didn&#8217;t want
-to tie the concept to a particular library implementation.</p>
+<p><code>libffi</code> is trying to configure for i386 architecture. Mojave doesn&#8217;t support that architecture, so the actual linking file is missing. A peek into the
+<code>config.log</code> reveals that fact:</p>
 
-<p>One good use case of using AOP concepts would be with something like
-debugging, for example, a user performed an action and you want to check
-the log for parameters that are getting passed in to methods, or what
-methods are getting called when certain action is performed. But, that&#8217;s
-what TracePoint does, right? Well, it definitely allows one to hook into
-the events and print debugging information. With AOP, one can create
-more focussed debugging. Imagine, a request going through Rails stack
-will hit a lot of methods and you don&#8217;t want to enable tracing and then
-having to go through a long console output.</p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ld: warning: The i386 architecture is deprecated for macOS (remove from the Xcode build setting: ARCHS)
+</span><span class='line'>ld: warning: ignoring file /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib/libSystem.tbd, missing required architecture i386 in file /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib/libSystem.tbd
+</span><span class='line'>ld: dynamic main executables must link with libSystem.dylib for architecture i386
+</span><span class='line'>clang: error: linker command failed with exit code 1 (use -v to see invocation)</span></code></pre></td></tr></table></div></figure>
 
-<p>These are just some of the initial thoughts I had on reading AOP and TracePoint.
-Hope this post will encourage you to investigate and learn more about these topics.</p>
+
+<p>There are several suggestion to actually link the file present in Mojave and make the missing file available that way, but that doesn&#8217;t work either.</p>
+
+<p>After several frustrating hours, the following suggestion worked perfectly:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>brew reinstall libffi
+</span><span class='line'>
+</span><span class='line'>export LDFLAGS="-L/usr/local/opt/libffi/lib"
+</span><span class='line'>export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Reinstallation of <code>libffi</code> installs it correctly for Mojave and then <code>bundle install</code> works like a charm.</p>
+
+<p>Hope it helps!</p>
 </div>
 
 
@@ -171,7 +158,7 @@ Hope this post will encourage you to investigate and learn more about these topi
 
 
 
-<time datetime="2013-12-30T00:00:00+00:00" pubdate  data-updated="true" >Dec 30<span>th</span>, 2013</time>
+<time datetime="2019-09-27T00:00:00+01:00" pubdate  data-updated="true" >Sep 27<span>th</span>, 2019</time>
       
 
 
@@ -179,7 +166,7 @@ Hope this post will encourage you to investigate and learn more about these topi
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://ploughthroughruby.co.uk//2013/12/30/aspect-oriented-programming.html/" data-via="" data-counturl="http://ploughthroughruby.co.uk//2013/12/30/aspect-oriented-programming.html/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://ploughthroughruby.co.uk//2019/09/27/installing-ffi-1.11.1-on-mojave.html/" data-via="" data-counturl="http://ploughthroughruby.co.uk//2019/09/27/installing-ffi-1.11.1-on-mojave.html/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -192,10 +179,10 @@ Hope this post will encourage you to investigate and learn more about these topi
     
     <p class="meta">
        
-        <a class="basic-alignment left" href="/2013/12/01/Mina-the-deployer.html/" title="Previous Post: Mina, the deployer">&laquo; Mina, the deployer</a>
+        <a class="basic-alignment left" href="/2016/10/06/dont-blindly-follow-blog-posts.html/" title="Previous Post: Don't blindly follow blog posts">&laquo; Don't blindly follow blog posts</a>
       
        
-        <a class="basic-alignment right" href="/2014/01/06/nested-exception-in-ruby-2.1.0.html/" title="next Post: Nested exceptions in Ruby 2.1.0">Nested exceptions in Ruby 2.1.0 &raquo;</a>
+        <a class="basic-alignment right" href="/2019/09/27/yarn-install-on-mojave.html/" title="next Post: Yarn install on Mojave">Yarn install on Mojave &raquo;</a>
       
     </p>
   </footer>

@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Recently, I was reading an article on natural language processing ofJapanese characters and came across something very unusual about the wayJapanes...">
+  <meta name="description" content="Reading open source code is almost always a good idea. Open source codehas the benefit of being reviewed by a lot of committed users and itjust sho...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -62,6 +62,159 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2015/01/25/ruby-command-line-flags.html/">Ruby Command Line Flag for Debugging</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2015-01-25T00:00:00+00:00" pubdate  data-updated="true" >Jan 25<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Reading open source code is almost always a good idea. Open source code
+has the benefit of being reviewed by a lot of committed users and it
+just shows the good patterns of programming. For instance, I once
+looked at Arel, and the code demonstrates an exemplary use of visitor
+pattern. There isn&#8217;t much code there, yet it manages to achieve so much.</p>
+
+<p>Recently, I was reading some open source code recently and spotted $DEBUG
+environment variable in quite a few places. At the time, I thought it
+must be something the author used to simplify debugging. But, no, it&#8217;s
+defined and used by ruby core. Ruby provides a debug flag (-d or &#8211;debug)
+which when used would set the $DEBUG to true.</p>
+
+<p>Try running the following script in irb, pry or whatever else you use:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ruby -d -e 'if $DEBUG; puts "Debugging"; end'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and you should see something like this as output:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>RUBY_GC_HEAP_FREE_SLOTS=200000 (default value: 4096)
+</span><span class='line'>RUBY_GC_MALLOC_LIMIT=90000000 (default value: 16777216)
+</span><span class='line'>Exception `LoadError' at /Users/andhapp/.rvm/rubies/ruby-2.2.0/lib/ruby/2.2.0/rubygems.rb:1222 - cannot load such file -- rubygems/defaults/operating_system
+</span><span class='line'>Exception `LoadError' at /Users/andhapp/.rvm/rubies/ruby-2.2.0/lib/ruby/2.2.0/rubygems.rb:1231 - cannot load such file -- rubygems/defaults/ruby
+</span><span class='line'>Debugging</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Don&#8217;t worry about the two exceptions as in <a href="http://stackoverflow.com/a/1851232/20301">debug mode exceptions are displayed</a> even when they are rescued.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac+copy.html/">Setting Up Chrome Selenium Driver for Capybara When Using Chrome Canary on a Mac</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2014-12-31T00:00:00+00:00" pubdate  data-updated="true" >Dec 31<span>st</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>We have been adding Rspec + Capybara to <a href="https://suggestion.io">Suggestion.io</a>
+to ensure we don&#8217;t create any regression bugs. There are plenty of resources
+online to set-up Capybara to use Selenium&#8217;s Chrome driver (instead of Firefox).</p>
+
+<h3>But, what if you are using Chrome Canary as your browser?</h3>
+
+<p>You would probably see the following error:</p>
+
+<pre>
+Selenium::WebDriver::Error::UnknownError: unknown error: cannot find Chrome binary
+</pre>
+
+
+<p>There are two ways to fix this issue:</p>
+
+<h3> Solution 1 - Download Chrome</h3>
+
+<p>Whilst, searching for the solution, I ended up on <a href="https://code.google.com/p/selenium/wiki/ChromeDriver">ChromeDriver&#8217;s wiki</a>.
+It clearly states that Chrome driver expects the Chrome binary to be in:</p>
+
+<pre>
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
+</pre>
+
+
+<p>That&#8217;s exactly where Chrome is installed on a Mac, so, to fix this issue
+just download Chrome.</p>
+
+<h3>Solution 2 - Pass the location of Chrome Canary&#8217;s binary to Selenium Chrome Driver via Capybara</h3>
+
+<p>Downloading Chrome just for the sake of passing specs doesn&#8217;t make
+sense. Googling revealed that there&#8217;s something called &#8216;ChromeOptions&#8217;, but,
+how the hell do I pass that option from Capybara, so that it get&#8217;s passed
+correctly to Selenium Chrome driver. After, trawling through the
+capybara and selenium-webdriver source, I found a way to pass the location
+of Chrome Canary as the binary. Here&#8217;s how:</p>
+
+<pre>
+Capybara.register_driver :chrome do |app|
+  Capybara::Selenium::Driver.new(app, 
+    browser: :chrome, 
+    desired_capabilities: {
+      "chromeOptions" => {
+        "binary" => '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary' 
+      } 
+    })
+end
+</pre>
+
+
+<p>The &#8216;binary&#8217; option specifies the location of Chrome Canary&#8217;s binary on
+your Mac.</p>
+
+<p>That was a couple of hours well spent. Hope it helps!</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -594,157 +747,6 @@ Hope this post will encourage you to investigate and learn more about these topi
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/12/01/Mina-the-deployer.html/">Mina, the Deployer</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2013-12-01T00:00:00+00:00" pubdate  data-updated="true" >Dec 1<span>st</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I recently decided to setup a dedicated website for my company as opposed to just using my personal one. It’s a static site, with barely any content right now.</p>
-
-<p>Now, I usually rely on capistrano for deployment, but since capistrano had recently undergone a major facelift, I sensed it as an opportunity to try <a href="https://github.com/nadarei/mina">Mina</a>. I have known about the gem since it’s very beginning, but the pressures of modern web developer life means less time for playing around, and more for getting things done. In other words, don’t change the deployer, if it ain’t broken.</p>
-
-<p>Mina is very similar to Capistrano, except one small yet pivotal fact. Instead of running commands one-by-one over SSH, it creates a bash script from your configuration and executes it remotely as one SSH command. Sounds astute to me. It has the same configuration and deploy setup as Capistrano, and anyone with some Capistrano experience will pick it up pretty quickly.</p>
-
-<p>One thing that really stuck out for me and propelled me to write this post is it’s reliance on the existing SSH set-up on your machine. For example, in Capistrano, one has to explicitly set up the ssh forward agent in the deploy script itself. But, in Mina, one just needs to specify forward agent in their SSH config, and Mina will pick that up. It’s quite logical, no idea why it wasn’t the case for Capistrano.</p>
-
-<p>Anyways, hope this will motivate you guys to try Mina as well.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/04/10/dtrace-probes-in-ruby-2.html/">DTrace Probes in Ruby 2 and a Startling Discovery</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2013-04-10T00:00:00+01:00" pubdate  data-updated="true" >Apr 10<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>DTrace is a static and dynamic instrumentation framework. I did a talk
-at LRUG back in October on DTrace and it&#8217;s addition in Ruby 2. There&#8217;s
-not much content in the presentation, but it will give you a little
-pointers to the present situation of DTrace in general, and in Ruby.</p>
-
-<p>The more I look into DTrace, the more I find it intriguing, challenging,
-surprising, and yet thoroughly enjoyable. Recently, I was refactoring some
-of the tests for a project, and the test suite takes forever to run,
-therefore, I decided to use Object.new for creating an instance of the
-interested object (stub the requests). Another colleague came along and
-commented&#8230;&#8221;Oh, why are you not using OpenStruct&#8221;. OpenStruct is handy,
-as it has a hash like structre, which means a method call that hasn&#8217;t
-been stubbed or instantiated will just return nil, just like a hash call
-when the key is absent from the hash.</p>
-
-<p>I ran some quick benchmarks and here are the results:</p>
-
-<pre>
-Calculating -------------------------------------
-         Struct.new       7341 i/100ms
-         Object.new      57600 i/100ms
-     OpenStruct.new       5462 i/100ms
--------------------------------------------------
-         Struct.new     90353.5 (±10.0%) i/s -     447801 in   5.017170s
-         Object.new   2335283.3 (±3.2%) i/s -   11692800 in   5.012149s
-     OpenStruct.new     65014.7 (±4.9%) i/s -     327720 in   5.053209s
-</pre>
-
-
-<p>One thing is obvious, if you don&#8217;t need the dynamic nature of an
-OpenStruct, just use Object.new. This led me to think, why Object.new is
-superfast as compared to Struct or OpenStruct. I wanted to see what
-method calls is Struct or OpenStruct making, you know, just for my own
-knowledge. I decided to use DTrace for that purpose. DTrace has been
-added to Ruby 2, but I still couldn&#8217;t find any documentation. However,
-<a href="https://github.com/ruby/ruby/blob/trunk/probes.d">probes.d</a> file gives
-a details of all the probe names, arguments in the probe and so on.
-Please look at that file if you&#8217;d like to use DTrace with ruby.</p>
-
-<p>I created a simple ruby file called <code>test.rb</code>, like this:</p>
-
-<pre>
-Object.new
-</pre>
-
-
-<p>and ran the following dtrace command on a Mac OS X:</p>
-
-<pre>
-sudo dtrace -c 'ruby test.rb' -Zn 'ruby*::method-entry { @[copyinstr(arg0)] = count(); }'
-</pre>
-
-
-<p>to receive the following output:</p>
-
-<pre>
-dtrace: description 'ruby*::method-entry ' matched 2 probes
-dtrace: pid 14009 has exited
-
-  Gem                                                              12
-  Gem::Requirement                                                 23
-  Gem::Version                                                     36
-  Gem::Specification                                              267
-  RbConfig                                                        309
-</pre>
-
-
-<p>Here column 1 is the Class name and the column 2 is the number of
-times that class was accessed while running this ruby file. This was
-quite surprising that RbConfig was accessed 309 times. Why? After much
-thinking, I thought may be RVM has got a hand in this. I haven&#8217;t found a
-solution yet.</p>
-
-<p>I leave you here with this startling discovery and hope to solve
-it for my next post. I&#8217;m planning to run the same dtrace command with
-ruby installed via rbenv and see what I get and then go from there.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -779,6 +781,14 @@ ruby installed via rbenv and see what I get and then go from there.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2019/09/27/yarn-install-on-mojave.html/">Yarn install on Mojave</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2019/09/27/installing-ffi-1.11.1-on-mojave.html/">Installing ffi 1.11.1 on Mojave</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/10/06/dont-blindly-follow-blog-posts.html/">Don&#8217;t blindly follow blog posts</a>
       </li>
     
@@ -788,14 +798,6 @@ ruby installed via rbenv and see what I get and then go from there.</p>
     
       <li class="post">
         <a href="/2016/08/29/Improve-bundler-cli.html/">Improve Bundler CLI</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2016/02/21/timing-attack-ruby-vulnerability.html/">Timing attack vulnerability in Rails</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2015/12/06/webpack-dev-server-and-rails.html/">Webpack dev server and Rails</a>
       </li>
     
   </ul>
@@ -822,7 +824,7 @@ ruby installed via rbenv and see what I get and then go from there.</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2016 - andHapp -
+  Copyright &copy; 2019 - andHapp -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

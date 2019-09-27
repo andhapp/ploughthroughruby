@@ -9,7 +9,7 @@
   <meta name="author" content="andHapp">
 
   
-  <meta name="description" content="Technlogy changes fast!And it&#8217;s a blatant fact.And with changing technology opinions, benchmarks and blog posts become obsolete, fast.I was r...">
+  <meta name="description" content="If you&#8217;re having issues in yarn install on Mojave, then it&#8217;s probably down to the factthat Mojave doesn&#8217;t support different i386 ...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -62,6 +62,140 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2019/09/27/yarn-install-on-mojave.html/">Yarn Install on Mojave</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2019-09-27T00:00:00+01:00" pubdate  data-updated="true" >Sep 27<span>th</span>, 2019</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>If you&#8217;re having issues in <code>yarn install</code> on Mojave, then it&#8217;s probably down to the fact
+that Mojave doesn&#8217;t support different i386 architecture and anything that involves native
+building, gems or node modules, seems to fail. The solution is to clean the slate and start
+fresh. That&#8217;s exactly what I had to do to fix the yarn installation errors:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rm yarn.lock
+</span><span class='line'>yarn cache clean
+</span><span class='line'>yarn install</span></code></pre></td></tr></table></div></figure>
+
+
+<p>These commands worked like a charm!</p>
+
+<p>Hope it helps!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2019/09/27/installing-ffi-1.11.1-on-mojave.html/">Installing Ffi 1.11.1 on Mojave</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2019-09-27T00:00:00+01:00" pubdate  data-updated="true" >Sep 27<span>th</span>, 2019</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>If you&#8217;ve installed to Mojave and are frustrated by the errors you get on installing ffi (1.11.1), then this blog
+post is for you.</p>
+
+<p>I had the same issue last week and after trawling through the internet and trying every possible suggestion, one finally
+worked!</p>
+
+<p>But, before that, a little discussion on the actual error is in order. Below is a small snippet of the actual error on <code>bundle install</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Configuring libffi for i386
+</span><span class='line'>configure: error: in `/Users/andhapp/Projects/github/startup/pimful/vendor/ruby/2.6.0/gems/ffi-1.11.1/ext/ffi_c/libffi-i386':
+</span><span class='line'>configure: error: C compiler cannot create executables
+</span><span class='line'>See `config.log' for more details
+</span><span class='line'>make[1]: *** No targets specified and no makefile found.  Stop.
+</span><span class='line'>make: *** ["/Users/andhapp/Projects/github/startup/pimful/vendor/ruby/2.6.0/gems/ffi-1.11.1/ext/ffi_c"/libffi-i386/.libs/libffi_convenience.a] Error 2</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>libffi</code> is trying to configure for i386 architecture. Mojave doesn&#8217;t support that architecture, so the actual linking file is missing. A peek into the
+<code>config.log</code> reveals that fact:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ld: warning: The i386 architecture is deprecated for macOS (remove from the Xcode build setting: ARCHS)
+</span><span class='line'>ld: warning: ignoring file /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib/libSystem.tbd, missing required architecture i386 in file /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib/libSystem.tbd
+</span><span class='line'>ld: dynamic main executables must link with libSystem.dylib for architecture i386
+</span><span class='line'>clang: error: linker command failed with exit code 1 (use -v to see invocation)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There are several suggestion to actually link the file present in Mojave and make the missing file available that way, but that doesn&#8217;t work either.</p>
+
+<p>After several frustrating hours, the following suggestion worked perfectly:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>brew reinstall libffi
+</span><span class='line'>
+</span><span class='line'>export LDFLAGS="-L/usr/local/opt/libffi/lib"
+</span><span class='line'>export PKG_CONFIG_PATH="/usr/local/opt/libffi/lib/pkgconfig"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Reinstallation of <code>libffi</code> installs it correctly for Mojave and then <code>bundle install</code> works like a charm.</p>
+
+<p>Hope it helps!</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1173,159 +1307,6 @@ it soon.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2015/01/25/ruby-command-line-flags.html/">Ruby Command Line Flag for Debugging</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2015-01-25T00:00:00+00:00" pubdate  data-updated="true" >Jan 25<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Reading open source code is almost always a good idea. Open source code
-has the benefit of being reviewed by a lot of committed users and it
-just shows the good patterns of programming. For instance, I once
-looked at Arel, and the code demonstrates an exemplary use of visitor
-pattern. There isn&#8217;t much code there, yet it manages to achieve so much.</p>
-
-<p>Recently, I was reading some open source code recently and spotted $DEBUG
-environment variable in quite a few places. At the time, I thought it
-must be something the author used to simplify debugging. But, no, it&#8217;s
-defined and used by ruby core. Ruby provides a debug flag (-d or &#8211;debug)
-which when used would set the $DEBUG to true.</p>
-
-<p>Try running the following script in irb, pry or whatever else you use:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ruby -d -e 'if $DEBUG; puts "Debugging"; end'</span></code></pre></td></tr></table></div></figure>
-
-
-<p>and you should see something like this as output:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>RUBY_GC_HEAP_FREE_SLOTS=200000 (default value: 4096)
-</span><span class='line'>RUBY_GC_MALLOC_LIMIT=90000000 (default value: 16777216)
-</span><span class='line'>Exception `LoadError' at /Users/andhapp/.rvm/rubies/ruby-2.2.0/lib/ruby/2.2.0/rubygems.rb:1222 - cannot load such file -- rubygems/defaults/operating_system
-</span><span class='line'>Exception `LoadError' at /Users/andhapp/.rvm/rubies/ruby-2.2.0/lib/ruby/2.2.0/rubygems.rb:1231 - cannot load such file -- rubygems/defaults/ruby
-</span><span class='line'>Debugging</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Don&#8217;t worry about the two exceptions as in <a href="http://stackoverflow.com/a/1851232/20301">debug mode exceptions are displayed</a> even when they are rescued.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2014/12/31/setting-up-chrome-selenium-driver-for-capybara-using-chrome-canary-on-a-mac+copy.html/">Setting Up Chrome Selenium Driver for Capybara When Using Chrome Canary on a Mac</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2014-12-31T00:00:00+00:00" pubdate  data-updated="true" >Dec 31<span>st</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>We have been adding Rspec + Capybara to <a href="https://suggestion.io">Suggestion.io</a>
-to ensure we don&#8217;t create any regression bugs. There are plenty of resources
-online to set-up Capybara to use Selenium&#8217;s Chrome driver (instead of Firefox).</p>
-
-<h3>But, what if you are using Chrome Canary as your browser?</h3>
-
-<p>You would probably see the following error:</p>
-
-<pre>
-Selenium::WebDriver::Error::UnknownError: unknown error: cannot find Chrome binary
-</pre>
-
-
-<p>There are two ways to fix this issue:</p>
-
-<h3> Solution 1 - Download Chrome</h3>
-
-<p>Whilst, searching for the solution, I ended up on <a href="https://code.google.com/p/selenium/wiki/ChromeDriver">ChromeDriver&#8217;s wiki</a>.
-It clearly states that Chrome driver expects the Chrome binary to be in:</p>
-
-<pre>
-/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
-</pre>
-
-
-<p>That&#8217;s exactly where Chrome is installed on a Mac, so, to fix this issue
-just download Chrome.</p>
-
-<h3>Solution 2 - Pass the location of Chrome Canary&#8217;s binary to Selenium Chrome Driver via Capybara</h3>
-
-<p>Downloading Chrome just for the sake of passing specs doesn&#8217;t make
-sense. Googling revealed that there&#8217;s something called &#8216;ChromeOptions&#8217;, but,
-how the hell do I pass that option from Capybara, so that it get&#8217;s passed
-correctly to Selenium Chrome driver. After, trawling through the
-capybara and selenium-webdriver source, I found a way to pass the location
-of Chrome Canary as the binary. Here&#8217;s how:</p>
-
-<pre>
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, 
-    browser: :chrome, 
-    desired_capabilities: {
-      "chromeOptions" => {
-        "binary" => '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary' 
-      } 
-    })
-end
-</pre>
-
-
-<p>The &#8216;binary&#8217; option specifies the location of Chrome Canary&#8217;s binary on
-your Mac.</p>
-
-<p>That was a couple of hours well spent. Hope it helps!</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -1358,6 +1339,14 @@ your Mac.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2019/09/27/yarn-install-on-mojave.html/">Yarn install on Mojave</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2019/09/27/installing-ffi-1.11.1-on-mojave.html/">Installing ffi 1.11.1 on Mojave</a>
+      </li>
+    
+      <li class="post">
         <a href="/2016/10/06/dont-blindly-follow-blog-posts.html/">Don&#8217;t blindly follow blog posts</a>
       </li>
     
@@ -1367,14 +1356,6 @@ your Mac.</p>
     
       <li class="post">
         <a href="/2016/08/29/Improve-bundler-cli.html/">Improve Bundler CLI</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2016/02/21/timing-attack-ruby-vulnerability.html/">Timing attack vulnerability in Rails</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2015/12/06/webpack-dev-server-and-rails.html/">Webpack dev server and Rails</a>
       </li>
     
   </ul>
@@ -1401,7 +1382,7 @@ your Mac.</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2016 - andHapp -
+  Copyright &copy; 2019 - andHapp -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
