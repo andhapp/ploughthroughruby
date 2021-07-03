@@ -1,0 +1,19 @@
+I"Û<p>Reading Open Source Code is probably the best way of learning new ways. Paperclip is an amazing file upload tool by brilliant guys at Thoughtbot. And yesterday, while going through their code I realised that <strong>rescue</strong> can be used as a statement modifier. For example, consider this block of code below:</p>
+
+<pre>
+  type = (self.path.match(/\.(\w+)$/)[1] rescue "octet-stream").downcase
+</pre>
+
+<p>What do you think happens here?
+Its quite simple really. If the first statement (the match bit) raises and exception the second statement is executed instead.</p>
+
+<p>Another way to write this would be:</p>
+
+<pre>
+  begin
+    type = (self.path.match(/\.(\w+)$/)[1]).downcase
+  rescue
+    "octet-stream"
+  end
+</pre>
+:ET

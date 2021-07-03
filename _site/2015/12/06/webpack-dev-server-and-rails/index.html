@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>
+    
+      Webpack dev server and Rails &middot; Plough => Ruby
+    
+  </title>
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+  <link rel="alternate" type="application/atom+xml" title="Plough => Ruby" href="/atom.xml">
+
+  <!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Webpack dev server and Rails" />
+<meta name="author" content="andhapp" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Webpack dev server is pretty awesome. In my last post, I set up React, ES6, Babel and Webpack and the only thing outstanding was the webpack dev server." />
+<meta property="og:description" content="Webpack dev server is pretty awesome. In my last post, I set up React, ES6, Babel and Webpack and the only thing outstanding was the webpack dev server." />
+<link rel="canonical" href="http://localhost:4000/2015/12/06/webpack-dev-server-and-rails/" />
+<meta property="og:url" content="http://localhost:4000/2015/12/06/webpack-dev-server-and-rails/" />
+<meta property="og:site_name" content="Plough =&gt; Ruby" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2015-12-06T00:00:00+00:00" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/2015/12/06/webpack-dev-server-and-rails/","@type":"BlogPosting","headline":"Webpack dev server and Rails","dateModified":"2015-12-06T00:00:00+00:00","datePublished":"2015-12-06T00:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2015/12/06/webpack-dev-server-and-rails/"},"author":{"@type":"Person","name":"andhapp"},"description":"Webpack dev server is pretty awesome. In my last post, I set up React, ES6, Babel and Webpack and the only thing outstanding was the webpack dev server.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+
+  <body>
+
+    <div class="container content">
+      <header class="masthead">
+        <h3 class="masthead-title">
+          <a href="/" title="Home">Plough => Ruby</a>
+          <small>Journey through ruby</small>
+        </h3>
+      </header>
+
+      <main>
+        <article class="post">
+  <h1 class="post-title">Webpack dev server and Rails</h1>
+  <time datetime="2015-12-06T00:00:00+00:00" class="post-date">06 Dec 2015</time>
+  <p><a href="https://webpack.github.io/docs/webpack-dev-server.html">Webpack dev server</a> is pretty awesome. In my <a href="http://ploughthroughruby.co.uk/2015/11/30/integrate-react-es6-webpack-babel-with-rails.html/">last post</a>, I set up React, ES6, Babel and Webpack and the only thing outstanding was the webpack dev server.</p>
+
+<p>With a webpack dev server running, developers can update their code and have the code changes show up straightaway in the browser, thanks to websockets. In order to implement it for a rails application, I did the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;% if Rails.env.development? %&gt;
+  &lt;%= javascript_include_tag 'http://localhost:9999/bundle.js', 'data-turbolinks-track' =&gt; true %&gt;
+&lt;% else %&gt;
+  &lt;%= javascript_include_tag 'bundle', 'data-turbolinks-track' =&gt; true %&gt;
+&lt;% end %&gt;
+</code></pre></div></div>
+
+<p>For development mode, I am downloading the <code class="highlighter-rouge">bundle.js</code> from <code class="highlighter-rouge">localhost:9999</code>. That’s the port where the webpack dev server is running at. For the production mode, the <code class="highlighter-rouge">bundle.js</code> is being read from the `app/assets/javascripts’ directory.</p>
+
+<p>I have the following in my <code class="highlighter-rouge">package.json</code> to to run the webpack dev server on port 9999:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "name": "ecommerce-checklist",
+  "version": "0.0.1",
+  "description": "Ecommerce checklist",
+  "scripts": {
+    "start": "webpack-dev-server --content-base ../app/assets/javascripts --port 9999",
+    "build": "./node_modules/webpack/bin/webpack.js --progress",
+    "build:prod": "./node_modules/webpack/bin/webpack.js -p --progress --config webpack.production.config.js"
+  },
+  "dependencies": {
+    "react": "^0.14.2",
+    "react-dom": "^0.14.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.0.20",
+    "babel-eslint": "^4.1.5",
+    "babel-loader": "^6.0.1",
+    "babel-preset-es2015": "^6.0.15",
+    "babel-preset-react": "^6.0.15",
+    "babel-preset-stage-0": "^6.0.15",
+    "eslint": "^1.8.0",
+    "eslint-loader": "^1.1.1",
+    "eslint-plugin-react": "^3.6.3",
+    "html-webpack-plugin": "^1.6.2",
+    "react-hot-loader": "^1.3.0",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.12.1"
+  }
+}
+</code></pre></div></div>
+
+<p>Note the bit under <code class="highlighter-rouge">scripts -&gt; start</code>.</p>
+
+<p>This completes the react and webapck setup for a rails application.</p>
+
+<p>One thing to bear in mind, is to create a production ready bundle.js before deploying this application, but that can be part of a capistrano deployment hook.</p>
+
+</article>
+
+
+<aside class="related">
+  <h3>Related posts</h3>
+  <ul class="related-posts">
+    
+      <li>
+        <a href="/2019/09/27/yarn-install-on-mojave/">
+          Yarn Install On Mojave
+          <small><time datetime="2019-09-27T00:00:00+01:00">27 Sep 2019</time></small>
+        </a>
+      </li>
+    
+      <li>
+        <a href="/2019/09/27/installing-ffi-1.11.1-on-mojave/">
+          Installing Ffi 1.11.1 On Mojave
+          <small><time datetime="2019-09-27T00:00:00+01:00">27 Sep 2019</time></small>
+        </a>
+      </li>
+    
+      <li>
+        <a href="/2016/10/06/dont-blindly-follow-blog-posts/">
+          Dont Blindly Follow Blog Posts
+          <small><time datetime="2016-10-06T00:00:00+01:00">06 Oct 2016</time></small>
+        </a>
+      </li>
+    
+  </ul>
+</aside>
+
+
+      </main>
+
+      <footer class="footer">
+        <small>
+          &copy; <time datetime="2021-07-03T06:18:22+01:00">2021</time>. All rights reserved.
+        </small>
+      </footer>
+    </div>
+
+    
+  </body>
+</html>

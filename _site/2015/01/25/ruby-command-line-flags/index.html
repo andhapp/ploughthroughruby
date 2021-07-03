@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>
+    
+      Ruby command line flag for debugging &middot; Plough => Ruby
+    
+  </title>
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+  <link rel="alternate" type="application/atom+xml" title="Plough => Ruby" href="/atom.xml">
+
+  <!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Ruby command line flag for debugging" />
+<meta name="author" content="andhapp" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Reading open source code is almost always a good idea. Open source code has the benefit of being reviewed by a lot of committed users and it just shows the good patterns of programming. For instance, I once looked at Arel, and the code demonstrates an exemplary use of visitor pattern. There isn’t much code there, yet it manages to achieve so much." />
+<meta property="og:description" content="Reading open source code is almost always a good idea. Open source code has the benefit of being reviewed by a lot of committed users and it just shows the good patterns of programming. For instance, I once looked at Arel, and the code demonstrates an exemplary use of visitor pattern. There isn’t much code there, yet it manages to achieve so much." />
+<link rel="canonical" href="http://localhost:4000/2015/01/25/ruby-command-line-flags/" />
+<meta property="og:url" content="http://localhost:4000/2015/01/25/ruby-command-line-flags/" />
+<meta property="og:site_name" content="Plough =&gt; Ruby" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2015-01-25T00:00:00+00:00" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/2015/01/25/ruby-command-line-flags/","@type":"BlogPosting","headline":"Ruby command line flag for debugging","dateModified":"2015-01-25T00:00:00+00:00","datePublished":"2015-01-25T00:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2015/01/25/ruby-command-line-flags/"},"author":{"@type":"Person","name":"andhapp"},"description":"Reading open source code is almost always a good idea. Open source code has the benefit of being reviewed by a lot of committed users and it just shows the good patterns of programming. For instance, I once looked at Arel, and the code demonstrates an exemplary use of visitor pattern. There isn’t much code there, yet it manages to achieve so much.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+
+  <body>
+
+    <div class="container content">
+      <header class="masthead">
+        <h3 class="masthead-title">
+          <a href="/" title="Home">Plough => Ruby</a>
+          <small>Journey through ruby</small>
+        </h3>
+      </header>
+
+      <main>
+        <article class="post">
+  <h1 class="post-title">Ruby command line flag for debugging</h1>
+  <time datetime="2015-01-25T00:00:00+00:00" class="post-date">25 Jan 2015</time>
+  <p>Reading open source code is almost always a good idea. Open source code
+has the benefit of being reviewed by a lot of committed users and it
+just shows the good patterns of programming. For instance, I once
+looked at Arel, and the code demonstrates an exemplary use of visitor
+pattern. There isn’t much code there, yet it manages to achieve so much.</p>
+
+<p>Recently, I was reading some open source code recently and spotted $DEBUG
+environment variable in quite a few places. At the time, I thought it
+must be something the author used to simplify debugging. But, no, it’s
+defined and used by ruby core. Ruby provides a debug flag (-d or –debug) 
+which when used would set the $DEBUG to true.</p>
+
+<p>Try running the following script in irb, pry or whatever else you use:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ruby -d -e 'if $DEBUG; puts "Debugging"; end'
+</code></pre></div></div>
+
+<p>and you should see something like this as output:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RUBY_GC_HEAP_FREE_SLOTS=200000 (default value: 4096)
+RUBY_GC_MALLOC_LIMIT=90000000 (default value: 16777216)
+Exception `LoadError' at /Users/andhapp/.rvm/rubies/ruby-2.2.0/lib/ruby/2.2.0/rubygems.rb:1222 - cannot load such file -- rubygems/defaults/operating_system
+Exception `LoadError' at /Users/andhapp/.rvm/rubies/ruby-2.2.0/lib/ruby/2.2.0/rubygems.rb:1231 - cannot load such file -- rubygems/defaults/ruby
+Debugging
+</code></pre></div></div>
+
+<p>Don’t worry about the two exceptions as in <a href="http://stackoverflow.com/a/1851232/20301">debug mode exceptions are displayed</a> even when they are rescued.</p>
+
+</article>
+
+
+<aside class="related">
+  <h3>Related posts</h3>
+  <ul class="related-posts">
+    
+      <li>
+        <a href="/2019/09/27/yarn-install-on-mojave/">
+          Yarn Install On Mojave
+          <small><time datetime="2019-09-27T00:00:00+01:00">27 Sep 2019</time></small>
+        </a>
+      </li>
+    
+      <li>
+        <a href="/2019/09/27/installing-ffi-1.11.1-on-mojave/">
+          Installing Ffi 1.11.1 On Mojave
+          <small><time datetime="2019-09-27T00:00:00+01:00">27 Sep 2019</time></small>
+        </a>
+      </li>
+    
+      <li>
+        <a href="/2016/10/06/dont-blindly-follow-blog-posts/">
+          Dont Blindly Follow Blog Posts
+          <small><time datetime="2016-10-06T00:00:00+01:00">06 Oct 2016</time></small>
+        </a>
+      </li>
+    
+  </ul>
+</aside>
+
+
+      </main>
+
+      <footer class="footer">
+        <small>
+          &copy; <time datetime="2021-07-03T06:18:22+01:00">2021</time>. All rights reserved.
+        </small>
+      </footer>
+    </div>
+
+    
+  </body>
+</html>

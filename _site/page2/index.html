@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>
+    
+      Plough => Ruby &middot; Journey through ruby
+    
+  </title>
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+  <link rel="alternate" type="application/atom+xml" title="Plough => Ruby" href="/atom.xml">
+
+  <!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Home" />
+<meta name="author" content="andhapp" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Ruby / Rails programming language" />
+<meta property="og:description" content="Learning Ruby / Rails programming language" />
+<link rel="canonical" href="http://localhost:4000/page2/" />
+<meta property="og:url" content="http://localhost:4000/page2/" />
+<meta property="og:site_name" content="Plough =&gt; Ruby" />
+<link rel="prev" href="http://localhost:4000/" />
+<link rel="next" href="http://localhost:4000/page3" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/page2/","@type":"WebPage","headline":"Home","author":{"@type":"Person","name":"andhapp"},"description":"Learning Ruby / Rails programming language","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+
+  <body>
+
+    <div class="container content">
+      <header class="masthead">
+        <h3 class="masthead-title">
+          <a href="/" title="Home">Plough => Ruby</a>
+          <small>Journey through ruby</small>
+        </h3>
+      </header>
+
+      <main>
+        <div class="posts">
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2016/02/21/timing-attack-ruby-vulnerability/">
+        Timing Attack Ruby Vulnerability
+      </a>
+    </h1>
+
+    <time datetime="2016-02-21T00:00:00+00:00" class="post-date">21 Feb 2016</time>
+
+    
+<hr />
+<p>layout: post
+title: Timing attack vulnerability in Rails
+date_string: 21 February 2016
+—</p>
+
+<h3 id="disclaimer">Disclaimer</h3>
+
+<p>I am not a security expert and this post is my attempt to learn a bit more about web security.</p>
+
+<h3 id="why-now">Why now?</h3>
+
+<p>Well, I am signed up to Ruby on Rails security mailing list to make sure vulnerabilities don’t go unnoticed and all my projects are running patched versions. Usually I just read the emails and ensure to upgrade or patch the affected versions and this system has worked very smoothly, however, I have never been happy with this approach and when <a href="https://groups.google.com/forum/#!topic/rubyonrails-security/ANv0HDHEC3k">a timing attack vulnerability</a>was announced on 25th January 2016 (CVE-2015-7576), I decided to research and learn more about it.</p>
+
+<h3 id="what-is-a-timing-attack">What is a timing attack?</h3>
+
+<p>A timing attack allows an adversary to learn more about the system under attack by statistically analysing information based on different response times. Here are a few examples:</p>
+
+<ol>
+  <li>
+    <p>The size of response for a signed in user and a signed out user will be significantlly different, thus allowing the adversary to determine user’s current state.</p>
+  </li>
+  <li>
+    <p>A string comparison with no matching characters will be slightly faster than one with 2 matching characters.</p>
+  </li>
+</ol>
+
+<p>There are many more examples along the same lines. One thing worth mentioning is that it takes a lot more analysis and patience for a successful timing attack, but it’s not impossible.</p>
+
+<h3 id="how-can-we-fix-the-string-comparision-to-run-in-constant-time">How can we fix the string comparision to run in constant time?</h3>
+
+<p>Although, there are several ways to use the timing attack but in the interest of this article the scope is limited to secure string comparison in Ruby. There are two ways to do it:</p>
+
+<h4 id="activesupport">Activesupport</h4>
+
+<p>Activesupport provides a <code class="highlighter-rouge">secure_compare</code> method that can be used like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActiveSupport::SecurityUtils.secure_compare(a, b)
+</code></pre></div></div>
+
+<h4 id="dont-use-activesupport">Don’t use Activesupport</h4>
+
+<p>I took this implementation from <a href="https://goo.gl/nMFEqk">Time Trial - Racing Towards Practical Remote Timing Attacks</a> paper and looks similar to activesupport’s implementation.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+def secure_compare(a, b)
+	return false if a.empty? || b.empty? || a.bytesize != b.bytesize l = a.unpack "C#{a.bytesize}"
+	res = 0
+	b.each_byte { |byte| res |= byte ^ l.shift } 
+	res == 0
+end
+
+
+</code></pre></div></div>
+
+<h4 id="why-no-secure-compare-in-ruby">Why no secure compare in Ruby?</h4>
+
+<p>You may ask why does Ruby not have a secure compare as part of the core API? I have no idea, but, there has been movement on that front lately and you can follow that discussion in <a href="https://bugs.ruby-lang.org/issues/10098#change-56910">ruby’s bug discussion area</a>. It’s currently waiting for Matz approval.</p>
+
+<h3 id="research">Research</h3>
+
+<p>I don’t want to repeat the research that has been conducted by others, so here’s a review of things I researched and if you’re interested you should read these to gain more understanding.</p>
+
+<h4 id="tools">Tools</h4>
+
+<p>Whilst researching I came across the following tools to test for a timing attack. I’ve not tried them myself but give them a go:</p>
+
+<ul>
+  <li>https://github.com/dmayer/time_trial</li>
+  <li>https://github.com/ecbftw/nanown</li>
+  <li>https://github.com/aj-code/TimingIntrusionTool5000</li>
+</ul>
+
+<h4 id="papersarticles">Papers/Articles</h4>
+
+<ul>
+  <li>
+    <p><a href="https://codeseekah.com/2012/04/29/timing-attacks-in-web-applications/">Timing Attacks in Web Applications</a> - 
+Gives a very basic introduction to timing attack vulnerability.</p>
+  </li>
+  <li>
+    <p><a href="https://codahale.com/a-lesson-in-timing-attacks/">A Lesson In Timing Attacks (or, Don’t use MessageDigest.isEquals)</a> - A very detailed explanation with examples of the actual vulnerability with solutions to fix the issue.</p>
+  </li>
+  <li>
+    <p><a href="http://www.security-assessment.com/files/documents/presentations/TimingAttackPresentation2012.pdf">Login timing attacks for mischief and mayhem</a> - This is a presentation into the timing attacks but being a persentation with no audio it’s a bit hard to know the intention of the speaker, nonetheless, full of useful information.</p>
+  </li>
+  <li>
+    <p><a href="https://www.securitee.org/files/timing-attacks_ccs2015.pdf">The Clock is Still Ticking:
+Timing Attacks in the Modern Web</a> - Probably one of the best papers I read with practical examples of attacking popular sites like Facebook and LinkedIn to gain a lot more information 
+regarding site users.</p>
+  </li>
+  <li>
+    <p><a href="http://www.cs.rice.edu/~dwallach/pub/crosby-timing2009.pdf">Opportunities and Limits of Remote
+Timing Attacks</a> - This paper goes into the details of the actual statistical mesaurements required as part of the a successful timing attack. To be honest, I read the beginning
+and realised the Maths was too complicated for my simple brain.</p>
+  </li>
+  <li>
+    <p><a href="https://www.blackhat.com/docs/us-15/materials/us-15-Morgan-Web-Timing-Attacks-Made-Practical-wp.pdf">Web Timing Attacks Made Practical</a> - Again, very thought provoking yet a bit heavy on the statistical analysis which is an integral part of a timing attack.</p>
+  </li>
+  <li>
+    <p><a href="https://goo.gl/nMFEqk">Time Trial - Racing Towards Practical Remote Timing Attacks</a> - Very detailed and full of great insights. Here’s a <a href="https://www.youtube.com/watch?v=md6NEmq1n-A">companion presentation</a> on youtube.</p>
+  </li>
+</ul>
+
+<h4 id="books">Books</h4>
+
+<ul>
+  <li>The Tagled Web A Guide to Securing Modern Web Applications</li>
+  <li>The Web Application Hackers Handbook</li>
+</ul>
+
+<p>This research is not comprehensive and I hope its given you enough to carry on this journey by yourself.</p>
+
+<h3 id="update-17032016">Update (17.03.2016)</h3>
+
+<p>Good news! Just seen update on <a href="https://bugs.ruby-lang.org/issues/10098#change-57513">the ruby issue</a> and apparently OpenSSL provides a timing safe binary comparison method called
+<code class="highlighter-rouge">CRYPTO_memcmp</code> which is what will be used in ruby internally and exposed from it to be used by other libraries.</p>
+
+
+  </article>
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2015/12/06/webpack-dev-server-and-rails/">
+        Webpack dev server and Rails
+      </a>
+    </h1>
+
+    <time datetime="2015-12-06T00:00:00+00:00" class="post-date">06 Dec 2015</time>
+
+    <p><a href="https://webpack.github.io/docs/webpack-dev-server.html">Webpack dev server</a> is pretty awesome. In my <a href="http://ploughthroughruby.co.uk/2015/11/30/integrate-react-es6-webpack-babel-with-rails.html/">last post</a>, I set up React, ES6, Babel and Webpack and the only thing outstanding was the webpack dev server.</p>
+
+<p>With a webpack dev server running, developers can update their code and have the code changes show up straightaway in the browser, thanks to websockets. In order to implement it for a rails application, I did the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;% if Rails.env.development? %&gt;
+  &lt;%= javascript_include_tag 'http://localhost:9999/bundle.js', 'data-turbolinks-track' =&gt; true %&gt;
+&lt;% else %&gt;
+  &lt;%= javascript_include_tag 'bundle', 'data-turbolinks-track' =&gt; true %&gt;
+&lt;% end %&gt;
+</code></pre></div></div>
+
+<p>For development mode, I am downloading the <code class="highlighter-rouge">bundle.js</code> from <code class="highlighter-rouge">localhost:9999</code>. That’s the port where the webpack dev server is running at. For the production mode, the <code class="highlighter-rouge">bundle.js</code> is being read from the `app/assets/javascripts’ directory.</p>
+
+<p>I have the following in my <code class="highlighter-rouge">package.json</code> to to run the webpack dev server on port 9999:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "name": "ecommerce-checklist",
+  "version": "0.0.1",
+  "description": "Ecommerce checklist",
+  "scripts": {
+    "start": "webpack-dev-server --content-base ../app/assets/javascripts --port 9999",
+    "build": "./node_modules/webpack/bin/webpack.js --progress",
+    "build:prod": "./node_modules/webpack/bin/webpack.js -p --progress --config webpack.production.config.js"
+  },
+  "dependencies": {
+    "react": "^0.14.2",
+    "react-dom": "^0.14.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.0.20",
+    "babel-eslint": "^4.1.5",
+    "babel-loader": "^6.0.1",
+    "babel-preset-es2015": "^6.0.15",
+    "babel-preset-react": "^6.0.15",
+    "babel-preset-stage-0": "^6.0.15",
+    "eslint": "^1.8.0",
+    "eslint-loader": "^1.1.1",
+    "eslint-plugin-react": "^3.6.3",
+    "html-webpack-plugin": "^1.6.2",
+    "react-hot-loader": "^1.3.0",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.12.1"
+  }
+}
+</code></pre></div></div>
+
+<p>Note the bit under <code class="highlighter-rouge">scripts -&gt; start</code>.</p>
+
+<p>This completes the react and webapck setup for a rails application.</p>
+
+<p>One thing to bear in mind, is to create a production ready bundle.js before deploying this application, but that can be part of a capistrano deployment hook.</p>
+
+  </article>
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2015/11/30/integrate-react-es6-webpack-babel-with-rails/">
+        Integrate React, ES6, Webpack and Babel with Rails
+      </a>
+    </h1>
+
+    <time datetime="2015-11-30T00:00:00+00:00" class="post-date">30 Nov 2015</time>
+
+    <h3 id="roll-your-own">Roll your own</h3>
+
+<p>If you have got two projects using the same functionality, then write a <strong>Rubygem</strong> to promote code reuse and modularity. Writing a gem is not a new thing. In fact, there are 6,710,940,000 gems and counting, as per the <a href="https://rubygems.org/">rubygems homepage</a>.</p>
+
+<p>Years ago Jamis Buck said in one of his blogs that if you don’t understand the inner workings of a gem, don’t use it as a dependency. Very fair comment indeed! I’m guilty of using the gems without really knowing their inner workings. To be honest, as a modern day programmer with a constant client expectation to deliver solutions, it’s okay to take your eyes of the ball.</p>
+
+<p>However, I decided to make amendments when it came to integrating a react app into rails. I wanted to learn and fix the issues that comes with integrating and therefore, decided to start it from scratch. If you wish to use, there are a couple of nice integrate react with rails gems out there, namely, <a href="https://github.com/shakacode/react_on_rails">react_on_rails</a> and <a href="https://github.com/reactjs/react-rails">react-rails</a>.</p>
+
+<h3 id="what-are-we-going-to-do">What are we going to do</h3>
+
+<p>Recently, I have crossed over to the Javascript world and been doing a lot of React, ES6 (with babel) and webpack and I wanted to use the same ideas in a Rails project.</p>
+
+<p>There are a few things to keep in mind:</p>
+
+<ol>
+  <li>A react component will serve as the client talking to the rails as a backend.</li>
+  <li>The rails will be used a backend.</li>
+  <li>It’s not an isomorphic application meaning there will be no server-side rendering of react components.</li>
+  <li>It should play nicely with rails asset pipeline.</li>
+</ol>
+
+<p>As part of this article, we are going to set-up a react app in both development and production-mode that will play nicely with a rails app.</p>
+
+<h3 id="setting-up-a-rails-app">Setting up a rails app</h3>
+
+<p>As a seasoned rails developer, I expect you guys to know how to do this.</p>
+
+<h3 id="setting-up-a-react-app">Setting up a react app</h3>
+
+<ul>
+  <li>Create a directory called <code class="highlighter-rouge">client</code> at the same level as the <code class="highlighter-rouge">app</code>.</li>
+  <li>Create a file called <code class="highlighter-rouge">package.json</code> in the <code class="highlighter-rouge">client</code> directory. Package.json is to npm what Gemfile is to Bundler. Copy the following contents into the client/package.json. Most of it is pretty self-explanatory except the scripts section. Npm allows you to create these tasks inside the scripts section runnable from the command line via <code class="highlighter-rouge">npm run</code> command. Under <code class="highlighter-rouge">scripts</code>, <code class="highlighter-rouge">start</code> starts a webpack dev server useful for reloading the app whilst working in development. <code class="highlighter-rouge">build</code> is for building the app locally and uses the default webpack config and finally, <code class="highlighter-rouge">build:prod</code> builds the final distributable js file using webpack’s production config.</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "name": "react-app",
+  "version": "0.0.1",
+  "description": "React App",
+  "scripts": {
+    "start": "webpack-dev-server --content-base dist/ --port 9999",
+    "build": "./node_modules/webpack/bin/webpack.js --progress",
+    "build:prod": "./node_modules/webpack/bin/webpack.js -p --progress --config webpack.production.config.js"
+  },
+  "dependencies": {
+    "react": "^0.14.2",
+    "react-dom": "^0.14.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.0.20",
+    "babel-eslint": "^4.1.5",
+    "babel-loader": "^6.0.1",
+    "babel-preset-es2015": "^6.0.15",
+    "babel-preset-react": "^6.0.15",
+    "babel-preset-stage-0": "^6.0.15",
+    "eslint": "^1.8.0",
+    "eslint-loader": "^1.1.1",
+    "eslint-plugin-react": "^3.6.3",
+    "html-webpack-plugin": "^1.6.2",
+    "react-hot-loader": "^1.3.0",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.12.1"
+  }
+}
+</code></pre></div></div>
+
+<ul>
+  <li>Create <code class="highlighter-rouge">webpack.base.config.js</code> in the <code class="highlighter-rouge">client</code> directory with the following contents:*</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var webpack = require('webpack');
+
+module.exports = {
+    entry: './src/js/app.js',
+    output: {
+        path: '../app/assets/javascripts/',
+        filename: "bundle.js"
+    },
+    module: {
+        preLoaders: [
+            {
+                test: /(\.js$)/,
+                exclude: /node_modules/,
+                loader: "eslint-loader"
+            }
+        ],
+        loaders: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: "babel-loader",
+                query: {
+                   presets: [ "react", "es2015", "stage-0" ]
+                }
+            }
+        ]
+    },
+    eslint: {
+        configFile: '.eslintrc'
+    },
+    plugins: [
+        new webpack.NoErrorsPlugin()
+    ]
+}
+
+</code></pre></div></div>
+
+<ul>
+  <li>Create <code class="highlighter-rouge">webpack.config.js</code>  in the <code class="highlighter-rouge">client</code> directory with the following contents. This is the default config used by webpack.</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var webpack = require('webpack'),
+    config = require('./webpack.base.config.js');
+
+config.entry = [
+    'webpack-dev-server/client?http://0.0.0.0:9999',
+    config.entry
+];
+
+config.output = {
+    path: config.output.path,
+    filename: config.output.filename
+};
+
+module.exports = config;
+
+</code></pre></div></div>
+
+<ul>
+  <li>Finally, create <code class="highlighter-rouge">webpack.production.config.js</code>  in the <code class="highlighter-rouge">client</code> directory with the following contents. This is mainly used for creating a production ready distributable bundle. It is invoked with a <code class="highlighter-rouge">-p</code> option at the command line to trigger automatic minification.</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var webpack = require('webpack'),
+    config = require('./webpack.base.config.js');
+
+config.entry = [
+    config.entry
+];
+
+config.output = {
+	path: config.output.path,
+    filename: config.output.filename
+};
+
+module.exports = config;
+
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>Create a directory called <code class="highlighter-rouge">src/js</code> in the <code class="highlighter-rouge">client</code> directory.</p>
+  </li>
+  <li>
+    <p>In the <code class="highlighter-rouge">src/js</code> directory, create a file called <code class="highlighter-rouge">app.js</code>. This is the entry file for webpack. Entry file is the file webpack uses to workout all the other dependencies that it needs to bundle up in the final distributable file.</p>
+  </li>
+  <li>
+    <p>The <code class="highlighter-rouge">app.js</code> file should have the following contents. This is the entry point for the app. Here it’s rendering the react app in a dom node with the id <code class="highlighter-rouge">react-app</code>. Make sure a dom node with the same id exists in the layout file of your rails app, otherwise, react will have no place to mount the app.</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './components/App.react'
+
+ReactDOM.render(
+    &lt;App /&gt;,
+    document.getElementById('react-app')
+);
+</code></pre></div></div>
+
+<ul>
+  <li>One last thing, create the following directory, src/js/components and in there create a root react component called App.react.js with the following contents. As you can see, the <code class="highlighter-rouge">App</code> is written in ES6 classes and takes advantage of the modular dependency provided by ES6 out of the box.</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import React, { Component, PropTypes } from 'react'
+
+class App extends Component {
+    render() {
+        return (
+            &lt;div&gt;
+                &lt;h1&gt;React App&lt;/h1&gt;
+            &lt;/div&gt;
+        );
+    }
+}
+
+export default App
+
+</code></pre></div></div>
+
+<h3 id="workflow">Workflow</h3>
+
+<ul>
+  <li>Open a terminal window and navigate to the client directory that we created above.</li>
+  <li>Run <code class="highlighter-rouge">npm run build</code>. This will create a bundle.js (development version) and to <code class="highlighter-rouge">app/assets/javascripts</code> directory.</li>
+  <li>Make sure to refer to it from the layout file. I added it to the <code class="highlighter-rouge">config/initializers/assets.rb</code> as a precompiled file:</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Rails.application.config.assets.precompile += %w( bundle.js )
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>Added it at the bottom of the layout file with a script tag to ensure the DOM node that react app depends upon is there before react’s mounting kicks in.</p>
+  </li>
+  <li>
+    <p>Opened the rails root page in a browser to check the react app is being mounted correctly and <code class="highlighter-rouge">React App</code> (the contents of the App.react.js component) is being rendered on the page.</p>
+  </li>
+</ul>
+
+<h3 id="phew-further-investigation-things">Phew, further investigation things!</h3>
+
+<ul>
+  <li>Firstly, you will see there is an error in the dev tools. The app still works fine. This means the at the time of the mount react didn’t find the DOM node which seems bizzare because it works fine. I noticed removing the line of code that brings in <code class="highlighter-rouge">application.js</code> in your rails layout file fixes this issue.</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Uncaught Error: Invariant Violation: _registerComponent(...): Target container is not a DOM element.
+</code></pre></div></div>
+
+<ul>
+  <li>You will also notice a lot of sock.js errors in the dev tools. This is because the in the webpack development config we’ve set it up to communicate with the local webpack dev server and update any changes to the app via websocket. I haven’t quite worked out how the webpack-dev-server communication with this will work, so ignore those for now, or just build the bundle.js using webpack production config.</li>
+</ul>
+
+<p>And, that’s it!</p>
+
+<p><strong>Update: 06 December 2015</strong></p>
+
+<p>The following error</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Uncaught Error: Invariant Violation: _registerComponent(...): Target container is not a DOM element.
+</code></pre></div></div>
+
+<p>is my fault. In my <code class="highlighter-rouge">app/assets/javascripts/application.js</code>, I had the line to include the bundle.js file and since this file is brought into the layout in the head section - when the DOM node that react app needs is not ready - it throws an error. We use <code class="highlighter-rouge">bundle.js</code> as a precompiled asset, so we don’t need to bring it in as part of <code class="highlighter-rouge">appication.js</code>. There’s an easy fix in Sprockets for it. If you would like to ignore a file in your directory you use the <code class="highlighter-rouge">stub</code> call. So, my <code class="highlighter-rouge">application.js</code> file now looks like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// This is a manifest file that'll be compiled into application.js, which will include all the files
+// listed below.
+//
+// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, vendor/assets/javascripts,
+// or any plugin's vendor/assets/javascripts directory can be referenced here using a relative path.
+//
+// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
+// compiled file.
+//
+// Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
+// about supported directives.
+//
+//= require jquery
+//= require jquery_ujs
+//= require turbolinks
+//= require_tree .
+//= stub bundle
+</code></pre></div></div>
+
+  </article>
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2015/10/04/rebooting-an-old-gem/">
+        Rebooting an old gem
+      </a>
+    </h1>
+
+    <time datetime="2015-10-04T00:00:00+01:00" class="post-date">04 Oct 2015</time>
+
+    <p>Novelty of writing a gem has worn off. Back in the days when Rails had
+just come out, writing a gem (or a plugin) was an achievement in itself.</p>
+
+<p>What has a gem got to do with Rails? You write ruby gems and rails is
+just another gem, no?</p>
+
+<p>Correct!</p>
+
+<p>It has nothing to do with Rails but my Ruby adventure began with Rails
+and I for one give the credit where it’s due, without a shadow of doubt.</p>
+
+<h4 id="history">History</h4>
+
+<p>Anyways, around 4 years ago, I created a gem called <a href="https://github.com/andhapp/is_bot">is_bot</a>. It offers some spam protection for web forms. I can’t even remember the project I used it on back then.
+However, recently we’ve been marketing <a href="https://www.suggestion.io/">Suggestion.io</a> and encountered a lot of spam sign ups and decided to fix the issue.</p>
+
+<h4 id="why-not-just-use-a-captcha">Why not just use a captcha?</h4>
+
+<p>I hate asking prospective clients to fill in yet another field. You want
+to make it easier not difficult to sign up. is_bot is different. It just
+adds a invisible text field making it hidden from the actual users. Time
+to get one back on the damn bots!</p>
+
+<h4 id="why-reboot-why-not-use-a-rails-4-gem">Why reboot? Why not use a Rails 4 gem?</h4>
+
+<p>I looked at few existing gems but none worked nicely. It was time to
+reboot is_bot. Back then it was written for Rails 3 so had to upgrade it
+for Rails 4 APIs which was a bit of a pain since it’s hard to find what
+changed from Rails 3 to Rails 4, easily. Reading through Rails source
+code and looking at some of the other gems got us through.</p>
+
+<h4 id="technology-is-flying">Technology is flying…</h4>
+
+<p>I also took this opportunity to change a few more things…I say a few,
+but so much has changed, hasn’t it?</p>
+
+<ul>
+  <li>Replaced Jeweler with Bundler as a gem to manage my ruby gem. Just
+find it easier to use.</li>
+  <li>Started using semantic versioning. Makes perfect sense for open source project.</li>
+  <li>Upgraded to latest RSpec.</li>
+  <li>Replaced <code class="highlighter-rouge">.rvmrc</code> to <code class="highlighter-rouge">.ruby-gemset</code> and <code class="highlighter-rouge">.ruby-version</code>.</li>
+</ul>
+
+<p>It was a bit of a work, but in the end all the efforts paid off.</p>
+
+  </article>
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2015/03/01/removing-a-method-in-ruby/">
+        Removing a method in Ruby
+      </a>
+    </h1>
+
+    <time datetime="2015-03-01T00:00:00+00:00" class="post-date">01 Mar 2015</time>
+
+    <p>There are several ways of adding a method to a ruby class (or instance),
+for example, define_method, method_missing, or by just opening up the
+class itself.</p>
+
+<p><em>However, can we remove the methods from a Ruby class?</em></p>
+
+<p>I encountered two ways of removing methods from a class:</p>
+
+<ul>
+  <li>
+    <p><a href="http://ruby-doc.org//core-2.2.0/Module.html#method-i-remove_method">remove_method</a></p>
+  </li>
+  <li>
+    <p><a href="http://ruby-doc.org//core-2.2.0/Module.html#method-i-undef_method">undef_method</a></p>
+  </li>
+</ul>
+
+<p>There are subtle differences between the two. The former removes the
+method from the current class, where as the latter, stops responding to
+the methods in the current class.</p>
+
+<p>Let’s look at an example for the same. Imagine we have a parent class,
+Appliance (a.k.a Kitchen Appliance), and child class, Can opener. Here
+are the definitions for the two classes:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Appliance
+  def name
+   puts "I'm a kitchen appliance"
+  end
+end
+
+class CanOpener &lt; Appliance
+  def name
+    puts "I'm a can opener"
+  end
+end
+
+</code></pre></div></div>
+
+<p>Now, let’s try <code class="highlighter-rouge">remove_method</code> and see what happens.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>can_opener = CanOpener.new
+can_opener.name
+
+class CanOpener
+  remove_method :name
+end
+
+can_opener.name
+puts "Can Opener has a name? #{can_opener.respond_to?(:name)}"   
+</code></pre></div></div>
+
+<p>This will produce the following output:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I'm a can opener
+I'm a kitchen appliance
+Can Opener has a name? true
+</code></pre></div></div>
+
+<p>As soon as you remove a method from a class it treats the method as
+undefined and goes up the ancestor chain to look for an implementation, 
+which it finds in the parent class. Since, there’s an implementation 
+<code class="highlighter-rouge">respond_to</code> returns true.</p>
+
+<p>However, <code class="highlighter-rouge">undef_method</code> works slightly differently and let’s see how:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Appliance
+  def name
+   puts "I'm a kitchen appliance"
+  end
+end
+
+class CanOpener &lt; Appliance
+  def name
+    puts "I'm a can opener"
+  end
+end
+
+can_opener = CanOpener.new
+can_opener.name
+
+class CanOpener
+  undef_method :name
+end
+ 
+puts "Can Opener has a name? #{can_opener.respond_to?(:name)}"
+can_opener.name
+</code></pre></div></div>
+
+<p>This will produce the following output:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I'm a can opener
+Can Opener has a name? true
+/tmp/execpad-f7201e261f52/source-f7201e261f52:21:in `&lt;main&gt;': undefined method `name' for #&lt;CanOpener:0x41017dcc&gt; (NoMethodError)
+</code></pre></div></div>
+
+<p>Unlike <code class="highlighter-rouge">remove_method</code>, <code class="highlighter-rouge">undef_method</code> stops responding to the method
+and doesn’t travel up the ancestor chain. It totally disregards the
+method implementation in the parent class.</p>
+
+<p>Quite interesting, however, I’ve never seen it used in any of the
+production code before, so, hopefully, I will find a good use case for
+it soon.</p>
+
+
+  </article>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="/page3">Older</a>
+  
+  
+    <a class="pagination-item newer" href="/">Newer</a>
+  
+</div>
+
+      </main>
+
+      <footer class="footer">
+        <small>
+          &copy; <time datetime="2021-07-03T06:18:22+01:00">2021</time>. All rights reserved.
+        </small>
+      </footer>
+    </div>
+
+    
+  </body>
+</html>

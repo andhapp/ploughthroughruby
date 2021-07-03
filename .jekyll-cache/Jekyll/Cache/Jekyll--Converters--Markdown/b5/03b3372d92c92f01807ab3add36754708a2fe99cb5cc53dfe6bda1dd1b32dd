@@ -1,0 +1,20 @@
+I"!<p>Right, so this is a tad confusing and the reason I am explaining is to ensure that I understand it properly.</p>
+
+<p><strong>instance_eval</strong> - It creates singleton methods on the object it is invoked on. If it is invoked on a Class object then these methods become singleton methods of the class. Some people would call them <del datetime="2009-09-30T19:13:53+00:00">“class methods”</del> but these are simply methods in an object’s singleton class. Here’s the code:</p>
+
+<pre>
+SomeObject.instance_eval (def singleton_method; "singleton_method";end)
+</pre>
+
+<p><strong>class_eval</strong> - It creates an instance method on the object. Simple there is nothing confusing about this. Here’s an example:</p>
+
+<pre>
+SomeObject.class_eval(def instance_method;"instance_method";end)
+</pre>
+
+<p>Now, define method when used inside either class_eval or instance_eval s immune to the usual behaviour.</p>
+
+<p>Why, you may ask?</p>
+
+<p>Because the documentation says so. As per the documentation “define method - Defines an instance method in the receiver”. Therefore, it does not matter if you use define_method inside class_eval or instance_eval it would always create an instance method. Now, the question to ask is - “Is there no way to define a singleton method using defne_method?”. Well, I still need to investigate that. It would probably be in an update to this post. Hope it all makes sense. Ruby metaprogramming is awesome only if you know what you are doing and to get to that stage one needs to spend countless hours metaprogramming.</p>
+:ET

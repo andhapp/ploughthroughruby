@@ -1,0 +1,6 @@
+I"g<p>Reading open source code is almost always a good idea. Open source code
+has the benefit of being reviewed by a lot of committed users and it
+just shows the good patterns of programming. For instance, I once
+looked at Arel, and the code demonstrates an exemplary use of visitor
+pattern. There isn’t much code there, yet it manages to achieve so much.</p>
+:ET

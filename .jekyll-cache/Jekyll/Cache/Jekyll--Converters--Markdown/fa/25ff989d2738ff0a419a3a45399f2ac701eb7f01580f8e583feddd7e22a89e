@@ -1,0 +1,5 @@
+I"�<p>OpenStruct is a handy class in ruby’s stdlib. I’ve used it in the past
+for creating test data, instead of using factory girl. It’s fast, and
+the fact that it behaves like a Hash, makes it super easy for stubbing
+object behaviours.</p>
+:ET

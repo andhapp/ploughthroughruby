@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>
+    
+      Plough => Ruby &middot; Journey through ruby
+    
+  </title>
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+  <link rel="alternate" type="application/atom+xml" title="Plough => Ruby" href="/atom.xml">
+
+  <!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Home" />
+<meta name="author" content="andhapp" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Ruby / Rails programming language" />
+<meta property="og:description" content="Learning Ruby / Rails programming language" />
+<link rel="canonical" href="http://localhost:4000/page8/" />
+<meta property="og:url" content="http://localhost:4000/page8/" />
+<meta property="og:site_name" content="Plough =&gt; Ruby" />
+<link rel="prev" href="http://localhost:4000/page7" />
+<link rel="next" href="http://localhost:4000/page9" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/page8/","@type":"WebPage","headline":"Home","author":{"@type":"Person","name":"andhapp"},"description":"Learning Ruby / Rails programming language","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+
+  <body>
+
+    <div class="container content">
+      <header class="masthead">
+        <h3 class="masthead-title">
+          <a href="/" title="Home">Plough => Ruby</a>
+          <small>Journey through ruby</small>
+        </h3>
+      </header>
+
+      <main>
+        <div class="posts">
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2009/12/20/proc-proc-blocks/">
+        Proc, proc, blocks
+      </a>
+    </h1>
+
+    <time datetime="2009-12-20T00:00:00+00:00" class="post-date">20 Dec 2009</time>
+
+    <p>I know you must be thinking proc and Proc is the same thing and I must have mistyped. But, proc and Proc are different things. Blocks is a beautiful concept and you can achieve so much by using blocks carefully that it is unbelievable. I created a simple DSL using blocks and Faker gem to spit out XML used for testing purposes. I mean it took me few hours to do the first version up and running in Sinatra. Amazing.</p>
+
+<p>So, block is nothing more than bits of code within curly brackets. The concept of blocks is used excessively throughout Ruby in iterators like inject, select, map, each and so on and so forth. For example:</p>
+
+<pre>
+def example_from_a_block
+  puts "Should call a block"
+  yield 
+  puts "Yes, I did!"
+end
+</pre>
+
+<p>and invoke it like:</p>
+
+<pre>
+example_from_a_block { puts "in a block" }
+</pre>
+
+<p>But blocks do have problems. Not exactly problems, but yeah shortcoming for sure. They are not objects. So…what difference does it make if they are not objects. I don’t care man. I like them. Exactly you like blocks but you would love blocks wrapped as objects. Yes, these things do exist. They are called proc or lambda. So what is a proc then? It is basically a block but with object like features, I mean you can manipulate them and pass them around like regular objects. Cool.</p>
+
+<p>To create a proc, just do:</p>
+
+<pre>
+p = Proc.new { puts "I am a proc" }
+</pre>
+
+<p>It is absolutely essential to pass a block to a proc. “p” is basically an instance of the class <a href="http://ruby-doc.org/core/classes/Proc.html">Proc</a>. Run this in you irb session and confim that it is indeed an object with an object_id:</p>
+
+<pre>
+p.object_id
+</pre>
+
+<p>Hmm…two down one to go. What exactly is a proc then. proc is just a simple global method, if you will, of the Kernel module. So, you can just invoke it like this:</p>
+
+<pre>
+kernels_proc_variable = proc {|a| a + 10 }
+</pre>
+
+<p>Now, proc behaves differently in Ruby 1.8 and Ruby 1.9. In 1.8, it returns a lambda where as in 1.9 it is a synonym for Proc.new. So, please be aware of this simple yet pivotal difference. Pivotal because lambda’s and proc’s are slightly different, although on the surface they look the same. They are both instances of Proc so let us just say they are siblings. There is so much more you can do with Procs and this post has just touched the surface of it. I will discuss lambda and closures in the coming posts and then compare them.</p>
+
+  </article>
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2009/11/19/ruby-streams-stdin-stdout-and-stderr/">
+        Ruby streams - $stdin, $stdout and $stderr
+      </a>
+    </h1>
+
+    <time datetime="2009-11-19T00:00:00+00:00" class="post-date">19 Nov 2009</time>
+
+    <p>It is obvious from the subject that I am going to talk about the streams $stdin, $stdout and $stderr but it would be a fun ride with lots of examples and good explanations. However, there is another set of global variables called STDOUT, STDIN, STDERR. In addition to STDIN, there is ARGF and DATA for reading data in so you know you can research into these things.</p>
+
+<p>Any variable in ruby that starts with a $ sign is a global variable. You do not need to define it. It is given to you. Great!. Now, every ruby process on a UNIX (POSIX) system gives you three file descriptors stdin(fd0), stdout(fd1) and stderr(fd2). To generalise, every process is presumed to have three file descriptors, namely, standard output, standard input and standard error to communicate to the underlying OS. Since, ruby runs as a process it would also get these three file descriptors. So, $stderr, $stdout and $stdin are basically wrappers to those file descriptors and assist us in talking to the OS. Trivial operations like print this out on the console actually employs $stdout for outputting.</p>
+
+<p>What kind of objects are they? Let us go to good old irb and run some code. Run the code below:</p>
+
+<pre>
+$stdout.kind_of?(IO)
+</pre>
+
+<p>This would give you “true” which bascially means that $stdout is an IO object. <a href="http://ruby-doc.org/core/classes/IO.html#M002278">IO</a> is the main input output library in ruby. Do check out the rdoc for other exciting things you can do with it. Ok. Good that we have these file descriptors so what. I do not need to know how “puts” outputs stuff to the console. I just use it. Well, that is good but one should definitely have a good understanding of controlling where the output goes otherwise when someone asks you - <strong>“How do I redirect my output to a file instead of console?”</strong>, you would just sit there with no answer. So, let us try and find an answer to the same question so that you do not look like a fool.</p>
+
+<p>As it happens, we can actually redefine the $stdout. The following code would do exactly that when run in irb:</p>
+<pre>
+$stdout = File.open("test.log", "w")
+</pre>
+
+<p>It basically tells $stdout to spit everything out to a file called “test.log”. That’s it. Its done. Now, when you send a mesage to puts method it would use the newly defined $stdout and do the needful. Run this code in the same irb session as above and and see what happens:</p>
+
+<pre>
+puts "I am going to the file. It is more fun than printing on the cosole."
+</pre>
+
+<p>and you would not see this printed out in the console. Go and check the file test.log but to your surprise it would not be there. So, where the heck is it? Well, what happens is it is stored in a buffer and not written to the file until the buffer gets full (I am not entirely sure about this but I am guessing that would be the case). Now, if you terminate your irb session and check test.log you would find the entire ouput there but I do not want to end the session. I want to do the work and at the same time check the output. Well, not to worry the flush method does exactly that. Run this after every puts or print:</p>
+
+<pre>
+$stdout.flush
+</pre>
+
+<p>Voila! This clears the buffer and writes everthing to the file. So, there you are now you know how to redirect the output to a file. But hang on what if I want to go back to the console in the same session. Is that possible? Ofcourse, that is possible. Remember I told you about STDOUT at the beginning well that comes to the rescue. STDOUT and $stdout point to the same IO object. You can check that by running the following code in irb:</p>
+
+<pre>
+$stdout.equal?(STDOUT) 
+</pre>
+
+<p>and this gives you true, which proves my point. So, in order to go back to the original state you can just do this in order to redefine $stdout:</p>
+
+<pre>
+$stdout = STDOUT
+</pre>
+
+<p>Simple! Now, when you do:</p>
+
+<pre>
+puts "Oh Em Gee, I am back on the console."
+</pre>
+
+<p>You will see it straight away on your console. BTW, instead of $stdout you can redefine STDOUT and redirect the output to a file but puts or print would not be bothered about it as they use $stdout which is still pointing to the console.</p>
+
+<p>Now comes the most interesting bit of the whole post. Are system calles affected by the redefining of $stdout. You know system calls. Well, in ruby you can use a system method to call the underlying OS functions, for example:</p>
+
+<pre>
+system('ls -l')
+system('echo Wheeee')
+</pre>
+
+<p>So, the question is what happens when you redefine the $stdout does that affect the output of these system calls. And the answer is Nope, it does not. The child processes like system would still use the existing output channel that the ruby process had in the beginning. Redefining, $stdout would not change the file descriptor. The file descriptors are still there and when we redefine $stdout we just stop using them. But the native calls to the OS will still use the console for output.</p>
+
+<p>That was a long post! I hope now you are better equipped with the IO knowledge and how it all works in ruby.</p>
+
+  </article>
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2009/11/04/serendipity/">
+        Serendipity
+      </a>
+    </h1>
+
+    <time datetime="2009-11-04T00:00:00+00:00" class="post-date">04 Nov 2009</time>
+
+    <p>I accidently found a nifty way of calling <del datetime="2009-11-04T09:19:06+00:00">class</del> singleton methods. Imagine you have this code:</p>
+
+<pre>
+
+class FoundANewWay
+    def self.to_call_a_singleton_method
+        puts "It works!"
+    end
+end
+</pre>
+
+<p>and you can call it like this:</p>
+
+<pre>
+FoundANewWay.to_call_a_singleton_method
+
+or
+
+FoundANewWay::to_call_a_singleton_method
+</pre>
+
+<p>Cool!</p>
+
+  </article>
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2009/10/31/immediate-values/">
+        Immediate Values
+      </a>
+    </h1>
+
+    <time datetime="2009-10-31T00:00:00+00:00" class="post-date">31 Oct 2009</time>
+
+    <p>In a <a href="http://www.ploughthroughruby.co.uk/2009/08/is-variable-an-object/">previous post</a>, I have explained that variables are basically passed by values in ruby but since they have a reference to the original object any mutator methods can bascially modify the object itself. However, there are two exceptions to this; Fixnum and Symbol.</p>
+
+<p>Both, Fixnum and Symbol, store the values and have no reference to the object. This also applies that there are no mutator methods for Fixnum and Symbol and they are immutable. So, how can we actually prove this fact. Let us do a simple experiment and I think I might have done this before but I do not want you going back and forth between posts so let us just do it again. Run the code snippet and we are going through each step:</p>
+
+<pre>
+  fixnum_1 = 3
+  p fixnum_1.object_id
+  fixnum_2 = 3
+  p fixnum_2.object_id
+  str_1 = "3"
+  p str_1.object_id
+  str_2 = "3"
+  p str_2.object_id
+</pre>
+
+<p>You will see that both the fixnum variables have the same object_id where as with str variables they will be different. So, what does that mean? It simply means that two fixnums of same value always represent the same object instance, so instance variables for Fixnum with value 1 are shared across the system. The same is the case with Symbol.</p>
+
+<p>Ok. Fine. This makes perfect sense but why should I bother with all this explanation. Well, that is a million dollar question really and the answer to that is “You can’t define singleton methods on Fixnums and Symbols”. What? Why? I know this is confusing but when in doubt think of an example.</p>
+
+<p>We previously established that all the fixnum variables with same value are actually pointing to the same object instance. If let us say I want to define a singleton method on one then it would really define the singleton method on that object instance which means all the fixnum variables with same value would really share that new method you have added. Therefore, in order to cut that possibilty out one cannot define singleton methods on Fixnum, and Symbls.</p>
+
+<p>Update: I have just realised that true (TrueClass), false (FalseClass) and nil (NilClass) also store the references as immediate values. And, yes there is a TrueClass, FalseClass and NilClass and true, false and nil are singleton instances of these classes.</p>
+
+  </article>
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2009/10/31/class-names-are-constants/">
+        Class names are constants 
+      </a>
+    </h1>
+
+    <time datetime="2009-10-31T00:00:00+00:00" class="post-date">31 Oct 2009</time>
+
+    <p>Ruby is an object oriented programming. Let us look at a code sinpet:</p>
+
+<pre>
+ str =  String.new("ruby rocks")
+</pre>
+
+<p>So, we define a variable called “str”, which stores a pointer to the object created by sending “new” on “String”. Here, “String” receives the “new” message but for “String” to take any action when it receives “new” message it must have a reference to the object called String. Therefore, there must be a corresponding constant to every class in ruby. It can’t be a variable as it starts with an uppercase.</p>
+
+<p>Actually, that is exactly what happens. Every class in ruby has a global constant which stores a reference to the object and is used for method invocations. So, there are two things really one is the constant named String and the other is the object named String.</p>
+
+  </article>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="/page9">Older</a>
+  
+  
+    <a class="pagination-item newer" href="/page7">Newer</a>
+  
+</div>
+
+      </main>
+
+      <footer class="footer">
+        <small>
+          &copy; <time datetime="2021-07-03T06:18:22+01:00">2021</time>. All rights reserved.
+        </small>
+      </footer>
+    </div>
+
+    
+  </body>
+</html>

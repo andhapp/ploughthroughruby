@@ -1,0 +1,19 @@
+I"K<p>RSpec 3 has been full of some good stuff and I have full admiration for
+the people behind it. Even the upgrade process was well thought out
+keeping in mind the end users. As developers, we are used to handle poor
+upgrade process pretty well, but RSpec totally changed my opinion.</p>
+
+<p>Whilst <a href="https://github.com/andhapp/textrazor/pull/4">merging pull request for TextRazor</a>, I decided to upgrade the gem
+to RSpec3. I was meant to do that for sometime anyways, and the pull
+request opened up the perfect opportunity for it. I stumbled upon a very
+interesting new feature in RSpec3, called <a href="https://relishapp.com/rspec/rspec-mocks/v/3-0/docs/verifying-doubles/using-an-instance-double">verifying doubles</a>. This
+functionality makes <a href="https://github.com/xaviershay/rspec-fire">rspec-fire</a> totally obsolete. It verifies that any
+methods being stubbed would be present on the instance of the class
+being stubbed and also the number of argument the method accepts. This
+is pretty cool. I always used rspec-fire to make sure that my stubbed
+method existed on the class. In the light of these updates, I removed
+<a href="https://github.com/andhapp/textrazor/commit/48aeff496be89c7433dadfbbedd3e1d3e4375b64">rspec-fire as a dependency from TextRazor</a>. Makes it even more
+lightweight.</p>
+
+<p>Thanks again to RSpec team!</p>
+:ET

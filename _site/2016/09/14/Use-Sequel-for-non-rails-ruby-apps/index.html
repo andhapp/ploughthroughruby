@@ -1,0 +1,30 @@
+
+<hr />
+<p>layout: post
+title: Use Sequel for non-rails ruby apps
+date_string: 14 September 2016
+—</p>
+
+<p>I am writing a ruby script to retireve some data via HTTP call and then add it to the database.</p>
+
+<p>Now, I decided to use ActiveRecord as an ORM and wrote a <a href="https://github.com/andhapp/activerecord_sans_rails">gem</a> for the same.</p>
+
+<p>Nothing complicated. It’s just a Rakefile that provides popular activerecord rake tasks.</p>
+
+<p>But, then I stumbled across blog post on <a href="https://www.toptal.com/ruby/api-with-sinatra-and-sequel-ruby-tutorial">Sequel</a> and I feel
+Sequel is a better choice for an ORM for a non-rails app.</p>
+
+<p>Why?</p>
+
+<p>Because, Rails is opinionated.</p>
+
+<p>And it’s nuances works nice for a Rails app.</p>
+
+<p>Anything outside of the realms of a standard Rails app and all bets are off.</p>
+
+<p>It is like fitting a square peg in a round hole. It’s possible but you will have to shave off the extra bits.</p>
+
+<p>Sequel on the other hand seems like a better fit for a ruby script.</p>
+
+<p>Will post my experience with Sequel. It has ample documentation and the project was last updated on 16th September 2016.
+There are no outstanding pull requests or issues on github which implies the project is active and nicely looked after.</p>

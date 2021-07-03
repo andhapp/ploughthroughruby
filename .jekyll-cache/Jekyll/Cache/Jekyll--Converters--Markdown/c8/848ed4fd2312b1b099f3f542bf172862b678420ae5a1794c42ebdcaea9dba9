@@ -1,0 +1,23 @@
+I"{<p>OpenStruct is a handy class in ruby’s stdlib. I’ve used it in the past
+for creating test data, instead of using factory girl. It’s fast, and
+the fact that it behaves like a Hash, makes it super easy for stubbing
+object behaviours.</p>
+
+<p>The other day, I had this requirement to convert an open struct instance
+into a hash. I foolishly tried to_hash call, considering that it acts as
+a hash, so there must be a to_hash call on it. But, unfortunately, there
+isn’t any to_hash methods on OpenStruct. However, there are other ways
+to convert an open struct instance to a hash quite easily. Here’s how:</p>
+
+<h3 id="option-1">Option 1</h3>
+<pre>
+os = OpenStruct.new(:id =&gt; 12)
+os.marshal_dump # returns the hash {:id=&gt;12}
+</pre>
+
+<h3 id="option-2">Option 2</h3>
+<pre>
+os = OpenStruct.new(:id =&gt; 12)
+os.instance_variable_get(:@table) # returns the hash {:id=&gt;12}
+</pre>
+:ET

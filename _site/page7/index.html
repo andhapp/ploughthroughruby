@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>
+    
+      Plough => Ruby &middot; Journey through ruby
+    
+  </title>
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+  <link rel="alternate" type="application/atom+xml" title="Plough => Ruby" href="/atom.xml">
+
+  <!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Home" />
+<meta name="author" content="andhapp" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Ruby / Rails programming language" />
+<meta property="og:description" content="Learning Ruby / Rails programming language" />
+<link rel="canonical" href="http://localhost:4000/page7/" />
+<meta property="og:url" content="http://localhost:4000/page7/" />
+<meta property="og:site_name" content="Plough =&gt; Ruby" />
+<link rel="prev" href="http://localhost:4000/page6" />
+<link rel="next" href="http://localhost:4000/page8" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/page7/","@type":"WebPage","headline":"Home","author":{"@type":"Person","name":"andhapp"},"description":"Learning Ruby / Rails programming language","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+
+  <body>
+
+    <div class="container content">
+      <header class="masthead">
+        <h3 class="masthead-title">
+          <a href="/" title="Home">Plough => Ruby</a>
+          <small>Journey through ruby</small>
+        </h3>
+      </header>
+
+      <main>
+        <div class="posts">
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2011/01/17/ruby-hacking-guide/">
+        Ruby Hacking Guide
+      </a>
+    </h1>
+
+    <time datetime="2011-01-17T00:00:00+00:00" class="post-date">17 Jan 2011</time>
+
+    <p>I got hold of an out-of-date <a href="http://hawthorne-press.com/WebPage_RHG.html">Ruby Hacking Guide</a> and it looks very interesting. Therefore, in order to improve my understanding of Ruby internals, I have decided to spend time in reading it and the writing posts about it. The entire book can be downloaded in the form of HTML pages and might not make sense since some of it has been machine translated.</p>
+
+<p>I hope my efforts are useful for anyone willing to venture into Ruby Internals.</p>
+
+  </article>
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2011/01/03/method-default-arguments-and-passing-nil-value/">
+        Method default arguments and passing nil value
+      </a>
+    </h1>
+
+    <time datetime="2011-01-03T00:00:00+00:00" class="post-date">03 Jan 2011</time>
+
+    <p>This is something very trivial and I kind of observed it whilst programming couple of weeks ago. For example, you had a method like this:</p>
+
+<pre>
+  class SomeClass
+    def some_method(some_argument = '')
+      raise ArgumentError unless some_argument
+    end
+  end
+</pre>
+
+<p>Now, I was under the impression that if I passed in a nil into this method, for some reason some_argument will still have the default value(‘’) as opposed to the nil value passed in but default arguments come into play when no value is passed in for the method arguments. But I was passing in nil which is an instance of NilClass and therefore some_argument gets assigned the nil value and an exception is raised.</p>
+
+  </article>
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2011/01/03/convert-array-to-hash-mystery/">
+        Convert Array to Hash mystery
+      </a>
+    </h1>
+
+    <time datetime="2011-01-03T00:00:00+00:00" class="post-date">03 Jan 2011</time>
+
+    <p>It is always easy to find solutions on Google but the real fun is in finding out how a bit of code works. It just helps you understand much more about the language and how it behaves. Converting an array to hash is easy. Just use this piece of code that I found on google:</p>
+
+<pre>
+  some_array = [1,2,3]
+  some_hash = Hash[*(some_array.collect{|v| [v,v]}.flatten)] # yields {1=&gt;1, 2=&gt;2, 3=&gt;3}
+</pre>
+
+<p>Few people have asked the question behind this conversion and I just decided to break it apart and tackle it bit by bit. Our objective, again, is to convert an array to a hash. Hash’s ruby documenation tells us that a new Hash object can be created by using even number of arguments. Something similar to the following code:</p>
+
+<pre>
+  some_hash = Hash[1,1,2,2,3,3] # This creates a hash object similar to this {1=&gt;1, 2=&gt;2, 3=&gt;3}
+</pre>
+
+<p>All we need to do now is convert our some_array (defined in the first code snippet) and convert it into [1,1,2,2,3,3].</p>
+
+<p>It’s simple really. We take the some_array and convert it into an array’s or array like this:</p>
+
+<pre>
+  some_array = [1,2,3]
+  some_array.collect{|v| [v, v]} # will yield [[1,1], [2,2], [3,3]]
+</pre>
+
+<p>Now to convert it into [1,1,2,2,3,3] we just need to flatten this array of arrays like this:</p>
+
+<pre>
+  some_array = [1,2,3]
+  some_array.collect{|v| [v, v]}.flatten # will yield [1,1,2,2,3,3]
+</pre>
+
+<p>Now, all we need to do is use the splat (*) unary operator. The splat operator expands the supplied array into individual arguments which is what we need to convert array into a hash. You could also achieve the same with the following snippet:</p>
+
+<pre>
+  some_array = [1,2,3]
+  some_hash = Hash[*(some_array+some_array).sort] # yields {1=&gt;1, 2=&gt;2, 3=&gt;3}
+</pre>
+
+<p>I hope you can work that out yourself. I hope this little discussion helped you.</p>
+
+  </article>
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2010/07/06/paperclip-and-rescue/">
+        Paperclip and rescue
+      </a>
+    </h1>
+
+    <time datetime="2010-07-06T00:00:00+01:00" class="post-date">06 Jul 2010</time>
+
+    <p>Reading Open Source Code is probably the best way of learning new ways. Paperclip is an amazing file upload tool by brilliant guys at Thoughtbot. And yesterday, while going through their code I realised that <strong>rescue</strong> can be used as a statement modifier. For example, consider this block of code below:</p>
+
+<pre>
+  type = (self.path.match(/\.(\w+)$/)[1] rescue "octet-stream").downcase
+</pre>
+
+<p>What do you think happens here?
+Its quite simple really. If the first statement (the match bit) raises and exception the second statement is executed instead.</p>
+
+<p>Another way to write this would be:</p>
+
+<pre>
+  begin
+    type = (self.path.match(/\.(\w+)$/)[1]).downcase
+  rescue
+    "octet-stream"
+  end
+</pre>
+
+  </article>
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2010/02/22/install-pg-and-mysql-gems/">
+        Install pg and mysql gems
+      </a>
+    </h1>
+
+    <time datetime="2010-02-22T00:00:00+00:00" class="post-date">22 Feb 2010</time>
+
+    <p>This is not entirely realted to ruby but if you ever program with ruby you will find yourself using pg and mysql gems and the issue is how exactly do I install them. This mini-post (rather tumble) is just to make a note of this. Run the following in Teerminal.</p>
+
+<p>PostgreSql</p>
+
+<pre>
+  export PATH=/usr/local/pgsql/bin:${PATH}
+  gem install pg
+</pre>
+
+<p>MySql</p>
+
+<pre>
+  export PATH=/usr/local/mysql/bin:${PATH}
+  gem install mysql
+</pre>
+
+<p>Also, please note that you should have postgres and mysql installed on your machine.</p>
+
+  </article>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="/page8">Older</a>
+  
+  
+    <a class="pagination-item newer" href="/page6">Newer</a>
+  
+</div>
+
+      </main>
+
+      <footer class="footer">
+        <small>
+          &copy; <time datetime="2021-07-03T06:18:22+01:00">2021</time>. All rights reserved.
+        </small>
+      </footer>
+    </div>
+
+    
+  </body>
+</html>

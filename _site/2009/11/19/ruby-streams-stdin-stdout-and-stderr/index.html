@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>
+    
+      Ruby streams - $stdin, $stdout and $stderr &middot; Plough => Ruby
+    
+  </title>
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+  <link rel="alternate" type="application/atom+xml" title="Plough => Ruby" href="/atom.xml">
+
+  <!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Ruby streams - $stdin, $stdout and $stderr" />
+<meta name="author" content="andhapp" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="It is obvious from the subject that I am going to talk about the streams $stdin, $stdout and $stderr but it would be a fun ride with lots of examples and good explanations. However, there is another set of global variables called STDOUT, STDIN, STDERR. In addition to STDIN, there is ARGF and DATA for reading data in so you know you can research into these things. Any variable in ruby that starts with a $ sign is a global variable. You do not need to define it. It is given to you. Great!. Now, every ruby process on a UNIX (POSIX) system gives you three file descriptors stdin(fd0), stdout(fd1) and stderr(fd2). To generalise, every process is presumed to have three file descriptors, namely, standard output, standard input and standard error to communicate to the underlying OS. Since, ruby runs as a process it would also get these three file descriptors. So, $stderr, $stdout and $stdin are basically wrappers to those file descriptors and assist us in talking to the OS. Trivial operations like print this out on the console actually employs $stdout for outputting. What kind of objects are they? Let us go to good old irb and run some code. Run the code below: $stdout.kind_of?(IO) This would give you “true” which bascially means that $stdout is an IO object. IO is the main input output library in ruby. Do check out the rdoc for other exciting things you can do with it. Ok. Good that we have these file descriptors so what. I do not need to know how “puts” outputs stuff to the console. I just use it. Well, that is good but one should definitely have a good understanding of controlling where the output goes otherwise when someone asks you - “How do I redirect my output to a file instead of console?”, you would just sit there with no answer. So, let us try and find an answer to the same question so that you do not look like a fool. As it happens, we can actually redefine the $stdout. The following code would do exactly that when run in irb: $stdout = File.open(&quot;test.log&quot;, &quot;w&quot;) It basically tells $stdout to spit everything out to a file called “test.log”. That’s it. Its done. Now, when you send a mesage to puts method it would use the newly defined $stdout and do the needful. Run this code in the same irb session as above and and see what happens: puts &quot;I am going to the file. It is more fun than printing on the cosole.&quot; and you would not see this printed out in the console. Go and check the file test.log but to your surprise it would not be there. So, where the heck is it? Well, what happens is it is stored in a buffer and not written to the file until the buffer gets full (I am not entirely sure about this but I am guessing that would be the case). Now, if you terminate your irb session and check test.log you would find the entire ouput there but I do not want to end the session. I want to do the work and at the same time check the output. Well, not to worry the flush method does exactly that. Run this after every puts or print: $stdout.flush Voila! This clears the buffer and writes everthing to the file. So, there you are now you know how to redirect the output to a file. But hang on what if I want to go back to the console in the same session. Is that possible? Ofcourse, that is possible. Remember I told you about STDOUT at the beginning well that comes to the rescue. STDOUT and $stdout point to the same IO object. You can check that by running the following code in irb: $stdout.equal?(STDOUT) and this gives you true, which proves my point. So, in order to go back to the original state you can just do this in order to redefine $stdout: $stdout = STDOUT Simple! Now, when you do: puts &quot;Oh Em Gee, I am back on the console.&quot; You will see it straight away on your console. BTW, instead of $stdout you can redefine STDOUT and redirect the output to a file but puts or print would not be bothered about it as they use $stdout which is still pointing to the console. Now comes the most interesting bit of the whole post. Are system calles affected by the redefining of $stdout. You know system calls. Well, in ruby you can use a system method to call the underlying OS functions, for example: system(&#39;ls -l&#39;) system(&#39;echo Wheeee&#39;) So, the question is what happens when you redefine the $stdout does that affect the output of these system calls. And the answer is Nope, it does not. The child processes like system would still use the existing output channel that the ruby process had in the beginning. Redefining, $stdout would not change the file descriptor. The file descriptors are still there and when we redefine $stdout we just stop using them. But the native calls to the OS will still use the console for output. That was a long post! I hope now you are better equipped with the IO knowledge and how it all works in ruby." />
+<meta property="og:description" content="It is obvious from the subject that I am going to talk about the streams $stdin, $stdout and $stderr but it would be a fun ride with lots of examples and good explanations. However, there is another set of global variables called STDOUT, STDIN, STDERR. In addition to STDIN, there is ARGF and DATA for reading data in so you know you can research into these things. Any variable in ruby that starts with a $ sign is a global variable. You do not need to define it. It is given to you. Great!. Now, every ruby process on a UNIX (POSIX) system gives you three file descriptors stdin(fd0), stdout(fd1) and stderr(fd2). To generalise, every process is presumed to have three file descriptors, namely, standard output, standard input and standard error to communicate to the underlying OS. Since, ruby runs as a process it would also get these three file descriptors. So, $stderr, $stdout and $stdin are basically wrappers to those file descriptors and assist us in talking to the OS. Trivial operations like print this out on the console actually employs $stdout for outputting. What kind of objects are they? Let us go to good old irb and run some code. Run the code below: $stdout.kind_of?(IO) This would give you “true” which bascially means that $stdout is an IO object. IO is the main input output library in ruby. Do check out the rdoc for other exciting things you can do with it. Ok. Good that we have these file descriptors so what. I do not need to know how “puts” outputs stuff to the console. I just use it. Well, that is good but one should definitely have a good understanding of controlling where the output goes otherwise when someone asks you - “How do I redirect my output to a file instead of console?”, you would just sit there with no answer. So, let us try and find an answer to the same question so that you do not look like a fool. As it happens, we can actually redefine the $stdout. The following code would do exactly that when run in irb: $stdout = File.open(&quot;test.log&quot;, &quot;w&quot;) It basically tells $stdout to spit everything out to a file called “test.log”. That’s it. Its done. Now, when you send a mesage to puts method it would use the newly defined $stdout and do the needful. Run this code in the same irb session as above and and see what happens: puts &quot;I am going to the file. It is more fun than printing on the cosole.&quot; and you would not see this printed out in the console. Go and check the file test.log but to your surprise it would not be there. So, where the heck is it? Well, what happens is it is stored in a buffer and not written to the file until the buffer gets full (I am not entirely sure about this but I am guessing that would be the case). Now, if you terminate your irb session and check test.log you would find the entire ouput there but I do not want to end the session. I want to do the work and at the same time check the output. Well, not to worry the flush method does exactly that. Run this after every puts or print: $stdout.flush Voila! This clears the buffer and writes everthing to the file. So, there you are now you know how to redirect the output to a file. But hang on what if I want to go back to the console in the same session. Is that possible? Ofcourse, that is possible. Remember I told you about STDOUT at the beginning well that comes to the rescue. STDOUT and $stdout point to the same IO object. You can check that by running the following code in irb: $stdout.equal?(STDOUT) and this gives you true, which proves my point. So, in order to go back to the original state you can just do this in order to redefine $stdout: $stdout = STDOUT Simple! Now, when you do: puts &quot;Oh Em Gee, I am back on the console.&quot; You will see it straight away on your console. BTW, instead of $stdout you can redefine STDOUT and redirect the output to a file but puts or print would not be bothered about it as they use $stdout which is still pointing to the console. Now comes the most interesting bit of the whole post. Are system calles affected by the redefining of $stdout. You know system calls. Well, in ruby you can use a system method to call the underlying OS functions, for example: system(&#39;ls -l&#39;) system(&#39;echo Wheeee&#39;) So, the question is what happens when you redefine the $stdout does that affect the output of these system calls. And the answer is Nope, it does not. The child processes like system would still use the existing output channel that the ruby process had in the beginning. Redefining, $stdout would not change the file descriptor. The file descriptors are still there and when we redefine $stdout we just stop using them. But the native calls to the OS will still use the console for output. That was a long post! I hope now you are better equipped with the IO knowledge and how it all works in ruby." />
+<link rel="canonical" href="http://localhost:4000/2009/11/19/ruby-streams-stdin-stdout-and-stderr/" />
+<meta property="og:url" content="http://localhost:4000/2009/11/19/ruby-streams-stdin-stdout-and-stderr/" />
+<meta property="og:site_name" content="Plough =&gt; Ruby" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2009-11-19T00:00:00+00:00" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/2009/11/19/ruby-streams-stdin-stdout-and-stderr/","@type":"BlogPosting","headline":"Ruby streams - $stdin, $stdout and $stderr","dateModified":"2009-11-19T00:00:00+00:00","datePublished":"2009-11-19T00:00:00+00:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2009/11/19/ruby-streams-stdin-stdout-and-stderr/"},"author":{"@type":"Person","name":"andhapp"},"description":"It is obvious from the subject that I am going to talk about the streams $stdin, $stdout and $stderr but it would be a fun ride with lots of examples and good explanations. However, there is another set of global variables called STDOUT, STDIN, STDERR. In addition to STDIN, there is ARGF and DATA for reading data in so you know you can research into these things. Any variable in ruby that starts with a $ sign is a global variable. You do not need to define it. It is given to you. Great!. Now, every ruby process on a UNIX (POSIX) system gives you three file descriptors stdin(fd0), stdout(fd1) and stderr(fd2). To generalise, every process is presumed to have three file descriptors, namely, standard output, standard input and standard error to communicate to the underlying OS. Since, ruby runs as a process it would also get these three file descriptors. So, $stderr, $stdout and $stdin are basically wrappers to those file descriptors and assist us in talking to the OS. Trivial operations like print this out on the console actually employs $stdout for outputting. What kind of objects are they? Let us go to good old irb and run some code. Run the code below: $stdout.kind_of?(IO) This would give you “true” which bascially means that $stdout is an IO object. IO is the main input output library in ruby. Do check out the rdoc for other exciting things you can do with it. Ok. Good that we have these file descriptors so what. I do not need to know how “puts” outputs stuff to the console. I just use it. Well, that is good but one should definitely have a good understanding of controlling where the output goes otherwise when someone asks you - “How do I redirect my output to a file instead of console?”, you would just sit there with no answer. So, let us try and find an answer to the same question so that you do not look like a fool. As it happens, we can actually redefine the $stdout. The following code would do exactly that when run in irb: $stdout = File.open(&quot;test.log&quot;, &quot;w&quot;) It basically tells $stdout to spit everything out to a file called “test.log”. That’s it. Its done. Now, when you send a mesage to puts method it would use the newly defined $stdout and do the needful. Run this code in the same irb session as above and and see what happens: puts &quot;I am going to the file. It is more fun than printing on the cosole.&quot; and you would not see this printed out in the console. Go and check the file test.log but to your surprise it would not be there. So, where the heck is it? Well, what happens is it is stored in a buffer and not written to the file until the buffer gets full (I am not entirely sure about this but I am guessing that would be the case). Now, if you terminate your irb session and check test.log you would find the entire ouput there but I do not want to end the session. I want to do the work and at the same time check the output. Well, not to worry the flush method does exactly that. Run this after every puts or print: $stdout.flush Voila! This clears the buffer and writes everthing to the file. So, there you are now you know how to redirect the output to a file. But hang on what if I want to go back to the console in the same session. Is that possible? Ofcourse, that is possible. Remember I told you about STDOUT at the beginning well that comes to the rescue. STDOUT and $stdout point to the same IO object. You can check that by running the following code in irb: $stdout.equal?(STDOUT) and this gives you true, which proves my point. So, in order to go back to the original state you can just do this in order to redefine $stdout: $stdout = STDOUT Simple! Now, when you do: puts &quot;Oh Em Gee, I am back on the console.&quot; You will see it straight away on your console. BTW, instead of $stdout you can redefine STDOUT and redirect the output to a file but puts or print would not be bothered about it as they use $stdout which is still pointing to the console. Now comes the most interesting bit of the whole post. Are system calles affected by the redefining of $stdout. You know system calls. Well, in ruby you can use a system method to call the underlying OS functions, for example: system(&#39;ls -l&#39;) system(&#39;echo Wheeee&#39;) So, the question is what happens when you redefine the $stdout does that affect the output of these system calls. And the answer is Nope, it does not. The child processes like system would still use the existing output channel that the ruby process had in the beginning. Redefining, $stdout would not change the file descriptor. The file descriptors are still there and when we redefine $stdout we just stop using them. But the native calls to the OS will still use the console for output. That was a long post! I hope now you are better equipped with the IO knowledge and how it all works in ruby.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+
+  <body>
+
+    <div class="container content">
+      <header class="masthead">
+        <h3 class="masthead-title">
+          <a href="/" title="Home">Plough => Ruby</a>
+          <small>Journey through ruby</small>
+        </h3>
+      </header>
+
+      <main>
+        <article class="post">
+  <h1 class="post-title">Ruby streams - $stdin, $stdout and $stderr</h1>
+  <time datetime="2009-11-19T00:00:00+00:00" class="post-date">19 Nov 2009</time>
+  <p>It is obvious from the subject that I am going to talk about the streams $stdin, $stdout and $stderr but it would be a fun ride with lots of examples and good explanations. However, there is another set of global variables called STDOUT, STDIN, STDERR. In addition to STDIN, there is ARGF and DATA for reading data in so you know you can research into these things.</p>
+
+<p>Any variable in ruby that starts with a $ sign is a global variable. You do not need to define it. It is given to you. Great!. Now, every ruby process on a UNIX (POSIX) system gives you three file descriptors stdin(fd0), stdout(fd1) and stderr(fd2). To generalise, every process is presumed to have three file descriptors, namely, standard output, standard input and standard error to communicate to the underlying OS. Since, ruby runs as a process it would also get these three file descriptors. So, $stderr, $stdout and $stdin are basically wrappers to those file descriptors and assist us in talking to the OS. Trivial operations like print this out on the console actually employs $stdout for outputting.</p>
+
+<p>What kind of objects are they? Let us go to good old irb and run some code. Run the code below:</p>
+
+<pre>
+$stdout.kind_of?(IO)
+</pre>
+
+<p>This would give you “true” which bascially means that $stdout is an IO object. <a href="http://ruby-doc.org/core/classes/IO.html#M002278">IO</a> is the main input output library in ruby. Do check out the rdoc for other exciting things you can do with it. Ok. Good that we have these file descriptors so what. I do not need to know how “puts” outputs stuff to the console. I just use it. Well, that is good but one should definitely have a good understanding of controlling where the output goes otherwise when someone asks you - <strong>“How do I redirect my output to a file instead of console?”</strong>, you would just sit there with no answer. So, let us try and find an answer to the same question so that you do not look like a fool.</p>
+
+<p>As it happens, we can actually redefine the $stdout. The following code would do exactly that when run in irb:</p>
+<pre>
+$stdout = File.open("test.log", "w")
+</pre>
+
+<p>It basically tells $stdout to spit everything out to a file called “test.log”. That’s it. Its done. Now, when you send a mesage to puts method it would use the newly defined $stdout and do the needful. Run this code in the same irb session as above and and see what happens:</p>
+
+<pre>
+puts "I am going to the file. It is more fun than printing on the cosole."
+</pre>
+
+<p>and you would not see this printed out in the console. Go and check the file test.log but to your surprise it would not be there. So, where the heck is it? Well, what happens is it is stored in a buffer and not written to the file until the buffer gets full (I am not entirely sure about this but I am guessing that would be the case). Now, if you terminate your irb session and check test.log you would find the entire ouput there but I do not want to end the session. I want to do the work and at the same time check the output. Well, not to worry the flush method does exactly that. Run this after every puts or print:</p>
+
+<pre>
+$stdout.flush
+</pre>
+
+<p>Voila! This clears the buffer and writes everthing to the file. So, there you are now you know how to redirect the output to a file. But hang on what if I want to go back to the console in the same session. Is that possible? Ofcourse, that is possible. Remember I told you about STDOUT at the beginning well that comes to the rescue. STDOUT and $stdout point to the same IO object. You can check that by running the following code in irb:</p>
+
+<pre>
+$stdout.equal?(STDOUT) 
+</pre>
+
+<p>and this gives you true, which proves my point. So, in order to go back to the original state you can just do this in order to redefine $stdout:</p>
+
+<pre>
+$stdout = STDOUT
+</pre>
+
+<p>Simple! Now, when you do:</p>
+
+<pre>
+puts "Oh Em Gee, I am back on the console."
+</pre>
+
+<p>You will see it straight away on your console. BTW, instead of $stdout you can redefine STDOUT and redirect the output to a file but puts or print would not be bothered about it as they use $stdout which is still pointing to the console.</p>
+
+<p>Now comes the most interesting bit of the whole post. Are system calles affected by the redefining of $stdout. You know system calls. Well, in ruby you can use a system method to call the underlying OS functions, for example:</p>
+
+<pre>
+system('ls -l')
+system('echo Wheeee')
+</pre>
+
+<p>So, the question is what happens when you redefine the $stdout does that affect the output of these system calls. And the answer is Nope, it does not. The child processes like system would still use the existing output channel that the ruby process had in the beginning. Redefining, $stdout would not change the file descriptor. The file descriptors are still there and when we redefine $stdout we just stop using them. But the native calls to the OS will still use the console for output.</p>
+
+<p>That was a long post! I hope now you are better equipped with the IO knowledge and how it all works in ruby.</p>
+
+</article>
+
+
+<aside class="related">
+  <h3>Related posts</h3>
+  <ul class="related-posts">
+    
+      <li>
+        <a href="/2019/09/27/yarn-install-on-mojave/">
+          Yarn Install On Mojave
+          <small><time datetime="2019-09-27T00:00:00+01:00">27 Sep 2019</time></small>
+        </a>
+      </li>
+    
+      <li>
+        <a href="/2019/09/27/installing-ffi-1.11.1-on-mojave/">
+          Installing Ffi 1.11.1 On Mojave
+          <small><time datetime="2019-09-27T00:00:00+01:00">27 Sep 2019</time></small>
+        </a>
+      </li>
+    
+      <li>
+        <a href="/2016/10/06/dont-blindly-follow-blog-posts/">
+          Dont Blindly Follow Blog Posts
+          <small><time datetime="2016-10-06T00:00:00+01:00">06 Oct 2016</time></small>
+        </a>
+      </li>
+    
+  </ul>
+</aside>
+
+
+      </main>
+
+      <footer class="footer">
+        <small>
+          &copy; <time datetime="2021-07-03T06:18:22+01:00">2021</time>. All rights reserved.
+        </small>
+      </footer>
+    </div>
+
+    
+  </body>
+</html>

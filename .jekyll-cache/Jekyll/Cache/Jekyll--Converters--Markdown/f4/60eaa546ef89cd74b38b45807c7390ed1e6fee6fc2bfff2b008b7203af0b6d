@@ -1,0 +1,8 @@
+I"<p><a href="http://www.ruby-lang.org/en/news/2013/02/24/ruby-2-0-0-p0-is-released/">Ruby 2.0.0</a> has been released and there are a lot of new things, for example, keyword arguments, TracePoint API, DTrace and so on. Here’s <a href="https://github.com/ruby/ruby/blob/trunk/NEWS">Ruby NEWS</a> file, and some <a href="http://blog.marc-andre.ca/2013/02/23/ruby-2-by-example/">new features in Ruby 2</a>.</p>
+
+<p>One thing to add to that list is that the behaviour of inspect is no
+longer dependent on to_s. In Ruby 1.9, if to_s was overridden inspect
+would just execute that code. But in Ruby 2.0, to_s overriding doesn’t
+affect inspect anymore. Here’s code example for <a href="https://eval.in/11121">Ruby 1.9.3</a> and <a href="https://eval.in/11120">Ruby
+2</a></p>
+:ET

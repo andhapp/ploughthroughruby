@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>
+    
+      Ruby object model &middot; Plough => Ruby
+    
+  </title>
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+  <link rel="alternate" type="application/atom+xml" title="Plough => Ruby" href="/atom.xml">
+
+  <!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Ruby object model" />
+<meta name="author" content="andhapp" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Right, so you know Ruby’s object model. Well here’s a little code snippet by JRuby creator Ola Bini and it drives the point home really. class Obj def something puts &quot;calling simple&quot; @abc = 3*42 def something puts &quot;calling memoized&quot; @abc end something end end o = Obj.new o.something o.something o.something The output of the code is: calling simple calling memoized calling memoized calling memoized Let us look at the code and anaylise it. ‘o’ is an instance of ‘Obj’ class. ‘something’ is an instance method of ‘O’, therefore it can access it. The first ‘o.something’ would call the instance method defined in ‘Obj’ class. So, it prints “calling simple” and then the second ‘something’ defines a method on instance ‘o’ because inside the first ‘something’ self is same as instance ‘o’. Now, what do you get when you do something like this: def o.something puts &quot;I am o&#39;s singleton method.&quot; end Yes, you get a singleton method on the instance. In this case, that’s exactly what happens. The second ‘something’ defines a singleton method on instance ‘o’. We are still in the middle of executing the first something. The last line of the first something (or the outer something) calls the method ‘something’. What the hell? Cyclic messaging!!!! Never ending loop. Yeah, but the code runs and exits gracefully. Well, the call to ‘something’ would actually go and look for ‘something’ method and before it finds a ‘something’ method defined in the class ‘Obj’ it would find the singleton-method ‘something’ and execute that. So, what would that print. Yeah, you are right it prints “calling memoized”. The second and third calls to something will again encounter the ‘something’ singleton method and execute that and it would not bother to go and look for the something defined as an instance method in class ‘Obj’. I know you are confused. Why would it go and look for the singleton method and not the instance method. This is the magic behind Ruby’s object model. Please head over to Ola Bini’s blog and read the article on metaprogramming. He goes into a lot more detail." />
+<meta property="og:description" content="Right, so you know Ruby’s object model. Well here’s a little code snippet by JRuby creator Ola Bini and it drives the point home really. class Obj def something puts &quot;calling simple&quot; @abc = 3*42 def something puts &quot;calling memoized&quot; @abc end something end end o = Obj.new o.something o.something o.something The output of the code is: calling simple calling memoized calling memoized calling memoized Let us look at the code and anaylise it. ‘o’ is an instance of ‘Obj’ class. ‘something’ is an instance method of ‘O’, therefore it can access it. The first ‘o.something’ would call the instance method defined in ‘Obj’ class. So, it prints “calling simple” and then the second ‘something’ defines a method on instance ‘o’ because inside the first ‘something’ self is same as instance ‘o’. Now, what do you get when you do something like this: def o.something puts &quot;I am o&#39;s singleton method.&quot; end Yes, you get a singleton method on the instance. In this case, that’s exactly what happens. The second ‘something’ defines a singleton method on instance ‘o’. We are still in the middle of executing the first something. The last line of the first something (or the outer something) calls the method ‘something’. What the hell? Cyclic messaging!!!! Never ending loop. Yeah, but the code runs and exits gracefully. Well, the call to ‘something’ would actually go and look for ‘something’ method and before it finds a ‘something’ method defined in the class ‘Obj’ it would find the singleton-method ‘something’ and execute that. So, what would that print. Yeah, you are right it prints “calling memoized”. The second and third calls to something will again encounter the ‘something’ singleton method and execute that and it would not bother to go and look for the something defined as an instance method in class ‘Obj’. I know you are confused. Why would it go and look for the singleton method and not the instance method. This is the magic behind Ruby’s object model. Please head over to Ola Bini’s blog and read the article on metaprogramming. He goes into a lot more detail." />
+<link rel="canonical" href="http://localhost:4000/2009/10/09/ruby-object-model/" />
+<meta property="og:url" content="http://localhost:4000/2009/10/09/ruby-object-model/" />
+<meta property="og:site_name" content="Plough =&gt; Ruby" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2009-10-09T00:00:00+01:00" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/2009/10/09/ruby-object-model/","@type":"BlogPosting","headline":"Ruby object model","dateModified":"2009-10-09T00:00:00+01:00","datePublished":"2009-10-09T00:00:00+01:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2009/10/09/ruby-object-model/"},"author":{"@type":"Person","name":"andhapp"},"description":"Right, so you know Ruby’s object model. Well here’s a little code snippet by JRuby creator Ola Bini and it drives the point home really. class Obj def something puts &quot;calling simple&quot; @abc = 3*42 def something puts &quot;calling memoized&quot; @abc end something end end o = Obj.new o.something o.something o.something The output of the code is: calling simple calling memoized calling memoized calling memoized Let us look at the code and anaylise it. ‘o’ is an instance of ‘Obj’ class. ‘something’ is an instance method of ‘O’, therefore it can access it. The first ‘o.something’ would call the instance method defined in ‘Obj’ class. So, it prints “calling simple” and then the second ‘something’ defines a method on instance ‘o’ because inside the first ‘something’ self is same as instance ‘o’. Now, what do you get when you do something like this: def o.something puts &quot;I am o&#39;s singleton method.&quot; end Yes, you get a singleton method on the instance. In this case, that’s exactly what happens. The second ‘something’ defines a singleton method on instance ‘o’. We are still in the middle of executing the first something. The last line of the first something (or the outer something) calls the method ‘something’. What the hell? Cyclic messaging!!!! Never ending loop. Yeah, but the code runs and exits gracefully. Well, the call to ‘something’ would actually go and look for ‘something’ method and before it finds a ‘something’ method defined in the class ‘Obj’ it would find the singleton-method ‘something’ and execute that. So, what would that print. Yeah, you are right it prints “calling memoized”. The second and third calls to something will again encounter the ‘something’ singleton method and execute that and it would not bother to go and look for the something defined as an instance method in class ‘Obj’. I know you are confused. Why would it go and look for the singleton method and not the instance method. This is the magic behind Ruby’s object model. Please head over to Ola Bini’s blog and read the article on metaprogramming. He goes into a lot more detail.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+
+  <body>
+
+    <div class="container content">
+      <header class="masthead">
+        <h3 class="masthead-title">
+          <a href="/" title="Home">Plough => Ruby</a>
+          <small>Journey through ruby</small>
+        </h3>
+      </header>
+
+      <main>
+        <article class="post">
+  <h1 class="post-title">Ruby object model</h1>
+  <time datetime="2009-10-09T00:00:00+01:00" class="post-date">09 Oct 2009</time>
+  <p>Right, so you know Ruby’s object model. Well here’s a little code snippet by JRuby creator Ola Bini and it drives the point home really.</p>
+
+<pre>
+class Obj
+  def something
+    puts "calling simple"
+    @abc = 3*42
+    def something
+      puts "calling memoized"
+      @abc
+    end
+    something
+  end
+end
+
+o = Obj.new
+o.something
+o.something
+o.something
+
+</pre>
+<p>The output of the code is:</p>
+
+<pre>
+calling simple
+calling memoized
+calling memoized
+calling memoized
+</pre>
+
+<p>Let us look at the code and anaylise it. ‘o’ is an instance of ‘Obj’ class. ‘something’ is an instance method of ‘O’, therefore it can access it. The first ‘o.something’ would call the instance method defined in ‘Obj’ class. So, it prints “calling simple” and then the second ‘something’ defines a method on instance ‘o’ because inside the first ‘something’ self is same as instance ‘o’.</p>
+
+<p>Now, what do you get when you do something like this:</p>
+
+<pre>
+def o.something
+     puts "I am o's singleton method."
+end
+</pre>
+
+<p>Yes, you get a singleton method on the instance. In this case, that’s exactly what happens. The second ‘something’ defines a singleton method on instance ‘o’.  We are still in the middle of executing the first something. The last line of the first something (or the outer something) calls the method ‘something’. What the hell? Cyclic messaging!!!! Never ending loop. Yeah, but the code runs and exits gracefully.</p>
+
+<p>Well, the call to ‘something’ would actually go and look for ‘something’ method and before it finds a ‘something’ method defined in the class ‘Obj’ it would find the singleton-method ‘something’ and execute that. So, what would that print. Yeah, you are right it prints “calling memoized”. The second and third calls to something will again encounter the ‘something’ singleton method and execute that and it would not bother to go and look for the something defined as an instance method in class ‘Obj’.</p>
+
+<p>I know you are confused. Why would it go and look for the singleton method and not the instance method. This is the magic behind Ruby’s object model. Please head over to Ola Bini’s blog and read the article on <a href="http://ola-bini.blogspot.com/search/label/metaprogramming">metaprogramming</a>. He goes into a lot more detail.</p>
+
+</article>
+
+
+<aside class="related">
+  <h3>Related posts</h3>
+  <ul class="related-posts">
+    
+      <li>
+        <a href="/2019/09/27/yarn-install-on-mojave/">
+          Yarn Install On Mojave
+          <small><time datetime="2019-09-27T00:00:00+01:00">27 Sep 2019</time></small>
+        </a>
+      </li>
+    
+      <li>
+        <a href="/2019/09/27/installing-ffi-1.11.1-on-mojave/">
+          Installing Ffi 1.11.1 On Mojave
+          <small><time datetime="2019-09-27T00:00:00+01:00">27 Sep 2019</time></small>
+        </a>
+      </li>
+    
+      <li>
+        <a href="/2016/10/06/dont-blindly-follow-blog-posts/">
+          Dont Blindly Follow Blog Posts
+          <small><time datetime="2016-10-06T00:00:00+01:00">06 Oct 2016</time></small>
+        </a>
+      </li>
+    
+  </ul>
+</aside>
+
+
+      </main>
+
+      <footer class="footer">
+        <small>
+          &copy; <time datetime="2021-07-03T06:18:22+01:00">2021</time>. All rights reserved.
+        </small>
+      </footer>
+    </div>
+
+    
+  </body>
+</html>

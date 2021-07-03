@@ -1,0 +1,2 @@
+I"&<p>To clarify, hashes here does not mean the Hash class. Object’s in ruby have a hash method that returns a hash code for an object. The hash is also used in the background by the eql? method. So, it’s safe to say that two objects are equal if their hash methods return the same value.</p>
+:ET

@@ -1,0 +1,4 @@
+I"<p>We have been adding Rspec + Capybara to <a href="https://suggestion.io">Suggestion.io</a> 
+to ensure we don’t create any regression bugs. There are plenty of resources 
+online to set-up Capybara to use Selenium’s Chrome driver (instead of Firefox).</p>
+:ET

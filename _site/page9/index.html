@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>
+    
+      Plough => Ruby &middot; Journey through ruby
+    
+  </title>
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+  <link rel="alternate" type="application/atom+xml" title="Plough => Ruby" href="/atom.xml">
+
+  <!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Home" />
+<meta name="author" content="andhapp" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Ruby / Rails programming language" />
+<meta property="og:description" content="Learning Ruby / Rails programming language" />
+<link rel="canonical" href="http://localhost:4000/page9/" />
+<meta property="og:url" content="http://localhost:4000/page9/" />
+<meta property="og:site_name" content="Plough =&gt; Ruby" />
+<link rel="prev" href="http://localhost:4000/page8" />
+<link rel="next" href="http://localhost:4000/page10" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/page9/","@type":"WebPage","headline":"Home","author":{"@type":"Person","name":"andhapp"},"description":"Learning Ruby / Rails programming language","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+
+  <body>
+
+    <div class="container content">
+      <header class="masthead">
+        <h3 class="masthead-title">
+          <a href="/" title="Home">Plough => Ruby</a>
+          <small>Journey through ruby</small>
+        </h3>
+      </header>
+
+      <main>
+        <div class="posts">
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2009/10/09/ruby-object-model/">
+        Ruby object model
+      </a>
+    </h1>
+
+    <time datetime="2009-10-09T00:00:00+01:00" class="post-date">09 Oct 2009</time>
+
+    <p>Right, so you know Ruby’s object model. Well here’s a little code snippet by JRuby creator Ola Bini and it drives the point home really.</p>
+
+<pre>
+class Obj
+  def something
+    puts "calling simple"
+    @abc = 3*42
+    def something
+      puts "calling memoized"
+      @abc
+    end
+    something
+  end
+end
+
+o = Obj.new
+o.something
+o.something
+o.something
+
+</pre>
+<p>The output of the code is:</p>
+
+<pre>
+calling simple
+calling memoized
+calling memoized
+calling memoized
+</pre>
+
+<p>Let us look at the code and anaylise it. ‘o’ is an instance of ‘Obj’ class. ‘something’ is an instance method of ‘O’, therefore it can access it. The first ‘o.something’ would call the instance method defined in ‘Obj’ class. So, it prints “calling simple” and then the second ‘something’ defines a method on instance ‘o’ because inside the first ‘something’ self is same as instance ‘o’.</p>
+
+<p>Now, what do you get when you do something like this:</p>
+
+<pre>
+def o.something
+     puts "I am o's singleton method."
+end
+</pre>
+
+<p>Yes, you get a singleton method on the instance. In this case, that’s exactly what happens. The second ‘something’ defines a singleton method on instance ‘o’.  We are still in the middle of executing the first something. The last line of the first something (or the outer something) calls the method ‘something’. What the hell? Cyclic messaging!!!! Never ending loop. Yeah, but the code runs and exits gracefully.</p>
+
+<p>Well, the call to ‘something’ would actually go and look for ‘something’ method and before it finds a ‘something’ method defined in the class ‘Obj’ it would find the singleton-method ‘something’ and execute that. So, what would that print. Yeah, you are right it prints “calling memoized”. The second and third calls to something will again encounter the ‘something’ singleton method and execute that and it would not bother to go and look for the something defined as an instance method in class ‘Obj’.</p>
+
+<p>I know you are confused. Why would it go and look for the singleton method and not the instance method. This is the magic behind Ruby’s object model. Please head over to Ola Bini’s blog and read the article on <a href="http://ola-bini.blogspot.com/search/label/metaprogramming">metaprogramming</a>. He goes into a lot more detail.</p>
+
+  </article>
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2009/09/30/define_method-instance_eval-and-class_eval/">
+        define_method, instance_eval and class_eval
+      </a>
+    </h1>
+
+    <time datetime="2009-09-30T00:00:00+01:00" class="post-date">30 Sep 2009</time>
+
+    <p>Right, so this is a tad confusing and the reason I am explaining is to ensure that I understand it properly.</p>
+
+<p><strong>instance_eval</strong> - It creates singleton methods on the object it is invoked on. If it is invoked on a Class object then these methods become singleton methods of the class. Some people would call them <del datetime="2009-09-30T19:13:53+00:00">“class methods”</del> but these are simply methods in an object’s singleton class. Here’s the code:</p>
+
+<pre>
+SomeObject.instance_eval (def singleton_method; "singleton_method";end)
+</pre>
+
+<p><strong>class_eval</strong> - It creates an instance method on the object. Simple there is nothing confusing about this. Here’s an example:</p>
+
+<pre>
+SomeObject.class_eval(def instance_method;"instance_method";end)
+</pre>
+
+<p>Now, define method when used inside either class_eval or instance_eval s immune to the usual behaviour.</p>
+
+<p>Why, you may ask?</p>
+
+<p>Because the documentation says so. As per the documentation “define method - Defines an instance method in the receiver”. Therefore, it does not matter if you use define_method inside class_eval or instance_eval it would always create an instance method. Now, the question to ask is - “Is there no way to define a singleton method using defne_method?”. Well, I still need to investigate that. It would probably be in an update to this post. Hope it all makes sense. Ruby metaprogramming is awesome only if you know what you are doing and to get to that stage one needs to spend countless hours metaprogramming.</p>
+
+  </article>
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2009/09/24/ruby-online-courses/">
+        Ruby online courses
+      </a>
+    </h1>
+
+    <time datetime="2009-09-24T00:00:00+01:00" class="post-date">24 Sep 2009</time>
+
+    <p>Anyone interested in learning ruby then head over to <a href="http://www.rubylearning.org">RubyLearning</a> blog with plethora of online courses. Some of them are free and some charge a very nominal price. I am currently scheduled to take Ruby Shoes course but there are others like: Ruby Core, ruby metaprogramming. I am enrolled and currently studying the ruby meta-programming course and it is fabulous. I paid $5 for it but it is compared to what you will achieve by the time you get to the other side. So, do not delay any further.</p>
+
+  </article>
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2009/09/24/ruby-idioms/">
+        Ruby idioms
+      </a>
+    </h1>
+
+    <time datetime="2009-09-24T00:00:00+01:00" class="post-date">24 Sep 2009</time>
+
+    <p>You can write a complete ruby script as a string and run it. Ruby (rather MRI) would just evalutae the string by executing it. For example:</p>
+
+<pre>
+"#{def x(s); puts(s.reverse); end; ('1'..'3').each{|aStr| x(aStr)} }"
+</pre>
+
+<p>This is absolutely valid.</p>
+
+  </article>
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2009/08/24/excellent-tutorial-on-casewhen/">
+        Excellent tutorial on case/when
+      </a>
+    </h1>
+
+    <time datetime="2009-08-24T00:00:00+01:00" class="post-date">24 Aug 2009</time>
+
+    <p><a href="http://www.skorks.com">Alan</a> seems to be doing an excellent job of explaining Ruby language. <a href="http://www.skorks.com/2009/08/how-a-ruby-case-statement-works-and-what-you-can-do-with-it/">Here’s</a> another great article on case statements in Ruby.</p>
+
+<p>Enjoy.</p>
+
+  </article>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="/page10">Older</a>
+  
+  
+    <a class="pagination-item newer" href="/page8">Newer</a>
+  
+</div>
+
+      </main>
+
+      <footer class="footer">
+        <small>
+          &copy; <time datetime="2021-07-03T06:18:22+01:00">2021</time>. All rights reserved.
+        </small>
+      </footer>
+    </div>
+
+    
+  </body>
+</html>

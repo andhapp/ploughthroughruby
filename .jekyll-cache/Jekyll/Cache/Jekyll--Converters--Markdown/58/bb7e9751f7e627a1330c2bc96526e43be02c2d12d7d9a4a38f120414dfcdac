@@ -1,0 +1,43 @@
+I"�<p>Ruby’s standard library is filled with several unique, non-standard classes/modules, one such module is <a href="http://ruby-doc.org/stdlib-2.1.0/libdoc/abbrev/rdoc/Abbrev.html">Abbrev</a>.</p>
+
+<p>Abbrev calculates the set of unique abbreviations for a given set of strings. The following code demonstrates it properly:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'abbrev'
+require 'pp'
+
+pp Abbrev.abbrev(['ruby', 'rules'])
+</code></pre></div></div>
+
+<p>This code produces the following output where all the keys are
+abbreviated and unique, and point to their respective words.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"ruby"=&gt;"ruby",
+ "rub"=&gt;"ruby",
+ "rules"=&gt;"rules",
+ "rule"=&gt;"rules",
+ "rul"=&gt;"rules"}
+</code></pre></div></div>
+
+<p>This also provides an extension for an Array, so you can call ‘abbrev’
+method straight on an array. The code above will then become:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'abbrev'
+require 'pp'
+
+pp ['ruby', 'rules'].abbrev
+</code></pre></div></div>
+
+<p>I found a couple of use cases of the Abbrev module on Google:</p>
+
+<ol>
+  <li>
+    <p>For creating <a href="http://www.aimred.com/news/developers/2010/05/11/rediscovering_ruby_abbrev/">unique labels</a> for a bar graph.</p>
+  </li>
+  <li>
+    <p>For creating an <a href="http://endofline.wordpress.com/2010/12/25/ruby-standard-library-abbrev/">auto-completer</a> on console, intriguing, right?</p>
+  </li>
+</ol>
+
+<p>Hope this will make you aware of such a nifty module and please share your
+use-cases with the rest of us.</p>
+:ET

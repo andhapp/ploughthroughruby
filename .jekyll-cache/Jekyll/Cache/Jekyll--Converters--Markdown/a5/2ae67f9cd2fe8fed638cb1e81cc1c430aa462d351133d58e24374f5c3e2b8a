@@ -1,0 +1,5 @@
+I""<p>DTrace is a static and dynamic instrumentation framework. I did a talk
+at LRUG back in October on DTrace and it’s addition in Ruby 2. There’s
+not much content in the presentation, but it will give you a little
+pointers to the present situation of DTrace in general, and in Ruby.</p>
+:ET

@@ -1,0 +1,7 @@
+I"°<p>With Ruby 2.1.0, one can easily trace the original exception.
+Previously, on rescuing an exception one would have no reference to the original exception
+(thrown by a gem/library). There are a couple of <a href="https://github.com/skorks/nesty">gems</a> that can help you
+keep track of the exceptions, but with Ruby 2.1.0 you can work with
+nested exceptions without any issues. Hereâ€™s some trivial code to
+achieve the same:</p>
+:ET

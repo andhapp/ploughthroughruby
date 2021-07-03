@@ -1,0 +1,46 @@
+I"�<p>Novelty of writing a gem has worn off. Back in the days when Rails had
+just come out, writing a gem (or a plugin) was an achievement in itself.</p>
+
+<p>What has a gem got to do with Rails? You write ruby gems and rails is
+just another gem, no?</p>
+
+<p>Correct!</p>
+
+<p>It has nothing to do with Rails but my Ruby adventure began with Rails
+and I for one give the credit where it’s due, without a shadow of doubt.</p>
+
+<h4 id="history">History</h4>
+
+<p>Anyways, around 4 years ago, I created a gem called <a href="https://github.com/andhapp/is_bot">is_bot</a>. It offers some spam protection for web forms. I can’t even remember the project I used it on back then.
+However, recently we’ve been marketing <a href="https://www.suggestion.io/">Suggestion.io</a> and encountered a lot of spam sign ups and decided to fix the issue.</p>
+
+<h4 id="why-not-just-use-a-captcha">Why not just use a captcha?</h4>
+
+<p>I hate asking prospective clients to fill in yet another field. You want
+to make it easier not difficult to sign up. is_bot is different. It just
+adds a invisible text field making it hidden from the actual users. Time
+to get one back on the damn bots!</p>
+
+<h4 id="why-reboot-why-not-use-a-rails-4-gem">Why reboot? Why not use a Rails 4 gem?</h4>
+
+<p>I looked at few existing gems but none worked nicely. It was time to
+reboot is_bot. Back then it was written for Rails 3 so had to upgrade it
+for Rails 4 APIs which was a bit of a pain since it’s hard to find what
+changed from Rails 3 to Rails 4, easily. Reading through Rails source
+code and looking at some of the other gems got us through.</p>
+
+<h4 id="technology-is-flying">Technology is flying…</h4>
+
+<p>I also took this opportunity to change a few more things…I say a few,
+but so much has changed, hasn’t it?</p>
+
+<ul>
+  <li>Replaced Jeweler with Bundler as a gem to manage my ruby gem. Just
+find it easier to use.</li>
+  <li>Started using semantic versioning. Makes perfect sense for open source project.</li>
+  <li>Upgraded to latest RSpec.</li>
+  <li>Replaced <code class="highlighter-rouge">.rvmrc</code> to <code class="highlighter-rouge">.ruby-gemset</code> and <code class="highlighter-rouge">.ruby-version</code>.</li>
+</ul>
+
+<p>It was a bit of a work, but in the end all the efforts paid off.</p>
+:ET

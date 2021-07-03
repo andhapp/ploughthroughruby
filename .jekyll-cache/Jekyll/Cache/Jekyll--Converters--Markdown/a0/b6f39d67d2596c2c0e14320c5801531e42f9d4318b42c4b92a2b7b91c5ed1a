@@ -1,0 +1,105 @@
+I"C<p>There are several ways of adding a method to a ruby class (or instance),
+for example, define_method, method_missing, or by just opening up the
+class itself.</p>
+
+<p><em>However, can we remove the methods from a Ruby class?</em></p>
+
+<p>I encountered two ways of removing methods from a class:</p>
+
+<ul>
+  <li>
+    <p><a href="http://ruby-doc.org//core-2.2.0/Module.html#method-i-remove_method">remove_method</a></p>
+  </li>
+  <li>
+    <p><a href="http://ruby-doc.org//core-2.2.0/Module.html#method-i-undef_method">undef_method</a></p>
+  </li>
+</ul>
+
+<p>There are subtle differences between the two. The former removes the
+method from the current class, where as the latter, stops responding to
+the methods in the current class.</p>
+
+<p>Let’s look at an example for the same. Imagine we have a parent class,
+Appliance (a.k.a Kitchen Appliance), and child class, Can opener. Here
+are the definitions for the two classes:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Appliance
+  def name
+   puts "I'm a kitchen appliance"
+  end
+end
+
+class CanOpener &lt; Appliance
+  def name
+    puts "I'm a can opener"
+  end
+end
+
+</code></pre></div></div>
+
+<p>Now, let’s try <code class="highlighter-rouge">remove_method</code> and see what happens.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>can_opener = CanOpener.new
+can_opener.name
+
+class CanOpener
+  remove_method :name
+end
+
+can_opener.name
+puts "Can Opener has a name? #{can_opener.respond_to?(:name)}"   
+</code></pre></div></div>
+
+<p>This will produce the following output:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I'm a can opener
+I'm a kitchen appliance
+Can Opener has a name? true
+</code></pre></div></div>
+
+<p>As soon as you remove a method from a class it treats the method as
+undefined and goes up the ancestor chain to look for an implementation, 
+which it finds in the parent class. Since, there’s an implementation 
+<code class="highlighter-rouge">respond_to</code> returns true.</p>
+
+<p>However, <code class="highlighter-rouge">undef_method</code> works slightly differently and let’s see how:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Appliance
+  def name
+   puts "I'm a kitchen appliance"
+  end
+end
+
+class CanOpener &lt; Appliance
+  def name
+    puts "I'm a can opener"
+  end
+end
+
+can_opener = CanOpener.new
+can_opener.name
+
+class CanOpener
+  undef_method :name
+end
+ 
+puts "Can Opener has a name? #{can_opener.respond_to?(:name)}"
+can_opener.name
+</code></pre></div></div>
+
+<p>This will produce the following output:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I'm a can opener
+Can Opener has a name? true
+/tmp/execpad-f7201e261f52/source-f7201e261f52:21:in `&lt;main&gt;': undefined method `name' for #&lt;CanOpener:0x41017dcc&gt; (NoMethodError)
+</code></pre></div></div>
+
+<p>Unlike <code class="highlighter-rouge">remove_method</code>, <code class="highlighter-rouge">undef_method</code> stops responding to the method
+and doesn’t travel up the ancestor chain. It totally disregards the
+method implementation in the parent class.</p>
+
+<p>Quite interesting, however, I’ve never seen it used in any of the
+production code before, so, hopefully, I will find a good use case for
+it soon.</p>
+
+:ET

@@ -1,0 +1,23 @@
+I"ž<p>I accidently found a nifty way of calling <del datetime="2009-11-04T09:19:06+00:00">class</del> singleton methods. Imagine you have this code:</p>
+
+<pre>
+
+class FoundANewWay
+    def self.to_call_a_singleton_method
+        puts "It works!"
+    end
+end
+</pre>
+
+<p>and you can call it like this:</p>
+
+<pre>
+FoundANewWay.to_call_a_singleton_method
+
+or
+
+FoundANewWay::to_call_a_singleton_method
+</pre>
+
+<p>Cool!</p>
+:ET

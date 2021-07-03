@@ -1,0 +1,35 @@
+I"�<p>With Ruby 2.1.0, one can easily trace the original exception.
+Previously, on rescuing an exception one would have no reference to the original exception
+(thrown by a gem/library). There are a couple of <a href="https://github.com/skorks/nesty">gems</a> that can help you
+keep track of the exceptions, but with Ruby 2.1.0 you can work with
+nested exceptions without any issues. Here’s some trivial code to
+achieve the same:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Car
+  def self.start
+    begin
+      1/0
+    rescue =&gt; ex
+      puts "Exception: #{ex}"
+      raise StandardError.new "Can't start the car"
+    end
+   end
+end
+
+begin
+  Car.start
+rescue =&gt; ex
+  puts "Cause: #{ex.cause}"
+  puts "Exception: #{ex}"
+end
+</code></pre></div></div>
+
+<p>This will produce the following output:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Exception: divided by 0
+Cause: divided by 0
+Exception: Can't start the car
+</code></pre></div></div>
+
+<p>You can <a href="https://eval.in/86466">play around</a> with the code yourself.
+It’s not as sophisticated as the gems out there, but it’s getting there.</p>
+:ET

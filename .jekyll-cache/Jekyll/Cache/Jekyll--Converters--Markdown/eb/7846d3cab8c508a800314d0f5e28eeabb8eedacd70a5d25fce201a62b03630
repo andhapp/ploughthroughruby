@@ -1,0 +1,61 @@
+I"�<p>In this post, I will talk about a ruby method that I had no idea existed which might come handy in debugging your code.</p>
+
+<p>The method I am talking about is <em>set_trace_func</em>. It’s part of the Kernel class and it does what it says. Allows one to set the method tracing on a method. The following snippet explains it further. Here, we have a class, TestingSetProcFunc:</p>
+
+<pre>
+    class TestingSetProcFunc
+      def traceThisMethod
+        source = 1
+        target = 2
+      end
+    end
+</pre>
+
+<p>To inject set_trace_func in, it needs to be called before the method is invoked, like this:</p>
+
+<pre>    
+    puts "Event    File:Line                Id          Binding        Classname"
+    set_trace_func proc { |event, file, line, id, binding, classname|
+      printf "%8s %s:%-2d %20s %12s %8s\n", event, file, line, id, binding, classname
+    }
+</pre>
+
+<p>It takes a proc with upto 6 arguments. These are the events with their brief descriptions:</p>
+
+<ul>
+  <li>c-call (call a C-language routine)</li>
+  <li>c-return (return from a C-language routine)</li>
+  <li>call (call a Ruby method)</li>
+  <li>class (start a class or module definition)</li>
+  <li>end (finish a class or module definition)</li>
+  <li>line (execute code on a new line)</li>
+  <li>raise (raise an exception)</li>
+  <li>return (return from a Ruby method).</li>
+</ul>
+
+<p>Now, to run this we just need to call the method and look at the output:</p>
+
+<pre>
+    tracer = TestingSetProcFunc.new
+    tracer.traceThisMethod
+</pre>
+
+<p>This is what the output will look like when you run it on the command line:</p>
+
+<pre>    
+Event    File:Line                Id          Binding        Classname
+c-return test.rb:11       set_trace_func #&lt;Binding:0x0b53c4&gt;   Kernel
+    line test.rb:13                      #&lt;Binding:0x0b52fc&gt;         
+  c-call test.rb:13                  new #&lt;Binding:0x0b525c&gt;    Class
+  c-call test.rb:13           initialize #&lt;Binding:0x0b5144&gt; BasicObject
+c-return test.rb:13           initialize #&lt;Binding:0x0b5090&gt; BasicObject
+c-return test.rb:13                  new #&lt;Binding:0x0b4ff0&gt;    Class
+    line test.rb:14                      #&lt;Binding:0x0b4f50&gt;         
+    call test.rb:2       traceThisMethod #&lt;Binding:0x0b4eb0&gt; TestingSetProcFunc
+    line test.rb:3       traceThisMethod #&lt;Binding:0x0b4dfc&gt; TestingSetProcFunc
+    line test.rb:4       traceThisMethod #&lt;Binding:0x0b4d5c&gt; TestingSetProcFunc
+  return test.rb:5       traceThisMethod #&lt;Binding:0x0b4cbc&gt; TestingSetProcFunc    
+</pre>
+
+<p>This output gives one a good idea about the work that is happening in the background. The weird looking Binding instance is the context at that particular place in the code. I have just scratched the surface and I am sure there’s a lot one can do with this method. Have a look at the <a href="https://github.com/ruby/ruby/blob/trunk/test/ruby/test_settracefunc.rb">ruby’s test for set_trace_func</a> for more useful ways of employing it.</p>
+:ET

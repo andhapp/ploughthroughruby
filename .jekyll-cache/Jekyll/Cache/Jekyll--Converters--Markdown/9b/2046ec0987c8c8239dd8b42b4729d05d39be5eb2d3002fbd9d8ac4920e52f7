@@ -1,0 +1,4 @@
+I"¤<p>There are several ways of adding a method to a ruby class (or instance),
+for example, define_method, method_missing, or by just opening up the
+class itself.</p>
+:ET
